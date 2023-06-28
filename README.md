@@ -1,5 +1,15 @@
 # aiogram_i18n
 
+FluentCompileCore:
+```pip install fluent_compiler```
+
+FluentRuntimeCore:
+```pip install fluent.runtime```
+
+BabelCore:
+```pip install Babel```
+
+
 ```python
 from cores.fluent_runtime_core import FluentRuntimeCore
 from lazy_proxy import LazyProxy
