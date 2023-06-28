@@ -1,5 +1,5 @@
 from collections import UserString
-from typing import Callable, Dict, Any, Awaitable, Optional, Tuple, List
+from typing import Callable, Dict, Any, Awaitable, Optional, Tuple
 from json import dumps, JSONEncoder
 from aiogram import Dispatcher, BaseMiddleware, Bot
 from aiogram.types import TelegramObject

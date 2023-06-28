@@ -1,5 +1,4 @@
-from contextlib import asynccontextmanager
-from typing import Dict, Any, AsyncIterator
+from typing import Dict, Any
 
 from aiogram.utils.mixins import ContextInstanceMixin
 

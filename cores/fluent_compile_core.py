@@ -7,7 +7,12 @@ from fluent_compiler.bundle import FluentBundle
 class FluentCompileCore(BaseCore):
     locales: Dict[str, FluentBundle]
 
-    def __init__(self, path: str, default_locale: str = "en", use_isolating: bool = True, functions: Dict[str, Callable] = None):
+    def __init__(self,
+                 path: str,
+                 default_locale: str = "en",
+                 use_isolating: bool = True,
+                 functions: Dict[str, Callable] = None
+                 ):
         self.path = path
         self.use_isolating = use_isolating
         self.functions = functions

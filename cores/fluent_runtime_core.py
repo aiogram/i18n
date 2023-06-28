@@ -1,10 +1,7 @@
 from typing import Dict, Callable
 from cores.base import BaseCore
 
-try:
-    from fluent.runtime import FluentBundle, FluentResource
-except ImportError:
-    raise ImportError("")
+from fluent.runtime import FluentBundle, FluentResource
 
 
 class FluentRuntimeCore(BaseCore):

@@ -2,8 +2,6 @@ import os
 from abc import abstractmethod
 from typing import List, Dict, Optional, Any
 
-from babel.support import LazyProxy
-
 
 class BaseCore:
     locales: Dict[str, Any]
@@ -46,16 +44,7 @@ class BaseCore:
                 if not os.path.isfile(obj_path):
                     continue
                 paths[locale].append(obj_path)
-                # with open(obj_path, mode='r', encoding='utf-8') as f:
-                #     paths[locale].append(f.read())
         return paths
-
-    def lazy(
-            self, key: str
-    ) -> LazyProxy:
-        return LazyProxy(
-            self.get, key=key, enable_cache=False
-        )
     
     @property
     def available_locales(self):

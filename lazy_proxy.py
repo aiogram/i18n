@@ -1,8 +1,9 @@
 from collections import UserString
-from typing import Any, Union, Dict, Callable, Sequence
-from magic_filter import MagicFilter
+from typing import Any, Union, Dict, Optional
+
 from aiogram.types import TelegramObject, Message
-from string import Template
+from magic_filter import MagicFilter
+
 from context import I18nContext
 
 
@@ -12,11 +13,11 @@ def extract_text(event: TelegramObject):
 
 
 class LazyProxy(UserString):
-    magic: MagicFilter
+    magic: Optional[MagicFilter]
     key: str
     kwargs: Dict[str, Any]
 
-    def __init__(self, key: str, magic: MagicFilter = None, **kwargs: Dict[str, Any]):  # noqa
+    def __init__(self, key: str, magic: Optional[MagicFilter] = None, **kwargs: Dict[str, Any]):  # noqa
         self.magic = magic
         self.key = key
         self.kwargs = kwargs

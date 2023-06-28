@@ -2,7 +2,6 @@ import gettext
 from pathlib import Path
 from typing import Dict, Union
 
-from aiogram.utils.i18n.lazy_proxy import LazyProxy
 
 from cores.base import BaseCore
 
