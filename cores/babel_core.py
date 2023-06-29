@@ -1,24 +1,18 @@
 import gettext
-from typing import Dict
-
+from typing import Dict, Any
 
 from cores.base import BaseCore
 
 
-class BabelCore(BaseCore):
-    locales: Dict[str, gettext.GNUTranslations]
-
+class BabelCore(BaseCore[gettext.GNUTranslations]):
     def __init__(
-            self,
-            *,
-            path: str,
-            default_locale: str = "en"
+        self, *,
+        path: str,
+        default_locale: str = "en"
     ) -> None:
+        super().__init__()
         self.path = path
         self.default_locale = default_locale
-
-    async def startup(self, *args, **kwargs):
-        self.locales = self.find_locales()
 
     def find_locales(self) -> Dict[str, gettext.GNUTranslations]:
         """
@@ -36,6 +30,6 @@ class BabelCore(BaseCore):
 
         return translations
 
-    def get(self, locale: str, key: str, *args, **kwargs):
+    def get(self, locale: str, key: str, *args: Any, **kwargs: Any) -> str:
         translator = self.get_translator(locale=locale)
         return translator.gettext(key).format(*args, **kwargs)

@@ -1,16 +1,3 @@
-# aiogram_i18n
-
-FluentCompileCore:
-```pip install fluent_compiler```
-
-FluentRuntimeCore:
-```pip install fluent.runtime```
-
-BabelCore:
-```pip install Babel```
-
-
-```python
 import asyncio
 from contextlib import suppress
 from logging import basicConfig, INFO
@@ -68,4 +55,3 @@ async def main() -> None:
 if __name__ == "__main__":
     with suppress(KeyboardInterrupt):
         asyncio.run(main())
-```

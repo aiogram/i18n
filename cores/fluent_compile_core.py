@@ -1,32 +1,33 @@
-from typing import Dict, Callable, Optional
+from typing import Dict, Callable, Optional, Any, cast
+
+try:
+    from fluent_compiler.bundle import FluentBundle  # type: ignore[import]
+except ImportError:
+    FluentBundle = None
 
 from cores.base import BaseCore
-from fluent_compiler.bundle import FluentBundle  # type: ignore
 
 
-class FluentCompileCore(BaseCore):
-    locales: Dict[str, FluentBundle]
-
-    def __init__(self,
-                 path: str,
-                 default_locale: str = "en",
-                 use_isolating: bool = True,
-                 functions: Optional[Dict[str, Callable]] = None
-                 ):
+class FluentCompileCore(BaseCore[FluentBundle]):
+    def __init__(
+        self,
+        path: str,
+        default_locale: str = "en",
+        use_isolating: bool = True,
+        functions: Optional[Dict[str, Callable[..., Any]]] = None
+    ) -> None:
+        super().__init__()
         self.path = path
         self.use_isolating = use_isolating
         self.functions = functions
         self.default_locale = default_locale
 
-    def get(self, locale: str, key: str, **kwargs):
+    def get(self, locale: str, key: str, *args: Any, **kwargs: Any) -> str:
         translator: FluentBundle = self.get_translator(locale=locale)
         text, errors = translator.format(message_id=key, args=kwargs)
         if errors:
             raise ValueError("\n".join(errors))
-        return text
-
-    async def startup(self, *args, **kwargs):
-        self.locales = self.find_locales()
+        return cast(str, text)  # 'cause fluent_compiler type-ignored
 
     def find_locales(self) -> Dict[str, FluentBundle]:
         """
@@ -34,6 +35,12 @@ class FluentCompileCore(BaseCore):
 
         :return: dict with locales
         """
+        if FluentBundle is None:
+            raise RuntimeError(
+                f"{type(self).__name__} can be used only when fluent_compiler installed\n"
+                "Just install fluent_compiler (`pip install fluent_compiler`)"
+            )
+
         translations: Dict[str, FluentBundle] = {}
         locales = self._extract_locales(self.path)
         for locale, paths in self._find_locales(self.path, locales, ".flt").items():

@@ -8,20 +8,24 @@ from managers.base import BaseManager
 
 class I18nContext(ContextInstanceMixin["I18nContext"]):
     locale: str
-    core: BaseCore
+    core: BaseCore[Any]
     manager: BaseManager
     data: Dict[str, Any]
 
-    def __init__(self, locale: str, core: BaseCore, manager: BaseManager, data: Dict[str, Any]):
+    def __init__(
+        self,
+        locale: str, core: BaseCore[Any],
+        manager: BaseManager, data: Dict[str, Any]
+    ) -> None:
         self.locale = locale
         self.core = core
         self.manager = manager
         self.data = data
 
-    def get(self, key: str, **kwargs):
+    def get(self, key: str, **kwargs: Any) -> str:
         return self.core.get(locale=self.locale, key=key, **kwargs)
 
-    async def set_locale(self, locale: str):
+    async def set_locale(self, locale: str) -> None:
         await self.manager.set_locale(
             locale=locale,
             core=self.core,
