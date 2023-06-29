@@ -8,7 +8,7 @@ from aiogram.types import TelegramObject
 from context import I18nContext
 from cores.base import BaseCore
 from managers.base import BaseManager
-from managers.fsm_manager import FsmManager
+from managers.fsm import FSMManager
 
 
 def default(default_dump: Callable[..., str]) -> Callable[..., str]:
@@ -48,7 +48,7 @@ class I18nMiddleware(BaseMiddleware):
     ) -> None:
         self.core = core
         if manager is None:
-            manager = FsmManager(default_locale=default_locale, key=locale_key)
+            manager = FSMManager(default_locale=default_locale, key=locale_key)
         self.manager = manager
         self.context_key = context_key
         self.locale_key = locale_key

@@ -3,7 +3,10 @@ from typing import Dict, Callable, Optional, Any, cast
 try:
     from fluent_compiler.bundle import FluentBundle  # type: ignore[import]
 except ImportError:
-    FluentBundle = None
+    raise ImportError(
+        "FluentCompileCore can be used only when fluent_compiler installed\n"
+        "Just install fluent_compiler (`pip install fluent_compiler`)"
+    )
 
 from cores.base import BaseCore
 
@@ -22,7 +25,7 @@ class FluentCompileCore(BaseCore[FluentBundle]):
         self.functions = functions
         self.default_locale = default_locale
 
-    def get(self, locale: str, key: str, *args: Any, **kwargs: Any) -> str:
+    def get(self, locale: str, key: str, **kwargs: Any) -> str:  # type: ignore[override]
         translator: FluentBundle = self.get_translator(locale=locale)
         text, errors = translator.format(message_id=key, args=kwargs)
         if errors:
@@ -35,12 +38,6 @@ class FluentCompileCore(BaseCore[FluentBundle]):
 
         :return: dict with locales
         """
-        if FluentBundle is None:
-            raise RuntimeError(
-                f"{type(self).__name__} can be used only when fluent_compiler installed\n"
-                "Just install fluent_compiler (`pip install fluent_compiler`)"
-            )
-
         translations: Dict[str, FluentBundle] = {}
         locales = self._extract_locales(self.path)
         for locale, paths in self._find_locales(self.path, locales, ".flt").items():

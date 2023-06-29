@@ -5,7 +5,7 @@ from aiogram.types import TelegramObject
 from managers.base import BaseManager
 
 
-class FsmManager(BaseManager):
+class FSMManager(BaseManager):
     key: str
 
     def __init__(self, key: str = "locale", default_locale: str = "en"):

@@ -4,7 +4,7 @@ try:
     from fluent.runtime import FluentBundle, FluentResource
 except ImportError:
     raise ImportError(
-        f"FluentRuntimeCore can be used only when fluent.runtime installed\n"
+        "FluentRuntimeCore can be used only when fluent.runtime installed\n"
         "Just install fluent.runtime (`pip install fluent.runtime`)"
     )
 
@@ -26,7 +26,7 @@ class FluentRuntimeCore(BaseCore[FluentBundle]):
         self.default_locale = default_locale
         self.pre_compile = pre_compile
 
-    def get(self, locale: str, key: str, *args: Any, **kwargs: Any) -> str:
+    def get(self, locale: str, key: str, **kwargs: Any) -> str:  # type: ignore[override]
         translator: FluentBundle = self.get_translator(locale=locale)
         message = translator.get_message(message_id=key)
         if message.value is None:
