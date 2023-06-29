@@ -1,7 +1,7 @@
-from typing import Dict, Callable
+from typing import Dict, Callable, Optional
 
 from cores.base import BaseCore
-from fluent_compiler.bundle import FluentBundle
+from fluent_compiler.bundle import FluentBundle  # type: ignore
 
 
 class FluentCompileCore(BaseCore):
@@ -11,7 +11,7 @@ class FluentCompileCore(BaseCore):
                  path: str,
                  default_locale: str = "en",
                  use_isolating: bool = True,
-                 functions: Dict[str, Callable] = None
+                 functions: Optional[Dict[str, Callable]] = None
                  ):
         self.path = path
         self.use_isolating = use_isolating

@@ -25,5 +25,5 @@ class FsmManager(BaseManager):
         return locale
 
     async def set_locale(self, locale: str, *args, **kwargs) -> None:
-        state: Optional[FSMContext] = kwargs['data'].get("state")
+        state: FSMContext = kwargs['data'].get("state")
         await state.update_data(data={self.key: locale})

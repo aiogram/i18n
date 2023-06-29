@@ -1,4 +1,4 @@
-from typing import Dict, Callable
+from typing import Dict, Callable, Optional
 from cores.base import BaseCore
 
 from fluent.runtime import FluentBundle, FluentResource
@@ -9,7 +9,7 @@ class FluentRuntimeCore(BaseCore):
 
     def __init__(self, path: str, default_locale: str = "en",
                  use_isolating: bool = True,
-                 functions: Dict[str, Callable] = None,
+                 functions: Optional[Dict[str, Callable]] = None,
                  pre_compile: bool = True):
         self.path = path
         self.use_isolating = use_isolating
@@ -19,8 +19,11 @@ class FluentRuntimeCore(BaseCore):
 
     def get(self, locale: str, key: str, **kwargs):
         translator: FluentBundle = self.get_translator(locale=locale)
+        message = translator.get_message(message_id=key)
+        if message.value is None:
+            raise ValueError("key", key, "not find")
         text, errors = translator.format_pattern(
-            pattern=translator.get_message(message_id=key).value,
+            pattern=message.value,
             args=kwargs
         )
         if errors:

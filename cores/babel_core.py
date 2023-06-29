@@ -1,6 +1,5 @@
 import gettext
-from pathlib import Path
-from typing import Dict, Union
+from typing import Dict
 
 
 from cores.base import BaseCore
@@ -12,7 +11,7 @@ class BabelCore(BaseCore):
     def __init__(
             self,
             *,
-            path: Union[str, Path],
+            path: str,
             default_locale: str = "en"
     ) -> None:
         self.path = path

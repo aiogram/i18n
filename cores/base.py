@@ -30,7 +30,7 @@ class BaseCore:
 
     @staticmethod
     def _find_locales(path: str, locales: List[str], ext: Optional[str] = None) -> Dict[str, List[str]]:
-        paths = {}
+        paths: Dict[str, List[str]] = {}
         if "{locale}" not in path:
             path = os.path.join(path, "{locale}")
         for locale in locales:
@@ -45,7 +45,7 @@ class BaseCore:
                     continue
                 paths[locale].append(obj_path)
         return paths
-    
+
     @property
     def available_locales(self):
         return tuple(self.locales.keys())
