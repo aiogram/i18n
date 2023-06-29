@@ -10,4 +10,4 @@ class ConstManager(BaseManager):
         return self.default_locale
 
     async def set_locale(self, locale: str, *args: Any, **kwargs: Any) -> None:
-        ...
+        self.default_locale = locale

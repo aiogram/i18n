@@ -25,12 +25,12 @@ class FluentCompileCore(BaseCore[FluentBundle]):
         self.functions = functions
         self.default_locale = default_locale
 
-    def get(self, locale: str, key: str, **kwargs: Any) -> str:  # type: ignore[override]
+    def get(self, locale: str, key: str, **kwargs: Any) -> str:
         translator: FluentBundle = self.get_translator(locale=locale)
         text, errors = translator.format(message_id=key, args=kwargs)
         if errors:
             raise ValueError("\n".join(errors))
-        return cast(str, text)  # 'cause fluent_compiler type-ignored
+        return cast(str, text)  # 'cause fluent_compiler is marked as type: ignored
 
     def find_locales(self) -> Dict[str, FluentBundle]:
         """
@@ -40,7 +40,7 @@ class FluentCompileCore(BaseCore[FluentBundle]):
         """
         translations: Dict[str, FluentBundle] = {}
         locales = self._extract_locales(self.path)
-        for locale, paths in self._find_locales(self.path, locales, ".flt").items():
+        for locale, paths in self._find_locales(self.path, locales, ".ftl").items():
             texts = []
             for path in paths:
                 with open(path, "r", encoding="utf8") as fp:

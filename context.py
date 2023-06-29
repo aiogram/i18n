@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from typing import Dict, Any
 
 from aiogram.utils.mixins import ContextInstanceMixin
@@ -15,7 +17,7 @@ class I18nContext(ContextInstanceMixin["I18nContext"]):
     def __init__(
         self,
         locale: str, core: BaseCore[Any],
-        manager: BaseManager, data: Dict[str, Any]
+        manager: BaseManager, data: Dict[str, Any],
     ) -> None:
         self.locale = locale
         self.core = core
@@ -23,7 +25,7 @@ class I18nContext(ContextInstanceMixin["I18nContext"]):
         self.data = data
 
     def get(self, key: str, **kwargs: Any) -> str:
-        return self.core.get(locale=self.locale, key=key, **kwargs)
+        return self.core.get(self.locale, key, **kwargs)
 
     async def set_locale(self, locale: str) -> None:
         await self.manager.set_locale(

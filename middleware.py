@@ -47,9 +47,7 @@ class I18nMiddleware(BaseMiddleware):
         default_locale: str = "en",
     ) -> None:
         self.core = core
-        if manager is None:
-            manager = FSMManager(default_locale=default_locale, key=locale_key)
-        self.manager = manager
+        self.manager = manager or FSMManager(default_locale=default_locale, key=locale_key)
         self.context_key = context_key
         self.locale_key = locale_key
         self.middleware_key = middleware_key

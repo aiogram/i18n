@@ -13,7 +13,7 @@ class BaseCore(Generic[Translator], ABC):
         self.locales: Dict[str, Translator] = {}
 
     @abstractmethod
-    def get(self, locale: str, key: str, *args: Any, **kwargs: Any) -> str:
+    def get(self, locale: str, key: str, **kwargs: Any) -> str:
         ...
 
     def get_translator(self, locale: str) -> Translator:

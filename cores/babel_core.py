@@ -30,6 +30,6 @@ class BabelCore(BaseCore[GNUTranslations]):
 
         return translations
 
-    def get(self, locale: str, key: str, *args: Any, **kwargs: Any) -> str:
+    def get(self, locale: str, key: str, **kwargs: Any) -> str:
         translator = self.get_translator(locale=locale)
-        return translator.gettext(key).format(*args, **kwargs)
+        return translator.gettext(key).format(**kwargs)

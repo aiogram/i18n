@@ -9,7 +9,7 @@ class LazyProxy(UserString):
     kwargs: Dict[str, Any]
 
     def __init__(  # noqa
-        self, key: str, **kwargs: Dict[str, Any]
+        self, key: str, **kwargs: Any
     ) -> None:
         self.key = key
         self.kwargs = kwargs
