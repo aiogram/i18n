@@ -23,18 +23,23 @@ mw = I18nMiddleware(
     )
 )
 
+rkb = ReplyKeyboardMarkup(
+    keyboard=[
+        [KeyboardButton(text=LazyProxy(key="help"))]
+    ], resize_keyboard=True
+)
 
 @router.message(CommandStart())
 async def cmd_start(message: types.Message, i18n: I18nContext):
     await message.reply(
         text=i18n.get('hello', user=message.from_user.full_name),
-        reply_markup=ikb
+        reply_markup=rkb
     )
 
 
 @router.message(F.text == LazyProxy(key="help"))
 async def cmd_help(message: types.Message):
-    await message.reply(text=">> " + message.text + " <<")
+    await message.reply(text="-- " + message.text + " --")
 
 async def main():
     dp = Dispatcher()
