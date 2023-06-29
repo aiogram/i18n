@@ -1,10 +1,10 @@
-import gettext
+from gettext import GNUTranslations
 from typing import Dict, Any
 
 from cores.base import BaseCore
 
 
-class BabelCore(BaseCore[gettext.GNUTranslations]):
+class BabelCore(BaseCore[GNUTranslations]):
     def __init__(
         self, *,
         path: str,
@@ -14,16 +14,16 @@ class BabelCore(BaseCore[gettext.GNUTranslations]):
         self.path = path
         self.default_locale = default_locale
 
-    def find_locales(self) -> Dict[str, gettext.GNUTranslations]:
+    def find_locales(self) -> Dict[str, GNUTranslations]:
         """
         Load all compiled locales from path
 
         :return: dict with locales
         """
-        translations: Dict[str, gettext.GNUTranslations] = {}
+        translations: Dict[str, GNUTranslations] = {}
         locales = self._extract_locales(self.path)
         for locale, paths in self._find_locales(self.path, locales, ".mo").items():
-            trans = translations[locale] = gettext.GNUTranslations()
+            trans = translations[locale] = GNUTranslations()
             for path in paths:
                 with open(path, "rb") as fp:
                     trans._parse(fp=fp) # noqa

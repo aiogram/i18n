@@ -9,14 +9,14 @@ from lazy_proxy import LazyProxy
 
 
 class KeyboardButton(_KeyboardButton):
-    text: Union[str, LazyProxy]
+    text: Union[str, LazyProxy]  # type: ignore[assignment]
 
     class Config:
         arbitrary_types_allowed = True
 
 
 class InlineKeyboardButton(_InlineKeyboardButton):
-    text: Union[str, LazyProxy]
+    text: Union[str, LazyProxy]  # type: ignore[assignment]
 
     class Config:
         arbitrary_types_allowed = True

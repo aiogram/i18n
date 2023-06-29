@@ -22,10 +22,11 @@ from aiogram.filters import CommandStart
 from aiogram.types import ReplyKeyboardMarkup, Message
 
 from context import I18nContext
-from cores import FluentRuntimeCore
+from cores.fluent_runtime_core import FluentRuntimeCore
 from lazy_proxy import LazyProxy
 from middleware import I18nMiddleware
 from utils.keyboard import KeyboardButton  # you should import the keyboard from here if you want to use LazyProxy
+
 
 router = Router(name=__name__)
 rkb = ReplyKeyboardMarkup(
@@ -67,4 +68,5 @@ async def main() -> None:
 if __name__ == "__main__":
     with suppress(KeyboardInterrupt):
         asyncio.run(main())
+
 ```
