@@ -1,0 +1,7 @@
+.idea/
+/venv/
+.vscode/
+*.ipynb
+docker-compose.yml
+.env
+.mypy_cache

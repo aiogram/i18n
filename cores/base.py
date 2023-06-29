@@ -1,29 +1,34 @@
 import os
-from abc import abstractmethod
-from typing import List, Dict, Optional, Any
+from abc import abstractmethod, ABC
+from typing import List, Dict, Optional, Any, Tuple, TypeVar, Generic
 
 
-class BaseCore:
-    locales: Dict[str, Any]
+Translator = TypeVar("Translator")
+
+
+class BaseCore(Generic[Translator], ABC):
     default_locale: str
 
+    def __init__(self) -> None:
+        self.locales: Dict[str, Translator] = {}
+
     @abstractmethod
-    def get(self, locale: str, key: str, **kwargs):
+    def get(self, locale: str, key: str, *args: Any, **kwargs: Any) -> str:
         ...
 
-    def get_translator(self, locale: str):
+    def get_translator(self, locale: str) -> Translator:
         if locale not in self.locales:
             locale = self.default_locale
         return self.locales[locale]
 
-    async def startup(self, *args, **kwargs):
-        ...
+    async def startup(self) -> None:
+        self.locales.update(self.find_locales())
 
-    async def shutdown(self, *args, **kwargs):
+    async def shutdown(self, *args: Any, **kwargs: Any) -> None:
         ...
 
     @staticmethod
-    def _extract_locales(path: str):
+    def _extract_locales(path: str) -> List[str]:
         if "{locale}" in path:
             path = path.split("{locale}")[0]
         return [p for p in os.listdir(path) if os.path.isdir(os.path.join(path, p))]
@@ -46,6 +51,10 @@ class BaseCore:
                 paths[locale].append(obj_path)
         return paths
 
+    @abstractmethod
+    def find_locales(self) -> Dict[str, Translator]:
+        ...
+
     @property
-    def available_locales(self):
+    def available_locales(self) -> Tuple[str, ...]:
         return tuple(self.locales.keys())
