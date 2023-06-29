@@ -1,6 +1,7 @@
 from __future__ import annotations
 
-from typing import Dict, Any
+from functools import partial
+from typing import Dict, Any, Callable
 
 from aiogram.utils.mixins import ContextInstanceMixin
 
@@ -26,6 +27,9 @@ class I18nContext(ContextInstanceMixin["I18nContext"]):
 
     def get(self, key: str, **kwargs: Any) -> str:
         return self.core.get(self.locale, key, **kwargs)
+
+    def __getattr__(self, item: str) -> Callable[..., str]:
+        return partial(self.get, item)
 
     async def set_locale(self, locale: str) -> None:
         await self.manager.set_locale(

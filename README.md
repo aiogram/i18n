@@ -21,6 +21,7 @@ from aiogram.enums import ParseMode
 from aiogram.filters import CommandStart
 from aiogram.types import ReplyKeyboardMarkup, Message
 
+from context import I18nContext
 from cores.fluent_runtime_core import FluentRuntimeCore
 from middleware import I18nMiddleware
 from utils.attrib_tracer import T
@@ -30,21 +31,21 @@ from utils.keyboard import KeyboardButton  # you should import the keyboard from
 router = Router(name=__name__)
 rkb = ReplyKeyboardMarkup(
     keyboard=[
-        [KeyboardButton(text=T.help.lazy())]  # aka LazyProxy("help")
+        [KeyboardButton(text=T.help.lazy())]  # aka LazyProxy(key="help")
     ], resize_keyboard=True
 )
 
 
 @router.message(CommandStart())
-async def cmd_start(message: Message) -> Any:
+async def cmd_start(message: Message, i18n: I18nContext) -> Any:
     name = message.from_user.mention_html()
     return message.reply(
-        text=T.hello(user=name),  # aka i18n.get("hello", user=message.from_user.full_name)
+        text=i18n.hello(user=name),  # or i18n.get("hello", user=name)
         reply_markup=rkb
     )
 
 
-@router.message(F.text == T.help.lazy())  # aka LazyProxy("help")
+@router.message(F.text == T.help.lazy())  # aka LazyProxy(key="help")
 async def cmd_help(message: Message) -> Any:
     return message.reply(text="-- " + message.text + " --")
 
