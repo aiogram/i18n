@@ -29,7 +29,7 @@ from utils.keyboard import KeyboardButton  # you should import the keyboard from
 router = Router(name=__name__)
 rkb = ReplyKeyboardMarkup(
     keyboard=[
-        [KeyboardButton(text=LazyProxy(key="help"))]  # or T.help.lazy()
+        [KeyboardButton(text=LazyProxy(key="help"))]  # or I18n.help()
     ], resize_keyboard=True
 )
 
@@ -43,7 +43,7 @@ async def cmd_start(message: Message, i18n: I18n) -> Any:
     )
 
 
-@router.message(F.text == LazyProxy(key="help"))
+@router.message(F.text == I18n.help())
 async def cmd_help(message: Message) -> Any:
     return message.reply(text="-- " + message.text + " --")
 
