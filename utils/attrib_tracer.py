@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from context import I18nContext
+from context import I18n
 from lazy_proxy import LazyProxy
 
 
@@ -16,7 +16,7 @@ class AttribTracer:
         return self
 
     def __call__(self, **kwargs: Any) -> str:
-        i18n = I18nContext.get_current(False)
+        i18n = I18n.get_current(False)
         text = i18n.get(self._query[:-1], **kwargs)
         self._query = ""
         return text

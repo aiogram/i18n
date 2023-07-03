@@ -1,8 +1,6 @@
 from collections import UserString
 from typing import Any, Dict
 
-from context import I18nContext
-
 
 class LazyProxy(UserString):
     key: str
@@ -16,7 +14,9 @@ class LazyProxy(UserString):
 
     @property
     def data(self) -> str:  # type: ignore[override]
-        context = I18nContext.get_current()
+        from context import I18n
+
+        context = I18n.get_current()
         if context:
             return context.get(key=self.key, **self.kwargs)
         return self.key

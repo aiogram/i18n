@@ -6,10 +6,16 @@ from typing import Dict, Any, Callable
 from aiogram.utils.mixins import ContextInstanceMixin
 
 from cores.base import BaseCore
+from lazy_proxy import LazyProxy
 from managers.base import BaseManager
 
 
-class I18nContext(ContextInstanceMixin["I18nContext"]):
+class I18nMeta(type):
+    def __getattr__(self, item: str) -> Callable[..., LazyProxy]:
+        return partial(LazyProxy, item)
+
+
+class I18n(ContextInstanceMixin["I18n"], metaclass=I18nMeta):
     locale: str
     core: BaseCore[Any]
     manager: BaseManager
