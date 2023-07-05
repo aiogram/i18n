@@ -20,7 +20,7 @@ from aiogram.enums import ParseMode
 from aiogram.filters import CommandStart
 from aiogram.types import ReplyKeyboardMarkup, Message
 
-from context import I18n
+from context import I18nContext
 from cores.fluent_runtime_core import FluentRuntimeCore
 from lazy_proxy import LazyProxy
 from middleware import I18nMiddleware
@@ -35,7 +35,7 @@ rkb = ReplyKeyboardMarkup(
 
 
 @router.message(CommandStart())
-async def cmd_start(message: Message, i18n: I18n) -> Any:
+async def cmd_start(message: Message, i18n: I18nContext) -> Any:
     name = message.from_user.mention_html()
     return message.reply(
         text=i18n.hello(user=name),  # aka i18n.get("hello", user=name)
@@ -43,7 +43,7 @@ async def cmd_start(message: Message, i18n: I18n) -> Any:
     )
 
 
-@router.message(F.text == I18n.help())
+@router.message(F.text == I18nContext.help())
 async def cmd_help(message: Message) -> Any:
     return message.reply(text="-- " + message.text + " --")
 

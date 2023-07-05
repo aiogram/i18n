@@ -5,7 +5,7 @@ from typing import Callable, Dict, Any, Awaitable, Optional, Sequence
 from aiogram import Dispatcher, BaseMiddleware, Bot
 from aiogram.types import TelegramObject
 
-from context import I18n
+from context import I18nContext
 from cores.base import BaseCore
 from managers.base import BaseManager
 from managers.fsm import FSMManager
@@ -45,6 +45,7 @@ class I18nMiddleware(BaseMiddleware):
         locale_key: str = "locale",
         middleware_key: str = "i18n_middleware",
         default_locale: str = "en",
+        separator: str = "-"
     ) -> None:
         self.core = core
         self.manager = manager or FSMManager(default_locale=default_locale, key=locale_key)
@@ -52,6 +53,7 @@ class I18nMiddleware(BaseMiddleware):
         self.locale_key = locale_key
         self.middleware_key = middleware_key
         self.default_locale = default_locale
+        self.separator = separator
 
     def setup(self, dispatcher: Dispatcher) -> None:
         dispatcher.update.outer_middleware.register(self)
@@ -67,14 +69,15 @@ class I18nMiddleware(BaseMiddleware):
     ) -> Any:
         locale = await self.manager.get_locale(event=event, data=data)
 
-        data[self.context_key] = I18n(
+        data[self.context_key] = I18nContext(
             locale=locale,
             core=self.core,
             manager=self.manager,
-            data=data
+            data=data,
+            separator=self.separator
         )
         data[self.locale_key] = locale
         data[self.middleware_key] = self
 
-        I18n.set_current(data[self.context_key])
+        I18nContext.set_current(data[self.context_key])
         return await handler(event, data)

@@ -1,24 +1,22 @@
 from collections import UserString
 from typing import Any, Dict
 
+from context import I18nContext
+
 
 class LazyProxy(UserString):
     key: str
     kwargs: Dict[str, Any]
 
-    def __init__(  # noqa
-        self, key: str, **kwargs: Any
-    ) -> None:
+    def __init__(self, key: str, **kwargs: Any) -> None:  # noqa
         self.key = key
         self.kwargs = kwargs
 
     @property
     def data(self) -> str:  # type: ignore[override]
-        from context import I18n
-
-        context = I18n.get_current()
+        context = I18nContext.get_current()
         if context:
-            return context.get(key=self.key, **self.kwargs)
+            return context.get(self.key, **self.kwargs)
         return self.key
 
     def __repr__(self) -> str:
