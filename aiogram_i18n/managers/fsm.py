@@ -2,7 +2,7 @@ from typing import Dict, Any, Optional
 from aiogram.fsm.context import FSMContext
 from aiogram.types import TelegramObject
 
-from managers.base import BaseManager
+from aiogram_i18n.managers.base import BaseManager
 
 
 class FSMManager(BaseManager):

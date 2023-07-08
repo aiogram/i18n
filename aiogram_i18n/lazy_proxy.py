@@ -1,7 +1,7 @@
 from collections import UserString
 from typing import Any, Dict
 
-from context import I18nContext
+from aiogram_i18n.context import I18nContext
 
 
 class LazyProxy(UserString):

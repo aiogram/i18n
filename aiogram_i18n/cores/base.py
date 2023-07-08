@@ -8,9 +8,10 @@ Translator = TypeVar("Translator")
 
 class BaseCore(Generic[Translator], ABC):
     default_locale: str
+    locales: Dict[str, Translator]
 
     def __init__(self) -> None:
-        self.locales: Dict[str, Translator] = {}
+        self.locales = {}
 
     @abstractmethod
     def get(self, locale: str, key: str, *args: Any, **kwargs: Any) -> str:

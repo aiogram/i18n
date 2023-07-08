@@ -1,7 +1,7 @@
 from gettext import GNUTranslations
 from typing import Dict, Any
 
-from cores.base import BaseCore
+from aiogram_i18n.cores.base import BaseCore
 
 
 class BabelCore(BaseCore[GNUTranslations]):

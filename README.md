@@ -6,9 +6,6 @@ FluentCompileCore:
 FluentRuntimeCore:
 ```pip install fluent.runtime```
 
-BabelCore:
-```pip install Babel```
-
 
 ```python
 import asyncio
@@ -21,11 +18,9 @@ from aiogram.enums import ParseMode
 from aiogram.filters import CommandStart
 from aiogram.types import ReplyKeyboardMarkup, Message
 
-from context import I18nContext
-from cores.fluent_runtime_core import FluentRuntimeCore
-from lazy_proxy import LazyProxy
-from middleware import I18nMiddleware
-from utils.keyboard import KeyboardButton  # you should import the keyboard from here if you want to use LazyProxy
+from aiogram_i18n import I18nContext, LazyProxy, I18nMiddleware
+from aiogram_i18n.cores.fluent_runtime_core import FluentRuntimeCore
+from aiogram_i18n.utils.keyboard import KeyboardButton  # you should import the keyboard from here if you want to use LazyProxy
 
 
 router = Router(name=__name__)

@@ -8,7 +8,7 @@ except ImportError:
         "Just install fluent_compiler (`pip install fluent_compiler`)"
     )
 
-from cores.base import BaseCore
+from aiogram_i18n.cores.base import BaseCore
 
 
 class FluentCompileCore(BaseCore[FluentBundle]):

@@ -2,7 +2,7 @@ from typing import Any, Dict
 
 from aiogram.types import TelegramObject
 
-from managers.base import BaseManager
+from aiogram_i18n.managers.base import BaseManager
 
 
 class ConstManager(BaseManager):

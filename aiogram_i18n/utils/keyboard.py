@@ -5,7 +5,7 @@ from aiogram.types import (
     InlineKeyboardButton as _InlineKeyboardButton
 )
 
-from lazy_proxy import LazyProxy
+from aiogram_i18n import LazyProxy
 
 
 class KeyboardButton(_KeyboardButton):

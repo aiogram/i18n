@@ -8,7 +8,7 @@ except ImportError:
         "Just install fluent.runtime (`pip install fluent.runtime`)"
     )
 
-from cores.base import BaseCore
+from aiogram_i18n.cores.base import BaseCore
 
 
 class FluentRuntimeCore(BaseCore[FluentBundle]):
