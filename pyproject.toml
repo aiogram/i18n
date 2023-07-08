@@ -1,0 +1,41 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "aiogram_i18n"
+version = "1.0"
+authors = [
+  { name="RootShinobi" },
+]
+description = "small translation tools for aiogram"
+readme = "README.md"
+license = {text = "MIT License"}
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+dependencies = [
+    "aiogram~=3.0.0b7",
+]
+
+keywords = [
+    "telegram",
+    "bot",
+    "api",
+    "framework",
+    "wrapper",
+    "asyncio",
+    "i18n",
+    "aiogram",
+    "fluent"
+]
+
+[project.urls]
+Repository = "https://github.com/RootShinobi/aiogram_i18n"
+
+[project.scripts]
+cli = "aiogram_i18n.__main__:main"
