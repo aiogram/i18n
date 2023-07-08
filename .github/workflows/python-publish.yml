@@ -29,8 +29,8 @@ jobs:
           mkdir -p try_install
           cd try_install
           virtualenv venv
-          venv/bin/pip install ../dist/aiogram-*.whl
-          venv/bin/python -c "import aiogram; print(aiogram.__version__)"
+          venv/bin/pip install ../dist/aiogram_i18n-*.whl
+          venv/bin/python -c "import aiogram_i18n; print(aiogram_i18n.__version__)"
       - name: Publish artifacts
         uses: actions/upload-artifact@v2
         with:
