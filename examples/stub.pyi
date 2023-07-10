@@ -1,0 +1,9 @@
+from typing import Any
+
+from aiogram_i18n import I18nContext as _I18nContext
+
+
+class I18nContext(_I18nContext):
+    def hello(self, *, user: Any) -> str: ...
+    def cur_lang(self, *, language: Any) -> str: ...
+    def help(self) -> str: ...

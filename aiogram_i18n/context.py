@@ -1,6 +1,6 @@
 from contextlib import contextmanager
 from functools import partial
-from typing import Dict, Any, Generator
+from typing import Dict, Any, Generator, Callable
 
 from aiogram.utils.mixins import ContextInstanceMixin
 
@@ -16,10 +16,10 @@ class I18nContext(ContextInstanceMixin["I18nContext"]):
     key_sep: str
 
     def __init__(
-            self,
-            locale: str, core: BaseCore[Any],
-            manager: BaseManager, data: Dict[str, Any],
-            key_sep: str = "-"
+        self,
+        locale: str, core: BaseCore[Any],
+        manager: BaseManager, data: Dict[str, Any],
+        key_sep: str = "-"
     ) -> None:
         self.locale = locale
         self.core = core
@@ -39,7 +39,7 @@ class I18nContext(ContextInstanceMixin["I18nContext"]):
         )
         self.locale = locale
 
-    def __getattr__(self, item: str) -> partial:
+    def __getattr__(self, item: str) -> Callable[..., str]:
         return partial(self.get, key=item.replace("_", self.key_sep))
 
     @contextmanager

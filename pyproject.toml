@@ -20,6 +20,7 @@ classifiers = [
 
 dependencies = [
     "aiogram~=3.0.0b7",
+    "click==8.1.4"
 ]
 
 keywords = [
@@ -39,3 +40,14 @@ Repository = "https://github.com/RootShinobi/aiogram_i18n"
 
 [project.scripts]
 cli = "aiogram_i18n.__main__:main"
+
+[tool.mypy]
+exclude = [
+    "\\.?venv",
+    "\\.idea",
+    "\\.test"
+]
+
+[[tool.mypy.overrides]]
+module = "mre"
+strict_optional = false
