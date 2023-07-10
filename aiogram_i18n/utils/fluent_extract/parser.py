@@ -1,18 +1,13 @@
 from __future__ import annotations
 
 import os
-from typing import Sequence
+from typing import Sequence, Dict, cast, Any
 
-try:
-    from libcst import parse_module
-except ImportError:
-    raise ImportError(
-        "Fluent keys extractor can be used only when libcst installed\n"
-        "Just install libcst (`pip install libcst`)"
-    )
+from click import echo
+from libcst import parse_module, matchers as m, Module
 
-from .models import FluentTemplate
-from .visitor import FluentKeyVisitor
+from .models import FluentTemplate, FluentMatch, FluentKeywords
+from ... import LazyProxy
 
 
 class FluentKeyParser:
@@ -23,19 +18,61 @@ class FluentKeyParser:
         exclude_dirs: Sequence[str], exclude_keys: Sequence[str]
     ) -> None:
         self.input_dirs = set(input_dirs)
-        self.output = output_file
+        self.output_file = output_file
+        self.i18n_keys = set(i18n_keys)
+        self.separator = separator
         self.exclude_dirs = exclude_dirs
         self.exclude_keys = list(exclude_keys)
-        self.visitor = FluentKeyVisitor(set(i18n_keys), separator)
+        self.result: Dict[str, FluentKeywords] = {}
+
+    @property
+    def _matcher(self) -> m.OneOf[m.Call]:
+        keywords = m.SaveMatchedNode(
+            m.ZeroOrMore(m.Arg(keyword=m.Name())), name="keywords"
+        )
+
+        return m.Call(
+            func=m.Attribute(
+                value=m.OneOf(*map(m.Name, self.i18n_keys)),
+                attr=m.Name(value="get"),
+            ) | m.Name(value=LazyProxy.__name__),
+            args=[
+                m.Arg(value=m.SaveMatchedNode(m.SimpleString(), name="key")),
+                keywords
+            ]
+        ) | m.Call(
+            func=m.Attribute(
+                value=m.OneOf(*map(m.Name, self.i18n_keys)),
+                attr=m.SaveMatchedNode(m.Name(), name="key"),
+            ),
+            args=[keywords]
+        )
+
+    def parse_tree(self, tree: Module) -> None:
+        keys: Dict[str, FluentKeywords] = {}
+        matches = tuple(
+            FluentMatch(**cast(Dict[str, Any], match)) for match in
+            m.extractall(tree, self._matcher)
+        )
+
+        for match in matches:
+            key = match.extract_key(self.separator)
+            kw = keys.get(key)
+            if not kw:
+                keys[key] = FluentKeywords.from_args(match.keywords)
+            else:
+                kw.keywords.extend(match.extract_keywords())
+
+        self.result.update(keys)
 
     def parse_file(self, path: str) -> None:
         try:
             with open(path, mode="r", encoding="utf-8") as py:
                 tree = parse_module(py.read())
-                tree.visit(self.visitor)
+                self.parse_tree(tree)
 
         except PermissionError as e:
-            print(f"Can't parse file {path}: {e}")
+            echo(f"Can't parse file {path}: {e}")
 
     def parse_dir(self, path: str) -> None:
         for p in os.listdir(path):
@@ -58,8 +95,8 @@ class FluentKeyParser:
                 self.parse_file(path)
 
         template = FluentTemplate(
-            filename=self.output,
-            keys=self.visitor.keys,
+            filename=self.output_file,
+            keys=self.result,
             exclude_keys=self.exclude_keys
         )
         template.write()

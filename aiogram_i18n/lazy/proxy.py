@@ -9,7 +9,7 @@ class LazyProxy(UserString):
     kwargs: Dict[str, Any]
 
     def __init__(  # noqa
-        self, key: str, **kwargs: Dict[str, Any]
+        self, key: str, /, **kwargs: Dict[str, Any]
     ) -> None:
         self.key = key
         self.kwargs = kwargs
@@ -18,7 +18,8 @@ class LazyProxy(UserString):
     def data(self) -> str:  # type: ignore[override]
         context = I18nContext.get_current()
         if context:
-            return context.get(key=self.key, **self.kwargs)
+            key = self.key.replace("_", context.key_separator)
+            return context.get(key, **self.kwargs)
         return self.key
 
     def __repr__(self) -> str:

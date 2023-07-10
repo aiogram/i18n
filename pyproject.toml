@@ -42,6 +42,7 @@ Repository = "https://github.com/RootShinobi/aiogram_i18n"
 cli = "aiogram_i18n.__main__:main"
 
 [tool.mypy]
+plugins = ["pydantic.mypy"]
 exclude = [
     "\\.?venv",
     "\\.idea",

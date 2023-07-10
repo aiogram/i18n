@@ -1,8 +1,8 @@
 
 from .parser import FluentKeyParser
-from .models import FluentKey, FluentTemplate
+from .models import FluentKeywords, FluentTemplate, FluentMatch
 
 
 __all__ = [
-    "FluentKeyParser", "FluentKey", "FluentTemplate"
+    "FluentKeyParser", "FluentKeywords", "FluentTemplate", "FluentMatch"
 ]

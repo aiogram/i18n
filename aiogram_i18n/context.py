@@ -13,22 +13,22 @@ class I18nContext(ContextInstanceMixin["I18nContext"]):
     core: BaseCore[Any]
     manager: BaseManager
     data: Dict[str, Any]
-    key_sep: str
+    key_separator: str
 
     def __init__(
         self,
         locale: str, core: BaseCore[Any],
         manager: BaseManager, data: Dict[str, Any],
-        key_sep: str = "-"
+        key_separator: str = "-"
     ) -> None:
         self.locale = locale
         self.core = core
         self.manager = manager
         self.data = data
-        self.key_sep = key_sep
+        self.key_separator = key_separator
 
-    def get(self, key: str, **kwargs: Any) -> str:
-        return self.core.get(locale=self.locale, key=key, **kwargs)
+    def get(self, key: str, /, **kwargs: Any) -> str:
+        return self.core.get(key, locale=self.locale, **kwargs)
 
     async def set_locale(self, locale: str) -> None:
         await self.manager.set_locale(
@@ -40,7 +40,7 @@ class I18nContext(ContextInstanceMixin["I18nContext"]):
         self.locale = locale
 
     def __getattr__(self, item: str) -> Callable[..., str]:
-        return partial(self.get, key=item.replace("_", self.key_sep))
+        return partial(self.get, key=item.replace("_", self.key_separator))
 
     @contextmanager
     def with_locale(self, locale: str) -> Generator["I18nContext", None, None]:

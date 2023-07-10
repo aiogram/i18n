@@ -1,32 +1,47 @@
-
 from __future__ import annotations
 
 import os
 import re
-from typing import List, Sequence, Dict
+from dataclasses import dataclass
+from typing import List, Sequence, Dict, Tuple, Union, cast
 
-from libcst import Arg
+from click import echo
+from libcst import Arg, SimpleString, Name
 from pydantic import BaseModel, Field
 
 
-class FluentKey(BaseModel):
-    key: str
+@dataclass
+class FluentMatch:
+    key: Union[SimpleString, Name]
+    keywords: Tuple[Arg, ...]
+
+    def extract_key(self, separator: str) -> str:
+        if isinstance(self.key, Name):
+            return self.key.value.replace("_", separator)
+        return self.key.raw_value.replace("_", separator)
+
+    def extract_keywords(self) -> Tuple[str, ...]:
+        return tuple(
+            cast(Name, arg.keyword).value for arg in self.keywords
+        )
+
+
+class FluentKeywords(BaseModel):
     keywords: List[str] = Field(default_factory=list)
 
     def get_placeholders(self) -> Sequence[str]:
         return [f"{{ ${p} }}" for p in set(self.keywords)]
 
     @classmethod
-    def from_args(cls, key: str, args: Sequence[Arg]) -> FluentKey:
+    def from_args(cls, args: Sequence[Arg]) -> FluentKeywords:
         return cls(
-            key=key,
             keywords=[a.keyword.value for a in args if a.keyword]
         )
 
 
 class FluentTemplate(BaseModel):
     filename: str
-    keys: Dict[str, FluentKey]
+    keys: Dict[str, FluentKeywords]
     exclude_keys: List[str] = Field(default_factory=list)
 
     def need_comment(self, key: str, text: str) -> bool:
@@ -34,12 +49,12 @@ class FluentTemplate(BaseModel):
 
     def update(self) -> List[str]:
         lines: List[str] = []
-        comment: bool = False
         removed = 0
 
         with open(self.filename, mode="r", encoding="utf-8") as template:
             raw_lines = template.readlines()
             raw_text = "".join(raw_lines)
+            comment: bool = False
 
             for line in raw_lines:
                 match = re.match(r"([^#]+) =", line)
@@ -53,7 +68,7 @@ class FluentTemplate(BaseModel):
                     line = "# " + line
                 lines.append(line)
 
-        print(f"Removed {removed} keys.")
+        echo(f"Removed {removed} keys.")
         return lines
 
     def write(self) -> None:
@@ -62,15 +77,15 @@ class FluentTemplate(BaseModel):
             lines.extend(self.update())
 
         counter = 0
-        for key in self.keys.values():
-            if key.key in self.exclude_keys:
+        for key, kw in self.keys.items():
+            if key in self.exclude_keys:
                 continue
             counter += 1
-            placeholders = key.get_placeholders()
-            value = key.key if not placeholders else f"{key.key} {' '.join(placeholders)}"
-            lines.append(f"{key.key} = {value}\n")
+            placeholders = kw.get_placeholders()
+            value = key if not placeholders else f"{key} {' '.join(placeholders)}"
+            lines.append(f"{key} = {value}\n")
 
-        print(f"Found {counter} new keys.")
+        echo(f"Found {counter} new keys.")
         with open(self.filename, mode="w", encoding="utf-8") as template:
-            print(f"Writing '{self.filename}' template.")
+            echo(f"Writing '{self.filename}' template.")
             template.write("".join(lines))
