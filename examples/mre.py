@@ -12,23 +12,25 @@ from aiogram_i18n import I18nContext, LazyProxy, I18nMiddleware
 from aiogram_i18n.cores.fluent_runtime_core import FluentRuntimeCore
 from aiogram_i18n.utils.keyboard import KeyboardButton  # you should import the keyboard from here if you want to use LazyProxy
 
+
 router = Router(name=__name__)
 rkb = ReplyKeyboardMarkup(
     keyboard=[
-        [KeyboardButton(text=LazyProxy(key="help"))]
+        [KeyboardButton(text=LazyProxy("help"))]  # or L.help()
     ], resize_keyboard=True
 )
 
 
 @router.message(CommandStart())
 async def cmd_start(message: Message, i18n: I18nContext) -> Any:
+    name = message.from_user.mention_html()
     return message.reply(
-        text=i18n.get("hello", user=message.from_user.full_name),
+        text=i18n.get("hello", user=name),  # or i18n.hello(user=name)
         reply_markup=rkb
     )
 
 
-@router.message(F.text == LazyProxy(key="help"))
+@router.message(F.text == LazyProxy("help"))
 async def cmd_help(message: Message) -> Any:
     return message.reply(text="-- " + message.text + " --")
 
@@ -36,7 +38,7 @@ async def cmd_help(message: Message) -> Any:
 async def main() -> None:
     basicConfig(level=INFO)
     bot = Bot("42:ABC", parse_mode=ParseMode.HTML)
-    i18n = I18nMiddleware(
+    i18n_middleware = I18nMiddleware(
         core=FluentRuntimeCore(
             path="locales/{locale}/LC_MESSAGES"
         )
@@ -44,7 +46,7 @@ async def main() -> None:
 
     dp = Dispatcher()
     dp.include_router(router)
-    i18n.setup(dispatcher=dp)
+    i18n_middleware.setup(dispatcher=dp)
 
     await dp.start_polling(bot)
 

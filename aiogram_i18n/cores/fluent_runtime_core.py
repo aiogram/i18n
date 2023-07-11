@@ -26,7 +26,7 @@ class FluentRuntimeCore(BaseCore[FluentBundle]):
         self.default_locale = default_locale
         self.pre_compile = pre_compile
 
-    def get(self, locale: str, key: str, **kwargs: Any) -> str:  # type: ignore[override]
+    def get(self, key: str, /, locale: str, **kwargs: Any) -> str:
         translator: FluentBundle = self.get_translator(locale=locale)
         message = translator.get_message(message_id=key)
         if message.value is None:

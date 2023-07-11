@@ -14,7 +14,7 @@ class BaseCore(Generic[Translator], ABC):
         self.locales = {}
 
     @abstractmethod
-    def get(self, locale: str, key: str, *args: Any, **kwargs: Any) -> str:
+    def get(self, key: str, /, locale: str, **kwargs: Any) -> str:
         ...
 
     def get_translator(self, locale: str) -> Translator:

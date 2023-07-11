@@ -1,35 +1,49 @@
+
 from os import makedirs, path
-from typing import Dict, List
+from typing import Dict, List, Sequence
 
 try:
     from fluent.syntax import FluentParser
+    from .visitor import FluentVisitor
 except ImportError:
     raise ImportError(
-        "fluent stub generator can be used only when fluent.syntax installed\n"
+        "Fluent stub generator can be used only when fluent.syntax installed\n"
         "Just install fluent.syntax (`pip install fluent.syntax`)"
     )
-from fluent.syntax.ast import Placeable, FunctionReference, VariableReference, SelectExpression, Junk
+
+
+STUB_HEADER = """from typing import Any
+
+from aiogram_i18n import I18nContext as _I18nContext
+from aiogram_i18n.lazy import LazyFactory as _LazyFactory
+
+
+class I18nStubs:
+"""
+
+STUB_FOOTER = """
+
+class I18nContext(I18nStubs, _I18nContext):
+    ...
+    
+
+class LazyFactory(I18nStubs, _LazyFactory):
+    ...
+    
+
+L: LazyFactory
+"""
 
 
 def parse(text: str) -> Dict[str, List[str]]:
-    messages = {}
     resource = FluentParser().parse(text)
     if not resource.body:
         raise ValueError("no body")
-    for message in resource.body:
-        if isinstance(message, Junk):
-            raise ValueError(message.annotations, "from ", message.content)
-        m = messages[message.id.name] = []
-        for element in message.value.elements:
-            if isinstance(element, Placeable):
-                if isinstance(element.expression, FunctionReference):
-                    for pos_arg in element.expression.arguments.positional:
-                        m.append(pos_arg.id.name)
-                elif isinstance(element.expression, VariableReference):
-                    m.append(element.expression.id.name)
-                elif isinstance(element.expression, SelectExpression):
-                    m.append(element.expression.selector.id.name)
-    return messages
+
+    ftl_visitor = FluentVisitor()
+    ftl_visitor.visit(resource)
+
+    return ftl_visitor.messages
 
 
 def parse_file(file: str) -> Dict[str, List[str]]:
@@ -39,13 +53,14 @@ def parse_file(file: str) -> Dict[str, List[str]]:
 
 
 def stub_from_messages(messages: Dict[str, List[str]], kw_only: bool = True) -> str:
-    stub_text = """from aiogram_i18n import I18nContext as _I18nContext\nclass I18nContext(_I18nContext):\n\n\n"""
+    stub_text = STUB_HEADER
     for name, params in messages.items():
+        params = list(map(lambda x: f'{x}: Any', params))
         if params and kw_only:
             params.insert(0, "*")
         params.insert(0, "self")
         stub_text += f"    def {name.replace('-', '_')}({', '.join(params)}) -> str: ...\n"
-    return stub_text
+    return stub_text + STUB_FOOTER
 
 
 def stub_from_file(file: str, kw_only: bool = True) -> str:
@@ -68,12 +83,10 @@ def from_string_to_file(string: str, to_file: str, kw_only: bool = True) -> None
         w.write(stub_from_string(text=string, kw_only=kw_only))
 
 
-def from_files_to_file(files: List[str], to_file: str, kw_only: bool = True):
+def from_files_to_file(files: Sequence[str], to_file: str, kw_only: bool = True) -> None:
     makedirs(path.dirname(to_file), exist_ok=True)
     with open(file=to_file, mode="w", encoding="utf8") as w:
         w.write(stub_from_messages(
-            messages={k: v for file in files for k, v in parse_file(file).items()}
+            messages={k: v for file in files for k, v in parse_file(file).items()},
+            kw_only=kw_only
         ))
-
-
-
