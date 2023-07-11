@@ -20,10 +20,10 @@ class FluentMatch:
             return self.key.value.replace("_", separator)
         return self.key.raw_value.replace("_", separator)
 
-    def extract_keywords(self) -> Tuple[str, ...]:
-        return tuple(
+    def extract_keywords(self) -> List[str]:
+        return [
             cast(Name, arg.keyword).value for arg in self.keywords
-        )
+        ]
 
 
 class FluentKeywords(BaseModel):
@@ -31,12 +31,6 @@ class FluentKeywords(BaseModel):
 
     def get_placeholders(self) -> Sequence[str]:
         return [f"{{ ${p} }}" for p in set(self.keywords)]
-
-    @classmethod
-    def from_args(cls, args: Sequence[Arg]) -> FluentKeywords:
-        return cls(
-            keywords=[a.keyword.value for a in args if a.keyword]
-        )
 
 
 class FluentTemplate(BaseModel):

@@ -59,7 +59,7 @@ class FluentKeyParser:
             key = match.extract_key(self.separator)
             kw = keys.get(key)
             if not kw:
-                keys[key] = FluentKeywords.from_args(match.keywords)
+                keys[key] = FluentKeywords(keywords=match.extract_keywords())
             else:
                 kw.keywords.extend(match.extract_keywords())
 

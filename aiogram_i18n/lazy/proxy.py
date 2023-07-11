@@ -18,8 +18,7 @@ class LazyProxy(UserString):
     def data(self) -> str:  # type: ignore[override]
         context = I18nContext.get_current()
         if context:
-            key = self.key.replace("_", context.key_separator)
-            return context.get(key, **self.kwargs)
+            return context.get(self.key, **self.kwargs)
         return self.key
 
     def __repr__(self) -> str:

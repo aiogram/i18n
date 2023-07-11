@@ -42,7 +42,7 @@ def stub(input_files: Tuple[str, ...], output_file: str) -> None:
 @main.command(help="Extract all used fluent keys from code")  # type: ignore[arg-type]
 @click.option("-i", "--input-dirs", required=True, multiple=True)
 @click.option("-o", "--output-file", required=True)
-@click.option("-k", "--i18n-keys", default=["i18n"], multiple=True, show_default=True)
+@click.option("-k", "--i18n-keys", default=["i18n", "L"], multiple=True, show_default=True)
 @click.option("-s", "--separator", default="-", show_default=True)
 @click.option("-ed", "--exclude-dirs", default=["venv"], multiple=True)
 @click.option("-ek", "--exclude-keys", multiple=True)
