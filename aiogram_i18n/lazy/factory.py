@@ -10,7 +10,9 @@ class LazyFactory:
 
     def set_separator(self, key_separator: str) -> None:
         if not isinstance(key_separator, str):
-            raise ValueError(f"Key separator should be instance of str not {type(key_separator).__name__!r}")
+            raise ValueError(
+                f"Key separator should be instance of str not {type(key_separator).__name__!r}"
+            )
         self.key_separator = key_separator
 
     def __getattr__(self, item: str) -> Callable[..., LazyProxy]:

@@ -14,25 +14,25 @@ To use FluentRuntimeCore:
 import asyncio
 from contextlib import suppress
 from logging import basicConfig, INFO
-from typing import Any, TYPE_CHECKING
+from typing import Any
 
 from aiogram import Router, Dispatcher, F, Bot
 from aiogram.enums import ParseMode
 from aiogram.filters import CommandStart
-from aiogram.types import ReplyKeyboardMarkup, Message
+from aiogram.types import Message
 
 from aiogram_i18n import I18nContext, LazyProxy, I18nMiddleware
 from aiogram_i18n.cores.fluent_runtime_core import FluentRuntimeCore
-from aiogram_i18n.utils.keyboard import KeyboardButton  # you should import the keyboard from here if you want to use LazyProxy
-
-if TYPE_CHECKING:
-    from stub import I18nContext
+from aiogram_i18n.types import (
+    ReplyKeyboardMarkup, KeyboardButton
+    # you should import mutable objects from here if you want to use LazyProxy in them
+)
 
 
 router = Router(name=__name__)
 rkb = ReplyKeyboardMarkup(
     keyboard=[
-        [KeyboardButton(text=LazyProxy(key="help"))]
+        [KeyboardButton(text=LazyProxy("help"))]  # or L.help()
     ], resize_keyboard=True
 )
 
@@ -41,12 +41,12 @@ rkb = ReplyKeyboardMarkup(
 async def cmd_start(message: Message, i18n: I18nContext) -> Any:
     name = message.from_user.mention_html()
     return message.reply(
-        text=i18n.hello(user=name),  # aka i18n.get("hello", user=name)
+        text=i18n.get("hello", user=name),  # or i18n.hello(user=name)
         reply_markup=rkb
     )
 
 
-@router.message(F.text == LazyProxy(key="help"))
+@router.message(F.text == LazyProxy("help"))
 async def cmd_help(message: Message) -> Any:
     return message.reply(text="-- " + message.text + " --")
 

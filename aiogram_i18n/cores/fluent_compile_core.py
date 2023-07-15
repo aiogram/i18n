@@ -17,17 +17,24 @@ class FluentCompileCore(BaseCore[FluentBundle]):
         path: str,
         default_locale: str = "en",
         use_isolating: bool = True,
-        functions: Optional[Dict[str, Callable[..., Any]]] = None
+        functions: Optional[Dict[str, Callable[..., Any]]] = None,
+        raise_key_error: bool = True
     ) -> None:
         super().__init__()
         self.path = path
         self.use_isolating = use_isolating
         self.functions = functions
         self.default_locale = default_locale
+        self.raise_key_error = raise_key_error
 
     def get(self, key: str, /, locale: str, **kwargs: Any) -> str:
         translator: FluentBundle = self.get_translator(locale=locale)
-        text, errors = translator.format(message_id=key, args=kwargs)
+        try:
+            text, errors = translator.format(message_id=key, args=kwargs)
+        except KeyError:
+            if self.raise_key_error:
+                raise KeyError(f"'{key}' is not found.")
+            return key
         if errors:
             raise ValueError("\n".join(errors))
         return cast(str, text)  # 'cause fluent_compiler type-ignored
@@ -40,7 +47,7 @@ class FluentCompileCore(BaseCore[FluentBundle]):
         """
         translations: Dict[str, FluentBundle] = {}
         locales = self._extract_locales(self.path)
-        for locale, paths in self._find_locales(self.path, locales, ".flt").items():
+        for locale, paths in self._find_locales(self.path, locales, ".ftl").items():
             texts = []
             for path in paths:
                 with open(path, "r", encoding="utf8") as fp:

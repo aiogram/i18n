@@ -1,32 +1,12 @@
-from collections import UserString
-from json import dumps, JSONEncoder
-from typing import Callable, Dict, Any, Awaitable, Optional, Sequence
+from typing import Callable, Dict, Any, Awaitable, Optional
 
-from aiogram import Dispatcher, BaseMiddleware, Bot
+from aiogram import Dispatcher, BaseMiddleware
 from aiogram.types import TelegramObject
 
 from aiogram_i18n.context import I18nContext
 from aiogram_i18n.cores.base import BaseCore
 from aiogram_i18n.managers.base import BaseManager
 from aiogram_i18n.managers.fsm import FSMManager
-
-
-def default(default_dump: Callable[..., str]) -> Callable[..., str]:
-    def serialize_lazy(obj: Any) -> str:
-        if isinstance(obj, UserString):
-            return obj.data
-        return default_dump(obj)
-
-    return serialize_lazy
-
-
-def on_startup(bots: Sequence[Bot]) -> None:
-    def_enc = JSONEncoder(default=default(dumps))
-    for bot in bots:
-        if bot.session.json_dumps is dumps:
-            bot.session.json_dumps = def_enc.encode
-        else:
-            bot.session.json_dumps = default(bot.session.json_dumps)
 
 
 class I18nMiddleware(BaseMiddleware):
@@ -60,7 +40,6 @@ class I18nMiddleware(BaseMiddleware):
         dispatcher.update.outer_middleware.register(self)
         dispatcher.startup.register(self.core.startup)
         dispatcher.shutdown.register(self.core.shutdown)
-        dispatcher.startup.register(on_startup)
 
     async def __call__(
         self,

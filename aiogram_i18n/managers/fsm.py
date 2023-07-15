@@ -1,4 +1,5 @@
 from typing import Dict, Any, Optional
+
 from aiogram.fsm.context import FSMContext
 from aiogram.types import TelegramObject
 
@@ -24,6 +25,5 @@ class FSMManager(BaseManager):
                 await state.update_data(data={self.key: locale})
         return locale
 
-    async def set_locale(self, locale: str, *args: Any, **kwargs: Any) -> None:
-        state: FSMContext = kwargs["data"].get("state")
+    async def set_locale(self, locale: str, state: FSMContext) -> None:
         await state.update_data(data={self.key: locale})

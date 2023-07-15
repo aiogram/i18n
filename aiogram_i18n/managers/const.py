@@ -1,4 +1,4 @@
-from typing import Any, Dict
+from typing import Any, Dict, NoReturn
 
 from aiogram.types import TelegramObject
 
@@ -9,5 +9,7 @@ class ConstManager(BaseManager):
     async def get_locale(self, event: TelegramObject, data: Dict[str, Any]) -> str:
         return self.default_locale
 
-    async def set_locale(self, locale: str, *args: Any, **kwargs: Any) -> None:
-        ...
+    async def set_locale(self, locale: str) -> NoReturn:
+        raise RuntimeError(
+            f"'{type(self).__name__}' doesn't support this method."
+        )
