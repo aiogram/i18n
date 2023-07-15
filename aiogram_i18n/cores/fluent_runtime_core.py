@@ -1,12 +1,11 @@
 from typing import Dict, Callable, Optional, Any, cast
 
+from aiogram_i18n.exceptions import NoModuleError
+
 try:
     from fluent.runtime import FluentBundle, FluentResource
 except ImportError:
-    raise ImportError(
-        "FluentRuntimeCore can be used only when fluent.runtime installed\n"
-        "Just install fluent.runtime (`pip install fluent.runtime`)"
-    )
+    raise NoModuleError(core_name="FluentRuntimeCore", module_name="fluent.runtime")
 
 from aiogram_i18n.cores.base import BaseCore
 

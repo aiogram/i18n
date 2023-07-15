@@ -1,24 +1,23 @@
 from typing import Dict, Callable, Optional, Any, cast
 
+from aiogram_i18n.exceptions import NoModuleError
+
 try:
     from fluent_compiler.bundle import FluentBundle  # type: ignore[import]
 except ImportError:
-    raise ImportError(
-        "FluentCompileCore can be used only when fluent_compiler installed\n"
-        "Just install fluent_compiler (`pip install fluent_compiler`)"
-    )
+    raise NoModuleError(core_name="FluentCompileCore", module_name="fluent_compiler")
 
 from aiogram_i18n.cores.base import BaseCore
 
 
 class FluentCompileCore(BaseCore[FluentBundle]):
     def __init__(
-        self,
-        path: str,
-        default_locale: str = "en",
-        use_isolating: bool = True,
-        functions: Optional[Dict[str, Callable[..., Any]]] = None,
-        raise_key_error: bool = True
+            self,
+            path: str,
+            default_locale: str = "en",
+            use_isolating: bool = True,
+            functions: Optional[Dict[str, Callable[..., Any]]] = None,
+            raise_key_error: bool = True
     ) -> None:
         super().__init__()
         self.path = path

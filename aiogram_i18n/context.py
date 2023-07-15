@@ -43,7 +43,7 @@ class I18nContext(ContextInstanceMixin["I18nContext"]):
         return partial(self.get, item.replace("_", self.key_separator))
 
     @contextmanager
-    def with_locale(self, locale: str) -> Generator["I18nContext", None, None]:
+    def use_locale(self, locale: str) -> Generator["I18nContext", None, None]:
         old_locale = self.locale
         self.locale = locale
         try:

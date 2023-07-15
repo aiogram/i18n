@@ -4,7 +4,7 @@ from typing import Dict, Any
 from aiogram_i18n.cores.base import BaseCore
 
 
-class BabelCore(BaseCore[GNUTranslations]):
+class GNUTextCore(BaseCore[GNUTranslations]):
     def __init__(
         self, *,
         path: str,
