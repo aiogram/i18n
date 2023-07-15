@@ -12,10 +12,10 @@ except ImportError:
     )
 
 
-STUB_HEADER = """from typing import Any
+STUB_HEADER = """from typing import Any, Union
 
 from aiogram_i18n import I18nContext as _I18nContext
-from aiogram_i18n.lazy import LazyFactory as _LazyFactory
+from aiogram_i18n.lazy import LazyProxy, LazyFactory as _LazyFactory
 
 
 class I18nStubs:
@@ -59,7 +59,7 @@ def stub_from_messages(messages: Dict[str, List[str]], kw_only: bool = True) -> 
         if params and kw_only:
             params.insert(0, "*")
         params.insert(0, "self")
-        stub_text += f"    def {name.replace('-', '_')}({', '.join(params)}) -> str: ...\n"
+        stub_text += f"    def {name.replace('-', '_')}({', '.join(params)}) -> Union[str, LazyProxy]: ...\n"
     return stub_text + STUB_FOOTER
 
 

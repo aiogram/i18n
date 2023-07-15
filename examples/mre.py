@@ -6,11 +6,14 @@ from typing import Any
 from aiogram import Router, Dispatcher, F, Bot
 from aiogram.enums import ParseMode
 from aiogram.filters import CommandStart
-from aiogram.types import ReplyKeyboardMarkup, Message
+from aiogram.types import Message
 
 from aiogram_i18n import I18nContext, LazyProxy, I18nMiddleware
 from aiogram_i18n.cores.fluent_runtime_core import FluentRuntimeCore
-from aiogram_i18n.utils.keyboard import KeyboardButton  # you should import the keyboard from here if you want to use LazyProxy
+from aiogram_i18n.types import (
+    ReplyKeyboardMarkup, KeyboardButton
+    # you should import mutable objects from here if you want to use LazyProxy in them
+)
 
 
 router = Router(name=__name__)
