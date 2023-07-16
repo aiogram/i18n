@@ -2,14 +2,13 @@
 from os import makedirs, path
 from typing import Dict, List, Sequence
 
+from aiogram_i18n.exceptions import NoModuleError
+
 try:
     from fluent.syntax import FluentParser
     from .visitor import FluentVisitor
 except ImportError:
-    raise ImportError(
-        "Fluent stub generator can be used only when fluent.syntax installed\n"
-        "Just install fluent.syntax (`pip install fluent.syntax`)"
-    )
+    raise NoModuleError(name="Fluent stub generator", module_name="fluent.syntax")
 
 
 STUB_HEADER = """from typing import Any, Union
