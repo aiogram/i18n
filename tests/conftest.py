@@ -1,15 +1,10 @@
 from __future__ import annotations
-
+from aiogram_i18n.cores import BaseCore
 from pathlib import Path
-from typing import Any, TYPE_CHECKING, AsyncGenerator, List
+from typing import Any, AsyncGenerator, List
 
 import pytest
 from pytest_asyncio import fixture
-
-if TYPE_CHECKING:
-    from aiogram_i18n.cores.fluent_runtime_core import FluentRuntimeCore
-    from aiogram_i18n.cores.fluent_compile_core import FluentCompileCore
-    from aiogram_i18n.cores.gnu_text_core import GNUTextCore
 
 
 LOCALES = str(
@@ -46,27 +41,27 @@ def pytest_collection_modifyitems(
 
 
 @fixture(scope="class")
-def gnu_text_core() -> GNUTextCore:
+def gnu_text_core() -> BaseCore:
     from aiogram_i18n.cores.gnu_text_core import GNUTextCore
     return GNUTextCore(path=LOCALES)
 
 
 @fixture(scope="class")
-def fluent_runtime_core() -> FluentRuntimeCore:
+def fluent_runtime_core() -> BaseCore:
     from aiogram_i18n.cores.fluent_runtime_core import FluentRuntimeCore
     return FluentRuntimeCore(path=LOCALES, use_isolating=False)
 
 
 @fixture(scope="class")
-def fluent_compile_core() -> FluentCompileCore:
+def fluent_compile_core() -> BaseCore:
     from aiogram_i18n.cores.fluent_compile_core import FluentCompileCore
     return FluentCompileCore(path=LOCALES, use_isolating=False)
 
 
 @fixture(scope="class")
 async def gnu_text_ready(
-    gnu_text: GNUTextCore
-) -> AsyncGenerator[GNUTextCore, None]:
+    gnu_text: BaseCore
+) -> AsyncGenerator[BaseCore, None]:
     await gnu_text.startup()
     yield gnu_text
     await gnu_text.shutdown()
@@ -74,8 +69,8 @@ async def gnu_text_ready(
 
 @fixture(scope="class")
 async def fluent_runtime_core_ready(
-    fluent_runtime_core: FluentRuntimeCore
-) -> AsyncGenerator[FluentRuntimeCore, None]:
+    fluent_runtime_core: BaseCore
+) -> AsyncGenerator[BaseCore, None]:
     await fluent_runtime_core.startup()
     yield fluent_runtime_core
     await fluent_runtime_core.shutdown()
@@ -83,8 +78,8 @@ async def fluent_runtime_core_ready(
 
 @fixture(scope="class")
 async def fluent_compile_core_ready(
-    fluent_compile_core: FluentCompileCore
-) -> AsyncGenerator[FluentCompileCore, None]:
+    fluent_compile_core: BaseCore
+) -> AsyncGenerator[BaseCore, None]:
     await fluent_compile_core.startup()
     yield fluent_compile_core
     await fluent_compile_core.shutdown()
