@@ -1,6 +1,13 @@
 from importlib import import_module
+from typing import Any, cast, TYPE_CHECKING
+
 from .base import BaseCore
-from typing import Any
+
+if TYPE_CHECKING:
+    from .gnu_text_core import GNUTextCore
+    from .fluent_compile_core import FluentCompileCore
+    from .fluent_runtime_core import FluentRuntimeCore
+
 
 __cores__ = {
     "GNUTextCore": '.gnu_text_core',
@@ -9,9 +16,9 @@ __cores__ = {
 }
 
 __all__ = (
-    "GNUTextCore",  # noqa
-    "FluentRuntimeCore",  # noqa
-    "FluentCompileCore",  # noqa
+    "GNUTextCore",
+    "FluentRuntimeCore",
+    "FluentCompileCore",
     "BaseCore"
 )
 
@@ -19,4 +26,7 @@ __all__ = (
 def __getattr__(name: str) -> BaseCore[Any]:
     if name not in __all__:
         raise AttributeError
-    return getattr(import_module(__cores__[name], "aiogram_i18n.cores"), name)
+    return cast(
+        BaseCore[Any],
+        getattr(import_module(__cores__[name], "aiogram_i18n.cores"), name)
+    )
