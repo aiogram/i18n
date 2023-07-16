@@ -15,7 +15,6 @@ class I18nMiddleware(BaseMiddleware):
     context_key: str
     locale_key: str
     middleware_key: str
-    default_locale: str
     key_separator: str
 
     def __init__(
@@ -29,12 +28,16 @@ class I18nMiddleware(BaseMiddleware):
         key_separator: str = "-"
     ) -> None:
         self.core = core
-        self.manager = manager or FSMManager(default_locale=default_locale, key=locale_key)
+        self.manager = manager or FSMManager(key=locale_key)
         self.context_key = context_key
         self.locale_key = locale_key
         self.middleware_key = middleware_key
-        self.default_locale = default_locale
         self.key_separator = key_separator
+
+        if self.core.default_locale is None:
+            self.core.default_locale = default_locale
+        if self.manager.default_locale is None:
+            self.manager.default_locale = default_locale
 
     def setup(self, dispatcher: Dispatcher) -> None:
         dispatcher.update.outer_middleware.register(self)

@@ -13,17 +13,17 @@ from aiogram_i18n.cores.base import BaseCore
 class FluentRuntimeCore(BaseCore[FluentBundle]):
     def __init__(
         self,
-        path: str, default_locale: str = "en",
+        path: str,
+        default_locale: Optional[str] = None,
         use_isolating: bool = True,
         functions: Optional[Dict[str, Callable[..., Any]]] = None,
         pre_compile: bool = True,
         raise_key_error: bool = True
     ) -> None:
-        super().__init__()
+        super().__init__(default_locale=default_locale)
         self.path = path
         self.use_isolating = use_isolating
         self.functions = functions
-        self.default_locale = default_locale
         self.pre_compile = pre_compile,
         self.raise_key_error = raise_key_error
 

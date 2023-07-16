@@ -1,15 +1,15 @@
 from abc import abstractmethod, ABC
-from typing import Dict, Any, TYPE_CHECKING, Awaitable, Callable
+from typing import Dict, Any, TYPE_CHECKING, Awaitable, Callable, Optional
 
 from aiogram.dispatcher.event.handler import CallableMixin
 from aiogram.types import TelegramObject
 
 
 class BaseManager(ABC):
-    default_locale: str
+    default_locale: Optional[str]
     set_locale_mixin: CallableMixin
 
-    def __init__(self, default_locale: str = "en") -> None:
+    def __init__(self, default_locale: Optional[str] = None) -> None:
         self.default_locale = default_locale
         self.set_locale_mixin = CallableMixin(self.set_locale)
 

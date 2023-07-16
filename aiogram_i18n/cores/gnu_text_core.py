@@ -1,5 +1,5 @@
 from gettext import GNUTranslations
-from typing import Dict, Any
+from typing import Dict, Any, Optional
 
 from aiogram_i18n.cores.base import BaseCore
 
@@ -8,11 +8,10 @@ class GNUTextCore(BaseCore[GNUTranslations]):
     def __init__(
         self, *,
         path: str,
-        default_locale: str = "en"
+        default_locale: Optional[str] = None,
     ) -> None:
-        super().__init__()
+        super().__init__(default_locale=default_locale)
         self.path = path
-        self.default_locale = default_locale
 
     def find_locales(self) -> Dict[str, GNUTranslations]:
         """
