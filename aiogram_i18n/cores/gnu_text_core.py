@@ -4,7 +4,7 @@ from typing import Dict, Any
 from aiogram_i18n.cores.base import BaseCore
 
 
-class BabelCore(BaseCore[GNUTranslations]):
+class GNUTextCore(BaseCore[GNUTranslations]):
     def __init__(
         self, *,
         path: str,
@@ -30,6 +30,6 @@ class BabelCore(BaseCore[GNUTranslations]):
 
         return translations
 
-    def get(self, locale: str, key: str, *args: Any, **kwargs: Any) -> str:
+    def get(self, key: str, /, locale: str, **kwargs: Any) -> str:
         translator = self.get_translator(locale=locale)
-        return translator.gettext(key).format(*args, **kwargs)
+        return translator.gettext(key).format(**kwargs)

@@ -1,33 +1,39 @@
 from typing import Dict, Callable, Optional, Any, cast
 
+from aiogram_i18n.exceptions import NoModuleError, KeyNotFound
+
 try:
     from fluent_compiler.bundle import FluentBundle  # type: ignore[import]
 except ImportError:
-    raise ImportError(
-        "FluentCompileCore can be used only when fluent_compiler installed\n"
-        "Just install fluent_compiler (`pip install fluent_compiler`)"
-    )
+    raise NoModuleError(name="FluentCompileCore", module_name="fluent_compiler")
 
 from aiogram_i18n.cores.base import BaseCore
 
 
 class FluentCompileCore(BaseCore[FluentBundle]):
     def __init__(
-        self,
-        path: str,
-        default_locale: str = "en",
-        use_isolating: bool = True,
-        functions: Optional[Dict[str, Callable[..., Any]]] = None
+            self,
+            path: str,
+            default_locale: str = "en",
+            use_isolating: bool = True,
+            functions: Optional[Dict[str, Callable[..., Any]]] = None,
+            raise_key_error: bool = True
     ) -> None:
         super().__init__()
         self.path = path
         self.use_isolating = use_isolating
         self.functions = functions
         self.default_locale = default_locale
+        self.raise_key_error = raise_key_error
 
-    def get(self, locale: str, key: str, **kwargs: Any) -> str:  # type: ignore[override]
+    def get(self, key: str, /, locale: str, **kwargs: Any) -> str:
         translator: FluentBundle = self.get_translator(locale=locale)
-        text, errors = translator.format(message_id=key, args=kwargs)
+        try:
+            text, errors = translator.format(message_id=key, args=kwargs)
+        except KeyError:
+            if self.raise_key_error:
+                raise KeyNotFound(key)
+            return key
         if errors:
             raise ValueError("\n".join(errors))
         return cast(str, text)  # 'cause fluent_compiler type-ignored
@@ -40,7 +46,7 @@ class FluentCompileCore(BaseCore[FluentBundle]):
         """
         translations: Dict[str, FluentBundle] = {}
         locales = self._extract_locales(self.path)
-        for locale, paths in self._find_locales(self.path, locales, ".flt").items():
+        for locale, paths in self._find_locales(self.path, locales, ".ftl").items():
             texts = []
             for path in paths:
                 with open(path, "r", encoding="utf8") as fp:
