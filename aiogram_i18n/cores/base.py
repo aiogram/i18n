@@ -1,7 +1,7 @@
 import os
 from abc import abstractmethod, ABC
 from typing import List, Dict, Optional, Any, Tuple, TypeVar, Generic
-from aiogram_i18n.exceptions import NoTranslateFileExistsError, NoFindLocalesError, NoLocalesError
+from aiogram_i18n.exceptions import NoTranslateFileExistsError, NoLocalesFoundError, NoLocalesError
 
 
 Translator = TypeVar("Translator")
@@ -38,7 +38,7 @@ class BaseCore(Generic[Translator], ABC):
             if os.path.isdir(os.path.join(path, file_path)):
                 locales.append(file_path)
         if not locales:
-            raise NoFindLocalesError(locales=["..."], path=path)
+            raise NoLocalesFoundError(locales=["..."], path=path)
         return locales
 
     @staticmethod
@@ -62,7 +62,7 @@ class BaseCore(Generic[Translator], ABC):
             if not paths[locale]:
                 raise NoTranslateFileExistsError(ext=ext, locale_path=locale_path)
         if not paths:
-            raise NoFindLocalesError(locales=locales, path=path)
+            raise NoLocalesFoundError(locales=locales, path=path)
         return paths
 
     @abstractmethod

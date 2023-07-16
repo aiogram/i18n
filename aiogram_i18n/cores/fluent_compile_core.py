@@ -1,11 +1,11 @@
 from typing import Dict, Callable, Optional, Any, cast
 
-from aiogram_i18n.exceptions import NoModuleError
+from aiogram_i18n.exceptions import NoModuleError, KeyNotFound
 
 try:
     from fluent_compiler.bundle import FluentBundle  # type: ignore[import]
 except ImportError:
-    raise NoModuleError(core_name="FluentCompileCore", module_name="fluent_compiler")
+    raise NoModuleError(name="FluentCompileCore", module_name="fluent_compiler")
 
 from aiogram_i18n.cores.base import BaseCore
 
@@ -32,7 +32,7 @@ class FluentCompileCore(BaseCore[FluentBundle]):
             text, errors = translator.format(message_id=key, args=kwargs)
         except KeyError:
             if self.raise_key_error:
-                raise KeyError(f"'{key}' is not found.")
+                raise KeyNotFound(key)
             return key
         if errors:
             raise ValueError("\n".join(errors))

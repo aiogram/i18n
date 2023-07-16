@@ -1,11 +1,11 @@
 from typing import Dict, Callable, Optional, Any, cast
 
-from aiogram_i18n.exceptions import NoModuleError
+from aiogram_i18n.exceptions import NoModuleError, KeyNotFound
 
 try:
     from fluent.runtime import FluentBundle, FluentResource
 except ImportError:
-    raise NoModuleError(core_name="FluentRuntimeCore", module_name="fluent.runtime")
+    raise NoModuleError(name="FluentRuntimeCore", module_name="fluent.runtime")
 
 from aiogram_i18n.cores.base import BaseCore
 
@@ -32,7 +32,7 @@ class FluentRuntimeCore(BaseCore[FluentBundle]):
         message = translator.get_message(message_id=key)
         if message.value is None:
             if self.raise_key_error:
-                raise KeyError("Key", key, "not found")
+                raise KeyNotFound(key)
             return key
         text, errors = translator.format_pattern(
             pattern=message.value,
