@@ -12,18 +12,17 @@ from aiogram_i18n.cores.base import BaseCore
 
 class FluentCompileCore(BaseCore[FluentBundle]):
     def __init__(
-            self,
-            path: str,
-            default_locale: str = "en",
-            use_isolating: bool = True,
-            functions: Optional[Dict[str, Callable[..., Any]]] = None,
-            raise_key_error: bool = True
+        self,
+        path: str,
+        default_locale: Optional[str] = None,
+        use_isolating: bool = True,
+        functions: Optional[Dict[str, Callable[..., Any]]] = None,
+        raise_key_error: bool = True
     ) -> None:
-        super().__init__()
+        super().__init__(default_locale=default_locale)
         self.path = path
         self.use_isolating = use_isolating
         self.functions = functions
-        self.default_locale = default_locale
         self.raise_key_error = raise_key_error
 
     def get(self, key: str, /, locale: str, **kwargs: Any) -> str:

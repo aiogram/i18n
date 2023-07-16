@@ -1,6 +1,6 @@
 import os
 from abc import abstractmethod, ABC
-from typing import List, Dict, Optional, Any, Tuple, TypeVar, Generic
+from typing import List, Dict, Optional, Any, Tuple, TypeVar, Generic, cast
 from aiogram_i18n.exceptions import NoTranslateFileExistsError, NoLocalesFoundError, NoLocalesError
 
 
@@ -8,10 +8,11 @@ Translator = TypeVar("Translator")
 
 
 class BaseCore(Generic[Translator], ABC):
-    default_locale: str
+    default_locale: Optional[str]
     locales: Dict[str, Translator]
 
-    def __init__(self) -> None:
+    def __init__(self, default_locale: Optional[str] = None) -> None:
+        self.default_locale = default_locale
         self.locales = {}
 
     @abstractmethod
@@ -20,13 +21,13 @@ class BaseCore(Generic[Translator], ABC):
 
     def get_translator(self, locale: str) -> Translator:
         if locale not in self.locales:
-            locale = self.default_locale
+            locale = cast(str, self.default_locale)
         return self.locales[locale]
 
     async def startup(self) -> None:
         self.locales.update(self.find_locales())
 
-    async def shutdown(self, *args: Any, **kwargs: Any) -> None:
+    async def shutdown(self) -> None:
         self.locales.clear()
 
     @staticmethod
