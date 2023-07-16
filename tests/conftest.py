@@ -42,19 +42,19 @@ def pytest_collection_modifyitems(
 
 @fixture(scope="class")
 def gnu_text_core() -> BaseCore:
-    from aiogram_i18n.cores.gnu_text_core import GNUTextCore
+    from aiogram_i18n.cores import GNUTextCore
     return GNUTextCore(path=LOCALES)
 
 
 @fixture(scope="class")
 def fluent_runtime_core() -> BaseCore:
-    from aiogram_i18n.cores.fluent_runtime_core import FluentRuntimeCore
+    from aiogram_i18n.cores import FluentRuntimeCore
     return FluentRuntimeCore(path=LOCALES, use_isolating=False)
 
 
 @fixture(scope="class")
 def fluent_compile_core() -> BaseCore:
-    from aiogram_i18n.cores.fluent_compile_core import FluentCompileCore
+    from aiogram_i18n.cores import FluentCompileCore
     return FluentCompileCore(path=LOCALES, use_isolating=False)
 
 
