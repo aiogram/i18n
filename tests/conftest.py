@@ -41,27 +41,27 @@ def pytest_collection_modifyitems(
 
 
 @fixture(scope="class")
-def gnu_text_core() -> BaseCore:
+def gnu_text_core() -> BaseCore[Any]:
     from aiogram_i18n.cores import GNUTextCore
     return GNUTextCore(path=LOCALES)
 
 
 @fixture(scope="class")
-def fluent_runtime_core() -> BaseCore:
+def fluent_runtime_core() -> BaseCore[Any]:
     from aiogram_i18n.cores import FluentRuntimeCore
     return FluentRuntimeCore(path=LOCALES, use_isolating=False)
 
 
 @fixture(scope="class")
-def fluent_compile_core() -> BaseCore:
+def fluent_compile_core() -> BaseCore[Any]:
     from aiogram_i18n.cores import FluentCompileCore
     return FluentCompileCore(path=LOCALES, use_isolating=False)
 
 
 @fixture(scope="class")
 async def gnu_text_ready(
-    gnu_text: BaseCore
-) -> AsyncGenerator[BaseCore, None]:
+    gnu_text: BaseCore[Any]
+) -> AsyncGenerator[BaseCore[Any], None]:
     await gnu_text.startup()
     yield gnu_text
     await gnu_text.shutdown()
@@ -69,8 +69,8 @@ async def gnu_text_ready(
 
 @fixture(scope="class")
 async def fluent_runtime_core_ready(
-    fluent_runtime_core: BaseCore
-) -> AsyncGenerator[BaseCore, None]:
+    fluent_runtime_core: BaseCore[Any]
+) -> AsyncGenerator[BaseCore[Any], None]:
     await fluent_runtime_core.startup()
     yield fluent_runtime_core
     await fluent_runtime_core.shutdown()
@@ -78,8 +78,8 @@ async def fluent_runtime_core_ready(
 
 @fixture(scope="class")
 async def fluent_compile_core_ready(
-    fluent_compile_core: BaseCore
-) -> AsyncGenerator[BaseCore, None]:
+    fluent_compile_core: BaseCore[Any]
+) -> AsyncGenerator[BaseCore[Any], None]:
     await fluent_compile_core.startup()
     yield fluent_compile_core
     await fluent_compile_core.shutdown()
