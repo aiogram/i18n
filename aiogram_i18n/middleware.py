@@ -15,7 +15,6 @@ class I18nMiddleware(BaseMiddleware):
     context_key: str
     locale_key: str
     middleware_key: str
-    default_locale: str
     key_separator: str
 
     def __init__(
