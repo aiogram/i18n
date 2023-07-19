@@ -1,5 +1,5 @@
 from functools import partial
-from typing import Callable
+from typing import Callable, Dict, Any
 
 from .proxy import LazyProxy
 
@@ -17,3 +17,6 @@ class LazyFactory:
 
     def __getattr__(self, item: str) -> Callable[..., LazyProxy]:
         return partial(LazyProxy, item.replace("_", self.key_separator))
+
+    def __call__(self, key: str, /, **kwargs: Dict[str, Any]) -> LazyProxy:
+        return LazyProxy(key, **kwargs)
