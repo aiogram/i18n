@@ -11,11 +11,8 @@ class LazyProxy(BaseModel):
     key: str
     kwargs: Dict[str, Any]
 
-    class Config:
-        arbitrary_types_allowed = True
-
     def __init__(
-        self, key: str, /, **kwargs: Dict[str, Any]
+        self, key: str, /, **kwargs: Any
     ) -> None:
         super().__init__(key=key, kwargs=kwargs)
 
@@ -26,10 +23,10 @@ class LazyProxy(BaseModel):
             return context.get(self.key, **self.kwargs)
         return self.key
 
-    def dict(self, **kwargs: Any) -> str:  # type: ignore[override]
+    def model_dump(self, **kwargs: Any) -> str:  # type: ignore[override]
         return self.data
 
-    def json(self, **kwargs: Any) -> str:
+    def model_dump_json(self, **kwargs: Any) -> str:
         return self.data
 
     def __repr__(self) -> str:

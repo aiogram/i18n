@@ -1,22 +1,23 @@
-from functools import partial
-from typing import Callable, Dict, Any
-
 from .proxy import LazyProxy
+from ..utils.magic_proxy import MagicProxy
 
 
 class LazyFactory:
     def __init__(self, key_separator: str = "-") -> None:
         self.key_separator = key_separator
 
-    def set_separator(self, key_separator: str) -> None:
-        if not isinstance(key_separator, str):
+    @property
+    def key_separator(self) -> str:
+        return self._key_separator
+
+    @key_separator.setter
+    def key_separator(self, sep: str) -> None:
+        if not isinstance(sep, str):
             raise ValueError(
-                f"Key separator should be instance of str not {type(key_separator).__name__!r}"
+                f"Key separator should be instance of str not {type(sep).__name__!r}"
             )
-        self.key_separator = key_separator
+        self._key_separator = sep
 
-    def __getattr__(self, item: str) -> Callable[..., LazyProxy]:
-        return partial(LazyProxy, item.replace("_", self.key_separator))
-
-    def __call__(self, key: str, /, **kwargs: Dict[str, Any]) -> LazyProxy:
-        return LazyProxy(key, **kwargs)
+    def __getattr__(self, item: str) -> MagicProxy:
+        proxy = MagicProxy(LazyProxy, key_separator=self._key_separator)
+        return proxy.__getattr__(item)
