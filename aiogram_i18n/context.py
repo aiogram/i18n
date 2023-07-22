@@ -33,7 +33,7 @@ class I18nContext(ContextInstanceMixin["I18nContext"]):
     __call__ = get
 
     def __getattr__(self, item: str) -> MagicProxy[str]:
-        proxy = MagicProxy(self.get, key_separator=self.key_separator)
+        proxy = MagicProxy(self, key_separator=self.key_separator)
         return proxy.__getattr__(item)
 
     async def set_locale(self, locale: str, **kwargs: Any) -> None:

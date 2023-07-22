@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Any, Callable, Self, TypeVar, List, Generic
+from typing import Any, Callable, TypeVar, List, Generic
 
 
 T = TypeVar("T", bound=Any)
@@ -14,7 +14,7 @@ class MagicProxy(Generic[T]):
         self._call = call
         self._query: List[str] = []
 
-    def __getattr__(self, item: str) -> Self:
+    def __getattr__(self, item: str) -> MagicProxy:
         self._query.append(item)
         return self
 
