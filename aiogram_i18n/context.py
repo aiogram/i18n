@@ -30,7 +30,9 @@ class I18nContext(ContextInstanceMixin["I18nContext"]):
     def get(self, key: str, /, **kwargs: Any) -> str:
         return self.core.get(key, locale=self.locale, **kwargs)
 
-    def __getattr__(self, item: str) -> MagicProxy:
+    __call__ = get
+
+    def __getattr__(self, item: str) -> MagicProxy[str]:
         proxy = MagicProxy(self.get, key_separator=self.key_separator)
         return proxy.__getattr__(item)
 

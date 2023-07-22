@@ -31,6 +31,8 @@ class FluentRuntimeCore(BaseCore[FluentBundle]):
         translator: FluentBundle = self.get_translator(locale=locale)
         try:
             message = translator.get_message(message_id=key)
+            if message.value is None:
+                raise KeyError(key)
         except KeyError:
             if self.raise_key_error:
                 raise KeyNotFound(key)

@@ -7,13 +7,11 @@ from pydantic import BaseModel
 from aiogram_i18n.context import I18nContext
 
 
-class LazyProxy(BaseModel):
+class LazyProxy(BaseModel):  # type: ignore[no-redef]
     key: str
     kwargs: Dict[str, Any]
 
-    def __init__(
-        self, key: str, /, **kwargs: Any
-    ) -> None:
+    def __init__(self, key: str, /, **kwargs: Any) -> None:
         super().__init__(key=key, kwargs=kwargs)
 
     @property
