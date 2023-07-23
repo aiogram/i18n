@@ -11,7 +11,7 @@ except ImportError:
     raise NoModuleError(name="Fluent stub generator", module_name="fluent.syntax")
 
 
-STUB_HEADER = """from typing import Any, Union
+STUB_HEADER = """from typing import Any
 
 from aiogram_i18n import I18nContext as _I18nContext
 from aiogram_i18n.lazy import LazyProxy, LazyFactory as _LazyFactory
@@ -58,7 +58,7 @@ def stub_from_messages(messages: Dict[str, List[str]], kw_only: bool = True) -> 
         if params and kw_only:
             params.insert(0, "*")
         params.insert(0, "self")
-        stub_text += f"    def {name.replace('-', '_')}({', '.join(params)}) -> Union[str, LazyProxy]: ...\n"
+        stub_text += f"    def {name.replace('-', '_')}({', '.join(params)}) -> str | LazyProxy: ...\n"
     return stub_text + STUB_FOOTER
 
 

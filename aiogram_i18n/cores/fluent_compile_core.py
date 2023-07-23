@@ -34,7 +34,7 @@ class FluentCompileCore(BaseCore[FluentBundle]):
                 raise KeyNotFound(key)
             return key
         if errors:
-            raise ValueError("\n".join(errors))
+            raise errors[0]
         return cast(str, text)  # 'cause fluent_compiler type-ignored
 
     def find_locales(self) -> Dict[str, FluentBundle]:
