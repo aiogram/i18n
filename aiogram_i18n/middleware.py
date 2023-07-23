@@ -16,16 +16,18 @@ class I18nMiddleware(BaseMiddleware):
     locale_key: str
     middleware_key: str
     key_separator: str
+    with_context: bool
 
     def __init__(
         self,
         core: BaseCore[Any],
         manager: Optional[BaseManager] = None,
         context_key: str = "i18n",
-        locale_key: str = "locale",
+        locale_key: Optional[str] = None,
         middleware_key: str = "i18n_middleware",
         default_locale: str = "en",
-        key_separator: str = "-"
+        key_separator: str = "-",
+        with_context: bool = True
     ) -> None:
         self.core = core
         self.manager = manager or FSMManager(key=locale_key)
@@ -33,6 +35,7 @@ class I18nMiddleware(BaseMiddleware):
         self.locale_key = locale_key
         self.middleware_key = middleware_key
         self.key_separator = key_separator
+        self.with_context = with_context
 
         if self.core.default_locale is None:
             self.core.default_locale = default_locale
@@ -58,8 +61,10 @@ class I18nMiddleware(BaseMiddleware):
             data=data,
             key_separator=self.key_separator
         )
-        data[self.locale_key] = locale
+        if self.locale_key is not None:
+            data[self.locale_key] = locale
         data[self.middleware_key] = self
 
-        I18nContext.set_current(context)
+        if self.with_context:
+            I18nContext.set_current(context)
         return await handler(event, data)

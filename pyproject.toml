@@ -20,7 +20,7 @@ classifiers = [
 
 dependencies = [
     "aiogram~=3.0.0b7",
-    "click==8.1.4"
+    "click~=8.1.4"
 ]
 
 keywords = [

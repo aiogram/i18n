@@ -15,7 +15,7 @@ class FluentRuntimeCore(BaseCore[FluentBundle]):
         self,
         path: str,
         default_locale: Optional[str] = None,
-        use_isolating: bool = True,
+        use_isolating: bool = False,
         functions: Optional[Dict[str, Callable[..., Any]]] = None,
         pre_compile: bool = True,
         raise_key_error: bool = True
