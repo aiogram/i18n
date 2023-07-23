@@ -7,16 +7,11 @@ from pydantic import BaseModel
 from aiogram_i18n.context import I18nContext
 
 
-class LazyProxy(BaseModel):
+class LazyProxy(BaseModel):  # type: ignore[no-redef]
     key: str
     kwargs: Dict[str, Any]
 
-    class Config:
-        arbitrary_types_allowed = True
-
-    def __init__(
-        self, key: str, /, **kwargs: Dict[str, Any]
-    ) -> None:
+    def __init__(self, key: str, /, **kwargs: Any) -> None:
         super().__init__(key=key, kwargs=kwargs)
 
     @property
@@ -26,10 +21,10 @@ class LazyProxy(BaseModel):
             return context.get(self.key, **self.kwargs)
         return self.key
 
-    def dict(self, **kwargs: Any) -> str:  # type: ignore[override]
+    def model_dump(self, **kwargs: Any) -> str:  # type: ignore[override]
         return self.data
 
-    def json(self, **kwargs: Any) -> str:
+    def model_dump_json(self, **kwargs: Any) -> str:
         return self.data
 
     def __repr__(self) -> str:

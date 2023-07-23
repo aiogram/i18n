@@ -1,11 +1,11 @@
 from contextlib import contextmanager
-from functools import partial
-from typing import Dict, Any, Generator, Callable
+from typing import Dict, Any, Generator
 
 from aiogram.utils.mixins import ContextInstanceMixin
 
 from aiogram_i18n.cores.base import BaseCore
 from aiogram_i18n.managers.base import BaseManager
+from aiogram_i18n.utils.magic_proxy import MagicProxy
 
 
 class I18nContext(ContextInstanceMixin["I18nContext"]):
@@ -30,6 +30,12 @@ class I18nContext(ContextInstanceMixin["I18nContext"]):
     def get(self, key: str, /, **kwargs: Any) -> str:
         return self.core.get(key, locale=self.locale, **kwargs)
 
+    __call__ = get
+
+    def __getattr__(self, item: str) -> MagicProxy[str]:
+        proxy = MagicProxy(self, key_separator=self.key_separator)
+        return proxy.__getattr__(item)
+
     async def set_locale(self, locale: str, **kwargs: Any) -> None:
         await self.manager.set_locale_mixin.call(
             locale,
@@ -38,9 +44,6 @@ class I18nContext(ContextInstanceMixin["I18nContext"]):
             **self.data, **kwargs
         )
         self.locale = locale
-
-    def __getattr__(self, item: str) -> Callable[..., str]:
-        return partial(self.get, item.replace("_", self.key_separator))
 
     @contextmanager
     def use_locale(self, locale: str) -> Generator["I18nContext", None, None]:

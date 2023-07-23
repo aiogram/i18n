@@ -13,24 +13,27 @@ from aiogram_i18n.cores.base import BaseCore
 class FluentRuntimeCore(BaseCore[FluentBundle]):
     def __init__(
         self,
-        path: str, default_locale: str = "en",
-        use_isolating: bool = True,
+        path: str,
+        default_locale: Optional[str] = None,
+        use_isolating: bool = False,
         functions: Optional[Dict[str, Callable[..., Any]]] = None,
         pre_compile: bool = True,
         raise_key_error: bool = True
     ) -> None:
-        super().__init__()
+        super().__init__(default_locale=default_locale)
         self.path = path
         self.use_isolating = use_isolating
         self.functions = functions
-        self.default_locale = default_locale
         self.pre_compile = pre_compile,
         self.raise_key_error = raise_key_error
 
     def get(self, key: str, /, locale: str, **kwargs: Any) -> str:
         translator: FluentBundle = self.get_translator(locale=locale)
-        message = translator.get_message(message_id=key)
-        if message.value is None:
+        try:
+            message = translator.get_message(message_id=key)
+            if message.value is None:
+                raise KeyError(key)
+        except KeyError:
             if self.raise_key_error:
                 raise KeyNotFound(key)
             return key
