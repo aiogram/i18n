@@ -1,5 +1,5 @@
 from typing import Dict, Callable, Optional, Any, cast
-
+from aiogram_i18n.utils.text_decorator import td
 from aiogram_i18n.exceptions import NoModuleError, KeyNotFound
 
 try:
@@ -17,12 +17,15 @@ class FluentCompileCore(BaseCore[FluentBundle]):
         default_locale: Optional[str] = None,
         use_isolating: bool = False,
         functions: Optional[Dict[str, Callable[..., Any]]] = None,
-        raise_key_error: bool = True
+        raise_key_error: bool = True,
+        use_td: bool = True
     ) -> None:
         super().__init__(default_locale=default_locale)
         self.path = path
         self.use_isolating = use_isolating
-        self.functions = functions
+        self.functions = functions or {}
+        if use_td:
+            self.functions.update(td.functions)
         self.raise_key_error = raise_key_error
 
     def get(self, key: str, /, locale: str, **kwargs: Any) -> str:

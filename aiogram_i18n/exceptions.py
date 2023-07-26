@@ -26,8 +26,8 @@ class NoTranslateFileExistsError(AiogramI18nError):
     message = "files {ext}in folder ({locale_path}) not found"
 
     def __init__(
-        self,
-        locale_path: str, ext: Optional[str] = None
+            self,
+            locale_path: str, ext: Optional[str] = None
     ) -> None:
         self.locale_path = locale_path
         self.ext = ext
@@ -60,3 +60,14 @@ class KeyNotFound(AiogramI18nError):
 
     def __str__(self) -> str:
         return self.message.format(key=self.key)
+
+
+class ContextItemError(BaseException):
+    message = "context({context}) has no item '{key}'"
+
+    def __init__(self, key: str, context: dict):
+        self.key = key
+        self.context = context
+
+    def __str__(self):
+        return self.message.format(key=self.key, context=self.context)

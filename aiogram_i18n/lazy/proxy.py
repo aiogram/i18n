@@ -5,6 +5,7 @@ from typing import Any, Dict, Tuple, Union
 from pydantic import BaseModel
 
 from aiogram_i18n.context import I18nContext
+from aiogram_i18n.utils.attrdict import AttrDict
 
 
 class LazyProxy(BaseModel):  # type: ignore[no-redef]
@@ -16,10 +17,15 @@ class LazyProxy(BaseModel):  # type: ignore[no-redef]
 
     @property
     def data(self) -> str:
-        context = I18nContext.get_current()
-        if context:
-            return context.get(self.key, **self.kwargs)
-        return self.key
+        i18n = I18nContext.get_current()
+        if i18n is None:
+            return self.key
+        kwargs = {}
+        for k, v in self.kwargs.items():
+            if hasattr(v, "resolve"):
+                v = v.resolve(AttrDict(i18n.context))
+            kwargs[k] = v
+        return i18n.get(self.key, kwargs)
 
     def model_dump(self, **kwargs: Any) -> str:  # type: ignore[override]
         return self.data
