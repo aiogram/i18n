@@ -1,20 +1,55 @@
+from __future__ import annotations
+
+from typing import Any, Dict, Optional, Callable
+
 from aiogram import Bot
-from aiogram.utils.text_decorations import TextDecoration as TextD, html_decoration, markdown_decoration
+from aiogram.utils.text_decorations import (
+    TextDecoration as TextD,
+    html_decoration,
+    markdown_decoration
+)
+
 from aiogram_i18n.context import I18nContext
-from typing import Optional, Dict, Callable, Any, Literal
 
 
-class Null:
-    def __getattr__(self, item) -> Callable[[str], str]:
-        return self.__call__
+class Null(TextD):
+    def link(self, value: str, link: str) -> str:
+        return value
 
-    def __call__(self, value: str, *args, **kwargs) -> str:
+    def bold(self, value: str) -> str:
+        return value
+
+    def italic(self, value: str) -> str:
+        return value
+
+    def code(self, value: str) -> str:
+        return value
+
+    def pre(self, value: str) -> str:
+        return value
+
+    def pre_language(self, value: str, language: str) -> str:
+        return value
+
+    def underline(self, value: str) -> str:
+        return value
+
+    def strikethrough(self, value: str) -> str:
+        return value
+
+    def spoiler(self, value: str) -> str:
+        return value
+
+    def quote(self, value: str) -> str:
+        return value
+
+    def custom_emoji(self, value: str, custom_emoji_id: str) -> str:
         return value
 
 
 class TextDecoration:
-    def __init__(self):
-        self.decorations = {
+    def __init__(self) -> None:
+        self.decorations: Dict[Optional[str], TextD] = {
             "html": html_decoration,
             "markdown": markdown_decoration,
             None: Null()
@@ -38,17 +73,17 @@ class TextDecoration:
 
     @property
     def i18n(self) -> I18nContext:
-        context = I18nContext.get_current()
-        if context:
-            return context
-        raise Exception
+        return I18nContext.get_current(False)
 
     @property
     def bot(self) -> Bot:
-        return self.i18n.data["bot"]
+        _bot: Bot = self.i18n.data["bot"]
+        return _bot
 
     def get_decoration(self, parse_mode: Optional[str] = None) -> TextD:
-        parse_mode = parse_mode or self.i18n.context.get("parse_mode") or self.bot.parse_mode
+        parse_mode = parse_mode or self.i18n.context.get("parse_mode", None) or self.bot.parse_mode
+        if parse_mode is None:
+            return self.decorations[parse_mode]
         return self.decorations[parse_mode.lower().strip()]
 
     def link(self, value: str, link: str, parse_mode: Optional[str] = None) -> str:

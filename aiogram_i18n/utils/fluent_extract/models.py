@@ -2,23 +2,35 @@ from __future__ import annotations
 
 import os
 import re
-from dataclasses import dataclass
-from typing import List, Sequence, Dict, Tuple, Union, cast
+from dataclasses import dataclass, field
+from typing import Dict, List, Tuple, cast, Optional, Sequence, Set
 
 from click import echo
-from libcst import Arg, SimpleString, Name
+from libcst import Arg, SimpleString, Name, Attribute, CSTNode
 from pydantic import BaseModel, Field
 
 
 @dataclass
 class FluentMatch:
-    key: Union[SimpleString, Name]
-    keywords: Tuple[Arg, ...]
+    keywords: Tuple[Arg, ...] = field(default_factory=tuple)
+    name: Optional[Name] = None
+    string: Optional[SimpleString] = None
+    attribute: Optional[Attribute] = None
 
-    def extract_key(self, separator: str) -> str:
-        if isinstance(self.key, Name):
-            return self.key.value.replace("_", separator)
-        return self.key.raw_value.replace("_", separator)
+    def full_attr_name(self, node: CSTNode, sep: str) -> str:
+        if isinstance(node, Attribute):
+            return self.full_attr_name(node.value, sep) + sep + node.attr.value
+        return cast(Name, node).value
+
+    def extract_key(self, sep: str, keys: Sequence[str] | Set[str]) -> str:
+        if self.name:
+            return self.name.value
+        if self.string:
+            return self.string.raw_value
+        return re.sub(
+            f"({'|'.join(keys)}){sep}", "",
+            self.full_attr_name(cast(Attribute, self.attribute), sep=sep)
+        )
 
     def extract_keywords(self) -> List[str]:
         return [

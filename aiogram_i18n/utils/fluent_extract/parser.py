@@ -37,13 +37,17 @@ class FluentKeyParser:
                 attr=m.Name(value="get"),
             ) | m.Name(value=LazyProxy.__name__),
             args=[
-                m.Arg(value=m.SaveMatchedNode(m.SimpleString(), name="key")),
+                m.Arg(value=m.SaveMatchedNode(m.SimpleString(), name="string")),
                 keywords
             ]
         ) | m.Call(
             func=m.Attribute(
                 value=m.OneOf(*map(m.Name, self.i18n_keys)),
-                attr=m.SaveMatchedNode(m.Name(), name="key"),
+                attr=(m.SaveMatchedNode(m.Name(), name="name"))
+            ) | m.SaveMatchedNode(
+                m.Attribute(
+                    value=m.Attribute(value=m.OneOf(*map(m.Name, self.i18n_keys))),
+                ), name="attribute"
             ),
             args=[keywords]
         )
@@ -56,12 +60,12 @@ class FluentKeyParser:
         )
 
         for match in matches:
-            key = match.extract_key(self.separator)
-            kw = keys.get(key)
-            if not kw:
-                keys[key] = FluentKeywords(keywords=match.extract_keywords())
-            else:
+            key = match.extract_key(self.separator, self.i18n_keys)
+            kw = keys.get(key, None)
+            if kw is not None:
                 kw.keywords.extend(match.extract_keywords())
+                continue
+            keys[key] = FluentKeywords(keywords=match.extract_keywords())
 
         self.result.update(keys)
 

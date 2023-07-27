@@ -13,7 +13,7 @@ class I18nMiddleware(BaseMiddleware):
     core: BaseCore[Any]
     manager: BaseManager
     context_key: str
-    locale_key: str
+    locale_key: Optional[str]
     middleware_key: str
     key_separator: str
     with_context: bool
@@ -30,7 +30,7 @@ class I18nMiddleware(BaseMiddleware):
         with_context: bool = True
     ) -> None:
         self.core = core
-        self.manager = manager or FSMManager(key=locale_key)
+        self.manager = manager or FSMManager(locale_key or "locale")
         self.context_key = context_key
         self.locale_key = locale_key
         self.middleware_key = middleware_key

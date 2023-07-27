@@ -1,6 +1,6 @@
 from contextlib import contextmanager
 from typing import Dict, Any, Generator
-from magic_filter import MagicFilter, AttrDict
+
 from aiogram.utils.mixins import ContextInstanceMixin
 
 from aiogram_i18n.cores.base import BaseCore
@@ -57,7 +57,7 @@ class I18nContext(ContextInstanceMixin["I18nContext"]):
             self.locale = old_locale
 
     @contextmanager
-    def use_context(self, **kwargs) -> Generator["I18nContext", None, None]:
+    def use_context(self, **kwargs: Any) -> Generator["I18nContext", None, None]:
         old_context = self.context
         self.context = kwargs
         try:
@@ -65,5 +65,5 @@ class I18nContext(ContextInstanceMixin["I18nContext"]):
         finally:
             self.context = old_context
 
-    def set_context(self, **kwargs) -> None:
+    def set_context(self, **kwargs: Any) -> None:
         self.context = kwargs
