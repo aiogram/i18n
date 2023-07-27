@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Any, Dict, Tuple, Union
 
-from pydantic import BaseModel
+from pydantic import BaseModel, model_serializer
 
 from aiogram_i18n.context import I18nContext
 from aiogram_i18n.utils.attrdict import AttrDict
@@ -25,16 +25,14 @@ class LazyProxy(BaseModel):  # type: ignore[no-redef]
             if hasattr(v, "resolve"):
                 v = v.resolve(AttrDict(i18n.context))
             kwargs[k] = v
-        return i18n.get(self.key, kwargs)
+        return i18n.get(self.key, **kwargs)
 
-    def model_dump(self, **kwargs: Any) -> str:  # type: ignore[override]
-        return self.data
-
-    def model_dump_json(self, **kwargs: Any) -> str:
+    @model_serializer
+    def dump(self) -> str:
         return self.data
 
     def __repr__(self) -> str:
-        return f"{self.__class__.__name__}<'{self.key}'>"
+        return f"<{self.__class__.__name__} '{self.key}'>"
 
     def __int__(self) -> int:
         return int(self.data)

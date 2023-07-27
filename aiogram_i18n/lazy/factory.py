@@ -19,7 +19,7 @@ class LazyFactory:
         self._key_separator = sep
 
     def __getattr__(self, item: str) -> MagicProxy[LazyProxy]:
-        proxy = MagicProxy(LazyProxy, key_separator=self._key_separator)
+        proxy = MagicProxy(self, key_separator=self._key_separator)
         return proxy.__getattr__(item)
 
     __call__ = LazyProxy

@@ -14,7 +14,7 @@ class MagicProxy(Generic[T]):
         self._call = call
         self._query: List[str] = []
 
-    def __getattr__(self, item: str) -> MagicProxy:
+    def __getattr__(self, item: str) -> MagicProxy[T]:
         self._query.append(item)
         return self
 

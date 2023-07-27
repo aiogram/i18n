@@ -1,4 +1,4 @@
-from typing import Optional, List
+from typing import Any, Dict, List, Optional
 
 
 class AiogramI18nError(Exception):
@@ -65,9 +65,9 @@ class KeyNotFound(AiogramI18nError):
 class ContextItemError(BaseException):
     message = "context({context}) has no item '{key}'"
 
-    def __init__(self, key: str, context: dict):
+    def __init__(self, key: str, context: Dict[str, Any]) -> None:
         self.key = key
         self.context = context
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.message.format(key=self.key, context=self.context)

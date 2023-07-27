@@ -1,7 +1,11 @@
 import os
 from abc import abstractmethod, ABC
-from typing import List, Dict, Optional, Any, Tuple, TypeVar, Generic, cast
-from aiogram_i18n.exceptions import NoTranslateFileExistsError, NoLocalesFoundError, NoLocalesError
+from typing import Any, Dict, List, Optional, Tuple, TypeVar, Generic, cast
+from aiogram_i18n.exceptions import (
+    NoTranslateFileExistsError,
+    NoLocalesFoundError,
+    NoLocalesError
+)
 
 
 Translator = TypeVar("Translator")

@@ -10,7 +10,7 @@ def main() -> None:
     ...
 
 
-@main.command(help="Generate stubs from .ftl files")  # type: ignore[arg-type]
+@main.command(help="Generate stubs from .ftl files")  # type: ignore[misc]
 @click.option("-i", "--input-files", required=True, multiple=True)
 @click.option("-o", "--output-file", required=True)
 def stub(input_files: Tuple[str, ...], output_file: str) -> None:
@@ -39,7 +39,7 @@ def stub(input_files: Tuple[str, ...], output_file: str) -> None:
     allow_formats[suffix](input_files, output_file)
 
 
-@main.command(help="Extract all used fluent keys from code")  # type: ignore[arg-type]
+@main.command(help="Extract all used fluent keys from code")  # type: ignore[misc]
 @click.option("-i", "--input-dirs", required=True, multiple=True)
 @click.option("-o", "--output-file", required=True)
 @click.option("-k", "--i18n-keys", default=["i18n", "L"], multiple=True, show_default=True)
