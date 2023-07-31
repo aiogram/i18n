@@ -7,3 +7,4 @@ docker-compose.yml
 .mypy_cache
 .venv
 .tests
+/tests/data/test_multiple_locales/
