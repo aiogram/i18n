@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Any, Dict, Optional, Callable
+from typing import Any, Dict, Optional, Callable, cast
 
 from aiogram import Bot
 from aiogram.utils.text_decorations import (
@@ -77,8 +77,7 @@ class TextDecoration:
 
     @property
     def bot(self) -> Bot:
-        _bot: Bot = self.i18n.data["bot"]
-        return _bot
+        return cast(Bot, self.i18n.data["bot"])
 
     def get_decoration(self, parse_mode: Optional[str] = None) -> TextD:
         parse_mode = parse_mode or self.i18n.context.get("parse_mode", None) or self.bot.parse_mode

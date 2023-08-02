@@ -11,10 +11,10 @@ from .base import main
 @click.option("-i", "--input-files", required=True, multiple=True)
 @click.option("-o", "--output-file", required=True)
 def stub(input_files: Tuple[str, ...], output_file: str) -> None:
-    from aiogram_i18n.utils.fluent_stub import from_files_to_file
+    from aiogram_i18n.utils.fluent_stub import from_files_to_file_ex
 
     allow_formats: Dict[str, Callable[[Sequence[str], str], None]] = {
-        "ftl": from_files_to_file,
+        "ftl": from_files_to_file_ex,
         # "mo"
     }
 
