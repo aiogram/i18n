@@ -1,5 +1,7 @@
+from __future__ import annotations
+
 from contextlib import contextmanager
-from typing import Dict, Any, Generator
+from typing import Any, Dict, Generator
 
 from aiogram.utils.mixins import ContextInstanceMixin
 
@@ -39,16 +41,12 @@ class I18nContext(ContextInstanceMixin["I18nContext"]):
         return proxy.__getattr__(item)
 
     async def set_locale(self, locale: str, **kwargs: Any) -> None:
-        await self.manager.set_locale_mixin.call(
-            locale,
-            core=self.core,
-            manager=self.manager,
-            **self.data, **kwargs
-        )
+        kwargs.update(self.data, core=self.core)
+        await self.manager.locale_setter(locale, **kwargs)
         self.locale = locale
 
     @contextmanager
-    def use_locale(self, locale: str) -> Generator["I18nContext", None, None]:
+    def use_locale(self, locale: str) -> Generator[I18nContext, None, None]:
         old_locale = self.locale
         self.locale = locale
         try:
@@ -57,7 +55,7 @@ class I18nContext(ContextInstanceMixin["I18nContext"]):
             self.locale = old_locale
 
     @contextmanager
-    def use_context(self, **kwargs: Any) -> Generator["I18nContext", None, None]:
+    def use_context(self, **kwargs: Any) -> Generator[I18nContext, None, None]:
         old_context = self.context
         self.context = kwargs
         try:

@@ -12,11 +12,11 @@ from ... import LazyProxy
 
 class BaseFluentKeyParser:
     def __init__(
-            self,
-            exclude_dirs: Sequence[Path],
-            i18n_keys: Sequence[str],
-            separator: str,
-            locales: Union[Sequence[str], None],
+        self,
+        exclude_dirs: Sequence[Path],
+        i18n_keys: Sequence[str],
+        separator: str,
+        locales: Union[Sequence[str], None],
     ) -> None:
         self.exclude_dirs = exclude_dirs
         self.i18n_keys = set(i18n_keys)
@@ -34,8 +34,7 @@ class BaseFluentKeyParser:
             func=m.Attribute(
                 value=m.OneOf(*map(m.Name, self.i18n_keys)),
                 attr=m.Name(value="get"),
-            )
-                 | m.Name(value=LazyProxy.__name__),
+            ) | m.Name(value=LazyProxy.__name__),
             args=[
                 m.Arg(value=m.SaveMatchedNode(m.SimpleString(), name="string")),
                 keywords,
@@ -44,8 +43,7 @@ class BaseFluentKeyParser:
             func=m.Attribute(
                 value=m.OneOf(*map(m.Name, self.i18n_keys)),
                 attr=(m.SaveMatchedNode(m.Name(), name="name")),
-            )
-                 | m.SaveMatchedNode(
+            ) | m.SaveMatchedNode(
                 m.Attribute(
                     value=m.Attribute(value=m.OneOf(*map(m.Name, self.i18n_keys))),
                 ),
@@ -83,16 +81,14 @@ class BaseFluentKeyParser:
 
     def parse_dir(self, path: Path) -> None:
         for p in path.iterdir():
-            _path = path / p
-
             if p.name.startswith(".") or p in self.exclude_dirs:
                 continue
 
-            if _path.is_dir():
-                self.parse_dir(_path)
+            if p.is_dir():
+                self.parse_dir(p)
 
-            elif _path.suffix == ".py":
-                self.parse_file(_path)
+            elif p.suffix == ".py":
+                self.parse_file(p)
 
     def run(self) -> None:
         raise NotImplementedError

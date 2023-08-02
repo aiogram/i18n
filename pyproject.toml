@@ -64,7 +64,7 @@ plugins = ["pydantic.mypy"]
 exclude = [
     "\\.?venv",
     "\\.idea",
-    "\\.test?"
+    "\\.tests?"
 ]
 
 [[tool.mypy.overrides]]
