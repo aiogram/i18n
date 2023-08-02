@@ -9,7 +9,8 @@ from typing import Dict, List, Tuple, cast, Optional, Sequence, Set, Final
 from click import echo
 from libcst import Arg, SimpleString, Name, Attribute, CSTNode
 
-RE_LINE: Final[re.Pattern] = re.compile(r"([^#]+) =")
+
+RE_LINE: Final[re.Pattern[str]] = re.compile(r"([^#]+) =")
 
 
 @dataclass

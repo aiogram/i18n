@@ -56,7 +56,7 @@ jobs:
 
       - name: Install project dependencies
         run: |
-          pip install -e .[tests]
+          pip install -e .[test]
 
       - name: Run tests
         run: pytest --cov=aiogram --cov-config .coveragerc --cov-report=xml

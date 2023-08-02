@@ -1,4 +1,3 @@
-
 from typing import Dict, List, Generator
 
 from fluent.syntax import ast

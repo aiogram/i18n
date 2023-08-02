@@ -10,14 +10,14 @@ from .models import FluentTemplate, FluentTemplateDir
 
 class FluentKeyParser(BaseFluentKeyParser):
     def __init__(
-            self,
-            input_dirs: Sequence[Path],
-            output_file: Path,
-            i18n_keys: Sequence[str],
-            separator: str,
-            locales: Union[Sequence[str], None],
-            exclude_dirs: Sequence[Path],
-            exclude_keys: Sequence[str],
+        self,
+        input_dirs: Sequence[Path],
+        output_file: Path,
+        i18n_keys: Sequence[str],
+        separator: str,
+        locales: Union[Sequence[str], None],
+        exclude_dirs: Sequence[Path],
+        exclude_keys: Sequence[str],
     ) -> None:
         super().__init__(exclude_dirs, i18n_keys, separator, locales)
         self.input_dirs = set(input_dirs)
@@ -52,14 +52,14 @@ class FluentKeyParser(BaseFluentKeyParser):
 
 class FluentMultipleKeyParser(BaseFluentKeyParser):
     def __init__(
-            self,
-            input_paths: Sequence[Path],
-            output_dir: Path,
-            i18n_keys: Sequence[str],
-            separator: str,
-            locales: Union[Sequence[str], None],
-            exclude_dirs: Sequence[Path],
-            exclude_keys: Sequence[str],
+        self,
+        input_paths: Sequence[Path],
+        output_dir: Path,
+        i18n_keys: Sequence[str],
+        separator: str,
+        locales: Union[Sequence[str], None],
+        exclude_dirs: Sequence[Path],
+        exclude_keys: Sequence[str],
     ) -> None:
         super().__init__(exclude_dirs, i18n_keys, separator, locales)
         self.input_paths = set(input_paths)
