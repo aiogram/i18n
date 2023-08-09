@@ -1,10 +1,15 @@
-from typing import Any, Dict, Optional, Union, cast
+from typing import Optional, Union
 
 from aiogram import Dispatcher
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.storage.redis import DefaultKeyBuilder, KeyBuilder, RedisStorage
-from aiogram.types import TelegramObject
-from redis.asyncio.client import Redis
+
+from ..exceptions import NoModuleError
+
+try:
+    from redis.asyncio.client import Redis
+except ImportError:
+    raise NoModuleError(name="RedisManager", module_name="redis")
 from redis.asyncio.connection import ConnectionPool
 
 from .base import BaseManager
@@ -27,11 +32,10 @@ class RedisManager(BaseManager):
         if self.redis is not None:
             return
         if not isinstance(dispatcher.fsm.storage, RedisStorage):
-            raise ValueError("")
+            raise ValueError("no source specified with Redis")
         self.redis = dispatcher.fsm.storage.redis
 
-    async def get_locale(self, event: TelegramObject, data: Dict[str, Any]) -> str:
-        state = cast(FSMContext, data["state"])
+    async def get_locale(self, state: FSMContext) -> str:
         redis_key = self.key_builder.build(state.key, "locale")  # noqa
         value = await self.redis.get(redis_key)
         if isinstance(value, bytes):

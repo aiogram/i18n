@@ -1,31 +1,31 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING, Any, Awaitable, Callable, Dict, Optional
+from typing import TYPE_CHECKING, Any, Awaitable, Callable, Optional
 
 from aiogram.dispatcher.event.handler import CallableMixin
-from aiogram.types import TelegramObject
 
 
 class BaseManager(ABC):
     default_locale: Optional[str]
-    locale_setter: LocaleSetter
 
     def __init__(self, default_locale: Optional[str] = None) -> None:
         self.default_locale = default_locale
-        self.locale_setter = LocaleSetter(self)
-
-    @abstractmethod
-    async def get_locale(self, event: TelegramObject, data: Dict[str, Any]) -> str:
-        ...
+        self.locale_setter = LocaleSetter(self.set_locale)
+        self.locale_getter = LocaleGetter(self.get_locale)
 
     if TYPE_CHECKING:
         set_locale: Callable[..., Awaitable[None]]
+        get_locale: Callable[..., Awaitable[None]]
 
     else:
 
         @abstractmethod
         async def set_locale(self, *args: Any, **kwargs: Any) -> None:
+            ...
+
+        @abstractmethod
+        async def get_locale(self, *args: Any, **kwargs: Any) -> str:
             ...
 
     async def startup(self, *args, **kwargs) -> None:
@@ -36,8 +36,10 @@ class BaseManager(ABC):
 
 
 class LocaleSetter(CallableMixin):
-    def __init__(self, manager: BaseManager) -> None:
-        super().__init__(callback=manager.set_locale)
-
     async def __call__(self, locale: str, /, **kwargs: Any) -> Any:
         return await self.call(locale, **kwargs)
+
+
+class LocaleGetter(CallableMixin):
+    async def __call__(self, **kwargs: Any) -> Any:
+        return await self.call(**kwargs)

@@ -55,7 +55,7 @@ class I18nMiddleware(BaseMiddleware):
         event: TelegramObject,
         data: Dict[str, Any],
     ) -> Any:
-        locale = await self.manager.get_locale(event=event, data=data)
+        locale = await self.manager.locale_getter(event=event, **data)
         data[self.context_key] = context = I18nContext(
             locale=locale,
             core=self.core,
