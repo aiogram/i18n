@@ -1,5 +1,6 @@
-from click import echo, style
 from functools import partial
+
+from click import echo, style
 
 
 def color(message: str, end: bool = True, fg: str = "white"):

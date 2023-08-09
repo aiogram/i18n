@@ -6,6 +6,7 @@ from aiogram_i18n.utils.stub_tree import Key
 
 try:
     from fluent.syntax import FluentParser
+
     from .visitor import FluentVisitor
 except ImportError:
     raise NoModuleError(name="Fluent stub generator", module_name="fluent.syntax")
@@ -25,11 +26,11 @@ STUB_FOOTER = """
 
 class I18nContext(I18nStubs, _I18nContext):
     ...
-    
+
 
 class LazyFactory(I18nStubs, _LazyFactory):
     ...
-    
+
 
 L: LazyFactory
 """
@@ -55,11 +56,13 @@ def parse_file(file: str) -> MESSAGES:
 def stub_from_messages(messages: MESSAGES, kw_only: bool = True) -> str:
     stub_text = STUB_HEADER
     for name, params in messages.items():
-        params = list(map(lambda x: f'{x}: Any', params))
+        params = [f"{x}: Any" for x in params]
         if params and kw_only:
             params.insert(0, "*")
         params.insert(0, "self")
-        stub_text += f"    def {name.replace('-', '_')}({', '.join(params)}) -> str | LazyProxy: ...\n"
+        stub_text += (
+            f"    def {name.replace('-', '_')}({', '.join(params)}) -> str | LazyProxy: ...\n"
+        )
     return stub_text + STUB_FOOTER
 
 
@@ -89,16 +92,20 @@ def from_files_to_file(files: Sequence[str], to_file: str, kw_only: bool = True)
     if file_dir := path.dirname(to_file):
         makedirs(file_dir, exist_ok=True)
     with open(file=to_file, mode="w", encoding="utf8") as w:
-        w.write(stub_from_messages(
-            messages={k: v for file in files for k, v in parse_file(file).items()},
-            kw_only=kw_only
-        ))
+        w.write(
+            stub_from_messages(
+                messages={k: v for file in files for k, v in parse_file(file).items()},
+                kw_only=kw_only,
+            )
+        )
 
 
 def from_files_to_file_ex(files: Sequence[str], to_file: str) -> None:
     if file_dir := path.dirname(to_file):
         makedirs(file_dir, exist_ok=True)
     with open(file=to_file, mode="w", encoding="utf8") as w:
-        w.write(Key().run(
-            messages={k: v for file in files for k, v in parse_file(file).items()},
-        ))
+        w.write(
+            Key().run(
+                messages={k: v for file in files for k, v in parse_file(file).items()},
+            )
+        )

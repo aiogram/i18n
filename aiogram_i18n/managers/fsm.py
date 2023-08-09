@@ -1,4 +1,4 @@
-from typing import Dict, Any, Optional, cast
+from typing import Any, Dict, Optional, cast
 
 from aiogram.fsm.context import FSMContext
 from aiogram.types import TelegramObject
@@ -9,9 +9,7 @@ from aiogram_i18n.managers.base import BaseManager
 class FSMManager(BaseManager):
     key: str
 
-    def __init__(
-        self, key: str = "locale", default_locale: Optional[str] = None
-    ) -> None:
+    def __init__(self, key: str = "locale", default_locale: Optional[str] = None) -> None:
         super().__init__(default_locale=default_locale)
         self.key = key
 

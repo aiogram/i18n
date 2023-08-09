@@ -39,9 +39,7 @@ def fluent_compile_core_multiple() -> BaseCore[Any]:
 class Test:
     async def test_multiple_extract(self, i18n: BaseCore[Any]) -> None:
         input_paths = (Path(__file__).absolute(),)
-        output_dir = (
-            Path(__file__).parent.joinpath("data", TEST_LOCALES_DIR).absolute()
-        )
+        output_dir = Path(__file__).parent.joinpath("data", TEST_LOCALES_DIR).absolute()
 
         fkp = FluentMultipleKeyParser(
             input_paths=input_paths,
@@ -65,14 +63,8 @@ class Test:
         assert i18n.get("buttons-cancel", locale="en") == "buttons-cancel"
         assert i18n.get("buttons-cancel", locale="uk") == "buttons-cancel"
 
-        assert (
-                i18n.get("buttons-add-user", locale="en", user="Bob")
-                == "buttons-add-user Bob"
-        )
-        assert (
-                i18n.get("buttons-add-user", locale="uk", user="Боб")
-                == "buttons-add-user Боб"
-        )
+        assert i18n.get("buttons-add-user", locale="en", user="Bob") == "buttons-add-user Bob"
+        assert i18n.get("buttons-add-user", locale="uk", user="Боб") == "buttons-add-user Боб"
 
         assert i18n.get("msgs-hello", locale="en", user="Bob") == "msgs-hello Bob"
         assert i18n.get("msgs-hello", locale="uk", user="Боб") == "msgs-hello Боб"

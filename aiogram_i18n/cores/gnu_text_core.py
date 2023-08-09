@@ -1,12 +1,13 @@
 from gettext import GNUTranslations
-from typing import Dict, Any, Optional
+from typing import Any, Dict, Optional
 
 from aiogram_i18n.cores.base import BaseCore
 
 
 class GNUTextCore(BaseCore[GNUTranslations]):
     def __init__(
-        self, *,
+        self,
+        *,
         path: str,
         default_locale: Optional[str] = None,
     ) -> None:
@@ -25,7 +26,7 @@ class GNUTextCore(BaseCore[GNUTranslations]):
             trans = translations[locale] = GNUTranslations()
             for path in paths:
                 with open(path, "rb") as fp:
-                    trans._parse(fp=fp) # noqa
+                    trans._parse(fp=fp)  # noqa
 
         return translations
 

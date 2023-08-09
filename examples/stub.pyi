@@ -1,9 +1,10 @@
 from contextlib import contextmanager
-from typing import Any, Union, Generator, Dict
+from typing import Any, Dict, Generator, Union
+
 from aiogram_i18n import LazyProxy
 
 class __cur:
-   def lang(self, *, language: Any) -> Union[str, LazyProxy]: ...
+    def lang(self, *, language: Any) -> Union[str, LazyProxy]: ...
 
 class I18nStubs:
     def hello(self, *, user: Any) -> Union[str, LazyProxy]: ...

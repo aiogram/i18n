@@ -1,12 +1,12 @@
 import os
-from abc import abstractmethod, ABC
-from typing import Any, Dict, List, Optional, Tuple, TypeVar, Generic, cast
-from aiogram_i18n.exceptions import (
-    NoTranslateFileExistsError,
-    NoLocalesFoundError,
-    NoLocalesError
-)
+from abc import ABC, abstractmethod
+from typing import Any, Dict, Generic, List, Optional, Tuple, TypeVar, cast
 
+from aiogram_i18n.exceptions import (
+    NoLocalesError,
+    NoLocalesFoundError,
+    NoTranslateFileExistsError,
+)
 
 Translator = TypeVar("Translator")
 
@@ -47,7 +47,9 @@ class BaseCore(Generic[Translator], ABC):
         return locales
 
     @staticmethod
-    def _find_locales(path: str, locales: List[str], ext: Optional[str] = None) -> Dict[str, List[str]]:
+    def _find_locales(
+        path: str, locales: List[str], ext: Optional[str] = None
+    ) -> Dict[str, List[str]]:
         if not locales:
             raise NoLocalesError
         paths: Dict[str, List[str]] = {}

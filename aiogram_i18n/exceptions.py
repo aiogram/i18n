@@ -25,10 +25,7 @@ class NoModuleError(AiogramI18nError):
 class NoTranslateFileExistsError(AiogramI18nError):
     message = "files {ext}in folder ({locale_path}) not found"
 
-    def __init__(
-            self,
-            locale_path: str, ext: Optional[str] = None
-    ) -> None:
+    def __init__(self, locale_path: str, ext: Optional[str] = None) -> None:
         self.locale_path = locale_path
         self.ext = ext
 
@@ -52,7 +49,7 @@ class NoLocalesFoundError(AiogramI18nError):
         return self.message.format(locales=", ".join(self.locales), path=self.path)
 
 
-class KeyNotFound(AiogramI18nError):
+class KeyNotFoundError(AiogramI18nError):
     message = "Key '{key}' not found."
 
     def __init__(self, key: str) -> None:

@@ -47,7 +47,7 @@ class LazyProxy(BaseModel):  # type: ignore[no-redef]
         return hash(self.data)
 
     def __getnewargs__(self) -> Tuple[str, ...]:
-        return self.data[:],
+        return (self.data[:],)
 
     def __eq__(self, string: object) -> bool:
         if isinstance(string, LazyProxy):

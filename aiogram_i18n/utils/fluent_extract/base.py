@@ -1,13 +1,14 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Sequence, Dict, cast, Any, Union
+from typing import Any, Dict, Sequence, Union, cast
 
 from click import echo
-from libcst import matchers as m, Module, parse_module
+from libcst import Module, parse_module
+from libcst import matchers as m
 
-from .models import FluentKeywords, FluentMatch
 from ... import LazyProxy
+from .models import FluentKeywords, FluentMatch
 
 
 class BaseFluentKeyParser:
@@ -26,15 +27,14 @@ class BaseFluentKeyParser:
 
     @property
     def _matcher(self) -> m.OneOf[m.Call]:
-        keywords = m.SaveMatchedNode(
-            m.ZeroOrMore(m.Arg(keyword=m.Name())), name="keywords"
-        )
+        keywords = m.SaveMatchedNode(m.ZeroOrMore(m.Arg(keyword=m.Name())), name="keywords")
 
         return m.Call(
             func=m.Attribute(
                 value=m.OneOf(*map(m.Name, self.i18n_keys)),
                 attr=m.Name(value="get"),
-            ) | m.Name(value=LazyProxy.__name__),
+            )
+            | m.Name(value=LazyProxy.__name__),
             args=[
                 m.Arg(value=m.SaveMatchedNode(m.SimpleString(), name="string")),
                 keywords,
@@ -43,7 +43,8 @@ class BaseFluentKeyParser:
             func=m.Attribute(
                 value=m.OneOf(*map(m.Name, self.i18n_keys)),
                 attr=(m.SaveMatchedNode(m.Name(), name="name")),
-            ) | m.SaveMatchedNode(
+            )
+            | m.SaveMatchedNode(
                 m.Attribute(
                     value=m.Attribute(value=m.OneOf(*map(m.Name, self.i18n_keys))),
                 ),
@@ -59,7 +60,7 @@ class BaseFluentKeyParser:
             for match in m.extractall(tree, self._matcher)
         )
 
-        for i, match in enumerate(matches):
+        for _i, match in enumerate(matches):
             key = match.extract_key(self.separator, self.i18n_keys)
             kw = keys.get(key, None)
             if kw is not None:

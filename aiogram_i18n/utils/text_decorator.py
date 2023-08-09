@@ -1,13 +1,10 @@
 from __future__ import annotations
 
-from typing import Any, Dict, Optional, Callable, cast
+from typing import Any, Callable, Dict, Optional, cast
 
 from aiogram import Bot
-from aiogram.utils.text_decorations import (
-    TextDecoration as TextD,
-    html_decoration,
-    markdown_decoration
-)
+from aiogram.utils.text_decorations import TextDecoration as TextD
+from aiogram.utils.text_decorations import html_decoration, markdown_decoration
 
 from aiogram_i18n.context import I18nContext
 
@@ -52,7 +49,7 @@ class TextDecoration:
         self.decorations: Dict[Optional[str], TextD] = {
             "html": html_decoration,
             "markdown": markdown_decoration,
-            None: Null()
+            None: Null(),
         }
 
     @property
@@ -115,7 +112,9 @@ class TextDecoration:
     def quote(self, value: str, parse_mode: Optional[str] = None) -> str:
         return self.get_decoration(parse_mode=parse_mode).quote(value)
 
-    def custom_emoji(self, value: str, custom_emoji_id: str, parse_mode: Optional[str] = None) -> str:
+    def custom_emoji(
+        self, value: str, custom_emoji_id: str, parse_mode: Optional[str] = None
+    ) -> str:
         return self.get_decoration(parse_mode=parse_mode).custom_emoji(value, custom_emoji_id)
 
 

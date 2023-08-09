@@ -1,9 +1,9 @@
 from .base import BaseManager
-from .fsm import FSMManager
 from .const import ConstManager
+from .fsm import FSMManager
 
 __all__ = (
     "BaseManager",
     "FSMManager",
-    "ConstManager"
+    "ConstManager",
 )

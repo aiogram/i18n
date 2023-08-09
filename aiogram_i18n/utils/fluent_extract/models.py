@@ -4,11 +4,10 @@ import re
 from copy import copy
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Dict, List, Tuple, cast, Optional, Sequence, Set, Final
+from typing import Dict, Final, List, Optional, Sequence, Set, Tuple, cast
 
 from click import echo
-from libcst import Arg, SimpleString, Name, Attribute, CSTNode
-
+from libcst import Arg, Attribute, CSTNode, Name, SimpleString
 
 RE_LINE: Final[re.Pattern[str]] = re.compile(r"([^#]+) =")
 
@@ -123,11 +122,11 @@ class FluentTemplateDir:
             for path in reversed(self.path.parents):
                 path.mkdir(exist_ok=True)
 
-        filenames: Set[str] = set(
+        filenames: Set[str] = {
             key.split(self.separator, maxsplit=1)[0]
             for key in self.keys.keys()
             if key not in self.exclude_keys
-        )
+        }
 
         for filename in filenames:
             template = FluentTemplate(

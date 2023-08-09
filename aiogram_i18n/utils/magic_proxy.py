@@ -1,15 +1,12 @@
 from __future__ import annotations
 
-from typing import Any, Callable, TypeVar, List, Generic
-
+from typing import Any, Callable, Generic, List, TypeVar
 
 T = TypeVar("T", bound=Any)
 
 
 class MagicProxy(Generic[T]):
-    def __init__(
-        self, call: Callable[..., T], key_separator: str = "-"
-    ) -> None:
+    def __init__(self, call: Callable[..., T], key_separator: str = "-") -> None:
         self.key_separator = key_separator
         self._call = call
         self._query: List[str] = []
