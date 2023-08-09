@@ -79,13 +79,3 @@ jobs:
           virtualenv .venv
           .venv/bin/pip install ../dist/*.whl
           .venv/bin/python -c "import aiogram_i18n; print(aiogram_i18n.__version__)"
-
-      - name: Upload coverage data
-        if: "env.IS_PYPY == 'false'"
-        uses: codecov/codecov-action@v3
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          files: coverage.xml
-          flags: unittests
-          name: py-${{ matrix.python-version }}-${{ matrix.os }}
-          fail_ci_if_error: true
