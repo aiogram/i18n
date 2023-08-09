@@ -28,7 +28,7 @@ class FluentRuntimeCore(BaseCore[FluentBundle]):
         self.functions = functions or {}
         if use_td:
             self.functions.update(td.functions)
-        self.pre_compile = (pre_compile,)
+        self.pre_compile = pre_compile
         self.raise_key_error = raise_key_error
 
     def get(self, key: str, /, locale: str, **kwargs: Any) -> str:
