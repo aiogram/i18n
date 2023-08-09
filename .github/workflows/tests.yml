@@ -2,9 +2,13 @@ name: Tests
 
 on:
   push:
-    branches: [ "master" , "dev" ]
+    branches:
+      - main
+      - dev
   pull_request:
-    branches: [ "master" , "dev" ]
+    branches:
+      - main
+      - dev
 
 jobs:
   build:
@@ -40,7 +44,6 @@ jobs:
       IS_PYPY: ${{ startswith(matrix.python-version, 'pypy') }}
       # Windows has also some limitations:
       # – Redis is not supported on GitHub Windows runners;
-      # – Poetry installer doesn't work on Windows with PyPy.
       IS_WINDOWS: ${{ startswith(matrix.os, 'windows') }}
 
     steps:
@@ -56,10 +59,26 @@ jobs:
 
       - name: Install project dependencies
         run: |
-          pip install -e .[test]
+          pip install -e .[test,dev,compiler,runtime]
+
+      - name: Lint code
+        if: "env.IS_PYPY == 'false'"
+        run: |
+          ruff --format=github aiogram_i18n tests examples
+          black --check --diff aiogram_i18n tests examples
 
       - name: Run tests
-        run: pytest --cov=aiogram --cov-config .coveragerc --cov-report=xml
+        run: pytest --cov=aiogram_i18n --cov-config .coveragerc --cov-report=xml
+
+      - name: Check installable
+        run: |
+          pip install build
+          build --wheel .
+          mkdir try_install
+          cd try_install
+          virtualenv .venv
+          .venv/bin/pip install ../dist/*.whl
+          .venv/bin/python -c "import aiogram_i18n; print(aiogram_i18n.__version__)"
 
       - name: Upload coverage data
         if: "env.IS_PYPY == 'false'"
