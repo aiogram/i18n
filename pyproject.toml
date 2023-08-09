@@ -74,6 +74,10 @@ dev = [
 ]
 
 [tool.hatch.envs.dev]
+post-install = [
+    "pre-commit install",
+]
+
 features = [
     "compiler",
     "runtime",
