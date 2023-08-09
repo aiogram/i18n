@@ -1,11 +1,12 @@
-from typing import Dict, Callable, Optional, Any, cast
+from typing import Any, Callable, Dict, Optional, cast
+
+from aiogram_i18n.exceptions import KeyNotFoundError, NoModuleError
 from aiogram_i18n.utils.text_decorator import td
-from aiogram_i18n.exceptions import NoModuleError, KeyNotFound
 
 try:
-    from fluent_compiler.bundle import FluentBundle  # type: ignore[import]
-except ImportError:
-    raise NoModuleError(name="FluentCompileCore", module_name="fluent_compiler")
+    from fluent_compiler.bundle import FluentBundle
+except ImportError as e:
+    raise NoModuleError(name="FluentCompileCore", module_name="fluent_compiler") from e
 
 from aiogram_i18n.cores.base import BaseCore
 
@@ -18,7 +19,7 @@ class FluentCompileCore(BaseCore[FluentBundle]):
         use_isolating: bool = False,
         functions: Optional[Dict[str, Callable[..., Any]]] = None,
         raise_key_error: bool = True,
-        use_td: bool = True
+        use_td: bool = True,
     ) -> None:
         super().__init__(default_locale=default_locale)
         self.path = path
@@ -34,7 +35,7 @@ class FluentCompileCore(BaseCore[FluentBundle]):
             text, errors = translator.format(message_id=key, args=kwargs)
         except KeyError:
             if self.raise_key_error:
-                raise KeyNotFound(key)
+                raise KeyNotFoundError(key) from None
             return key
         if errors:
             raise errors[0]
@@ -54,9 +55,10 @@ class FluentCompileCore(BaseCore[FluentBundle]):
                 with open(path, "r", encoding="utf8") as fp:
                     texts.append(fp.read())
             translations[locale] = FluentBundle.from_string(
-                text="\n".join(texts), locale=locale,
+                text="\n".join(texts),
+                locale=locale,
                 use_isolating=self.use_isolating,
-                functions=self.functions
+                functions=self.functions,
             )
 
         return translations

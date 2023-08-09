@@ -1,4 +1,3 @@
-
 from pathlib import Path
 from typing import Tuple, Union
 
@@ -73,12 +72,8 @@ def extract(
     input_dirs_ = tuple(Path(input_dir) for input_dir in input_dirs)
     output_file_ = Path(output_file)
 
-    exclude_dirs_ = (
-        Path("__pycache__"), *(Path(exclude_dir) for exclude_dir in exclude_dirs)
-    )
-    exclude_keys += tuple(
-        key for key, value in I18nContext.__dict__.items() if callable(value)
-    )
+    exclude_dirs_ = (Path("__pycache__"), *(Path(exclude_dir) for exclude_dir in exclude_dirs))
+    exclude_keys += tuple(key for key, value in I18nContext.__dict__.items() if callable(value))
 
     fkp = FluentKeyParser(
         input_dirs=input_dirs_,

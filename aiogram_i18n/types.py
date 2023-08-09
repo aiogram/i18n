@@ -4,7 +4,7 @@ This code is generated automatically.
 """
 from __future__ import annotations
 
-from typing import Optional, List, Union, Literal
+from typing import List, Literal, Optional, Union
 
 from aiogram import types
 

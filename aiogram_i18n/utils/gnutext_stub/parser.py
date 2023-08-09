@@ -1,12 +1,11 @@
-from typing import Union
 from re import compile, match, search
-
-from aiogram_i18n.utils.cli.echo import red
+from typing import Union
 
 from aiogram_i18n.exceptions import NoModuleError
+from aiogram_i18n.utils.cli.echo import red
 
 try:
-    from polib import pofile, mofile, POEntry, MOEntry
+    from polib import MOEntry, POEntry, mofile, pofile
 except ImportError:
     raise NoModuleError(name="GnuText stub generator", module_name="polib")
 

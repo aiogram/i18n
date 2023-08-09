@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-from abc import abstractmethod, ABC
-from typing import Any, Awaitable, Callable, Dict, Optional, TYPE_CHECKING
+from abc import ABC, abstractmethod
+from typing import TYPE_CHECKING, Any, Awaitable, Callable, Dict, Optional
 
 from aiogram.dispatcher.event.handler import CallableMixin
 from aiogram.types import TelegramObject
@@ -23,6 +23,7 @@ class BaseManager(ABC):
         set_locale: Callable[..., Awaitable[None]]
 
     else:
+
         @abstractmethod
         async def set_locale(self, *args: Any, **kwargs: Any) -> None:
             ...

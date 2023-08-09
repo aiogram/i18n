@@ -20,9 +20,11 @@ class I18nContext(ContextInstanceMixin["I18nContext"]):
 
     def __init__(
         self,
-        locale: str, core: BaseCore[Any],
-        manager: BaseManager, data: Dict[str, Any],
-        key_separator: str = "-"
+        locale: str,
+        core: BaseCore[Any],
+        manager: BaseManager,
+        data: Dict[str, Any],
+        key_separator: str = "-",
     ) -> None:
         self.locale = locale
         self.core = core

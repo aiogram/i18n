@@ -1,6 +1,5 @@
 from typing import Optional
 
-
 STUB_TEMPLATE = """from contextlib import contextmanager
 from typing import Any, Union, Generator, Dict
 from aiogram_i18n import LazyProxy
@@ -71,17 +70,18 @@ class MethodNode(BaseNode):
         self.kw_only = kw_only
 
     def __str__(self):
-        params = list(map(lambda x: f'{x}: Any', self.params))
+        params = [f"{x}: Any" for x in self.params]
         if params and self.kw_only:
             params.insert(0, "*")
         params.insert(0, "self")
-        return f"def {self.name.replace('-', '_')}({', '.join(params)}) -> Union[str, LazyProxy]: ..."
+        return (
+            f"def {self.name.replace('-', '_')}({', '.join(params)}) -> Union[str, LazyProxy]: ..."
+        )
 
     __repr__ = __str__
 
 
 class ClassNode(BaseClass):
-
     def __init__(self, name: str, stub: BaseClass, mro: Optional[list[str]] = None):
         super().__init__(name)
         self.attrs = []
@@ -98,7 +98,6 @@ class ClassNode(BaseClass):
 
 
 class Stub(BaseClass):
-
     def __init__(self):
         super().__init__("I18nContext")
         self.attrs = []
@@ -145,7 +144,7 @@ class Attr:
     def __str__(self):
         text = f"<Attr{{{self.name}}}"
         if self.attrs:
-            attrs = '\n    '.join(str(i) for i in self.attrs)
+            attrs = "\n    ".join(str(i) for i in self.attrs)
             text += f" attrs: \n    {attrs}"
 
         if self.params:

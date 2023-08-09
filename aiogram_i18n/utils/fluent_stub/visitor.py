@@ -1,4 +1,4 @@
-from typing import Dict, List, Generator
+from typing import Dict, Generator, List
 
 from fluent.syntax import ast
 from fluent.syntax.visitor import Visitor
@@ -19,7 +19,7 @@ class FluentVisitor(Visitor):
             for pos_arg in element.arguments.positional:
                 yield from self._get_placeholders(pos_arg)
 
-    def visit_Message(self, message: ast.Message) -> None:
+    def visit_Message(self, message: ast.Message) -> None:  # noqa: N802
         m = self.messages[message.id.name] = []
 
         if not message.value:

@@ -6,11 +6,14 @@ from pytest_lazyfixture import lazy_fixture
 from aiogram_i18n.cores.base import BaseCore
 
 
-@pytest.mark.parametrize("core", [
-    lazy_fixture("gnu_text_core"),
-    lazy_fixture("fluent_runtime_core"),
-    lazy_fixture("fluent_compile_core"),
-])
+@pytest.mark.parametrize(
+    "core",
+    [
+        lazy_fixture("gnu_text_core"),
+        lazy_fixture("fluent_runtime_core"),
+        lazy_fixture("fluent_compile_core"),
+    ],
+)
 @pytest.mark.asyncio
 class Test:
     async def test_startup(self, core: BaseCore[Any]) -> None:

@@ -1,4 +1,3 @@
-
 from pathlib import Path
 from typing import Tuple, Union
 
@@ -84,12 +83,8 @@ def multiple_extract(
     input_paths_ = tuple(Path(input_path) for input_path in input_paths)
     output_dir_ = Path(output_dir)
 
-    exclude_dirs_ = (
-        Path("__pycache__"), *(Path(exclude_dir) for exclude_dir in exclude_dirs)
-    )
-    exclude_keys += tuple(
-        key for key, value in I18nContext.__dict__.items() if callable(value)
-    )
+    exclude_dirs_ = (Path("__pycache__"), *(Path(exclude_dir) for exclude_dir in exclude_dirs))
+    exclude_keys += tuple(key for key, value in I18nContext.__dict__.items() if callable(value))
 
     fkp = FluentMultipleKeyParser(
         input_paths=input_paths_,
