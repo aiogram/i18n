@@ -73,7 +73,7 @@ jobs:
       - name: Check installable
         run: |
           pip install build
-          build --wheel .
+          python -m build --wheel .
           mkdir try_install
           cd try_install
           virtualenv .venv
