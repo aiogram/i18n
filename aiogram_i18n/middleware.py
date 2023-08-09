@@ -46,6 +46,8 @@ class I18nMiddleware(BaseMiddleware):
         dispatcher.update.outer_middleware.register(self)
         dispatcher.startup.register(self.core.startup)
         dispatcher.shutdown.register(self.core.shutdown)
+        dispatcher.startup.register(self.manager.startup)
+        dispatcher.shutdown.register(self.manager.shutdown)
 
     async def __call__(
         self,

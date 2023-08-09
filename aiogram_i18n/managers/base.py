@@ -27,6 +27,12 @@ class BaseManager(ABC):
         async def set_locale(self, *args: Any, **kwargs: Any) -> None:
             ...
 
+    async def startup(self, *args, **kwargs) -> None:
+        ...
+
+    async def shutdown(self, *args, **kwargs) -> None:
+        ...
+
 
 class LocaleSetter(CallableMixin):
     def __init__(self, manager: BaseManager) -> None:
