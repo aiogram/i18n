@@ -71,6 +71,7 @@ jobs:
         run: pytest --cov=aiogram_i18n --cov-config .coveragerc --cov-report=xml
 
       - name: Check installable
+        if: "env.IS_WINDOWS == 'false'"
         run: |
           pip install build
           python -m build --wheel .
@@ -79,3 +80,14 @@ jobs:
           virtualenv .venv
           .venv/bin/pip install ../dist/*.whl
           .venv/bin/python -c "import aiogram_i18n; print(aiogram_i18n.__version__)"
+
+      - name: Check installable on Windows
+        if: "env.IS_WINDOWS == 'true'"
+        run: |
+          pip install build
+          python -m build --wheel .
+          mkdir try_install
+          cd try_install
+          virtualenv .venv
+          .venv/Scripts/pip install ../dist/*.whl
+          .venv/Scripts/python -c "import aiogram_i18n; print(aiogram_i18n.__version__)"
