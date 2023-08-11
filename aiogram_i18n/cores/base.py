@@ -12,16 +12,25 @@ Translator = TypeVar("Translator")
 
 
 class BaseCore(Generic[Translator], ABC):
+    """
+    Is an abstract base class for implementing core functionality for translation.
+    """
+
     default_locale: Optional[str]
     locales: Dict[str, Translator]
 
     def __init__(self, default_locale: Optional[str] = None) -> None:
+        """
+
+        :param default_locale: The default locale to be used for translations.
+            If not provided, it will default to None.
+        """
         self.default_locale = default_locale
         self.locales = {}
 
     @abstractmethod
     def get(self, key: str, /, locale: str, **kwargs: Any) -> str:
-        ...
+        pass
 
     def get_translator(self, locale: str) -> Translator:
         if locale not in self.locales:
@@ -74,7 +83,7 @@ class BaseCore(Generic[Translator], ABC):
 
     @abstractmethod
     def find_locales(self) -> Dict[str, Translator]:
-        ...
+        pass
 
     @property
     def available_locales(self) -> Tuple[str, ...]:
