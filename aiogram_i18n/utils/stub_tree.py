@@ -9,13 +9,10 @@ from contextlib import contextmanager
 from typing import Any, Union, Generator
 from aiogram_i18n import LazyProxy
 
-
 {classes}
-
 
 class I18nStubs:
     {body}
-
 
 class I18nContext(I18nStubs):
     def get(self, key: str, /, **kwargs: Any) -> str: ...
@@ -23,12 +20,10 @@ class I18nContext(I18nStubs):
     @contextmanager
     def use_locale(self, locale: str) -> Generator[I18nContext, None, None]: ...
 
-
 class LazyFactory(I18nStubs):
     key_separator: str
     def set_separator(self, key_separator: str) -> None: ...
     def __call__(self, key: str, /, **kwargs: dict[str, Any]) -> LazyProxy: ...
-
 
 L: LazyFactory
 """
@@ -122,7 +117,7 @@ class Stub(BaseClass):
         self.classes = []
 
     def __repr__(self) -> str:
-        return "\n\n\n".join(repr(i) for i in reversed(self.classes))
+        return "\n\n".join(repr(i) for i in reversed(self.classes))
 
     def __str__(self) -> str:
         return "\n    ".join(str(i) for i in self.attrs)
