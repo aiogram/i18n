@@ -1,13 +1,13 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import Optional, TypeVar
+from typing import Optional
 
-STUB_TEMPLATE = """from __future__ import annotations
+STUB_TEMPLATE = """from contextlib import contextmanager
+from typing import Any, Generator, Union
 
-from contextlib import contextmanager
-from typing import Any, Union, Generator
 from aiogram_i18n import LazyProxy
+
 
 {classes}
 
@@ -29,9 +29,6 @@ L: LazyFactory
 """
 
 
-T = TypeVar("T", bound="BaseClass")
-
-
 class BaseNode(ABC):
     name: str
 
@@ -47,9 +44,12 @@ class BaseClass(BaseNode, ABC):
     attrs: list[BaseNode]
     stub: BaseClass
     classes: list[BaseClass]
+    number: int
 
-    def add_class(self, class_node: T) -> T:
+    def add_class(self, class_node: BaseClass) -> BaseClass:
         self.attrs.append(class_node)
+        while class_node in class_node.stub.classes:
+            class_node.number += 1
         class_node.stub.classes.append(class_node)
         return class_node
 
@@ -94,19 +94,38 @@ class MethodNode(BaseNode):
 
 
 class ClassNode(BaseClass):
-    def __init__(self, name: str, stub: BaseClass, mro: Optional[list[str]] = None) -> None:
+    def __init__(
+        self,
+        name: str,
+        stub: BaseClass,
+        mro: Optional[list[str]] = None,
+        number: Optional[int] = 0,
+    ) -> None:
         super().__init__(name)
+        self.number = number
         self.attrs = []
         self.stub = stub
         self.mro = mro
 
-    def __repr__(self) -> str:
+    def __repr__(self):
         body = "\n   ".join(str(i) for i in self.attrs)
         mro = "" if self.mro is None else f"{', '.join(self.mro)}"
-        return f"class __{self.name.title()}{mro}:\n   {body}"
+        return f"class {self.class_name}{mro}:\n   {body}"
 
-    def __str__(self) -> str:
-        return f"{self.name}: __{self.name.title()}"
+    def __str__(self):
+        return f"{self.name} = {self.class_name}()"
+
+    @property
+    def class_name(self):
+        return f"{self.name.title()}{self.number or ''}"
+
+    def __hash__(self):
+        return self.class_name.__hash__()
+
+    def __eq__(self, other):
+        if isinstance(other, ClassNode):
+            return hash(other) == hash(self)
+        raise ValueError(f"unknown type {type(other)}")
 
 
 class Stub(BaseClass):

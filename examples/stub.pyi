@@ -1,7 +1,8 @@
 from __future__ import annotations
 
 from contextlib import contextmanager
-from typing import Any, Union, Generator
+from typing import Any, Generator, Union
+
 from aiogram_i18n import LazyProxy
 
 class __Cur:

@@ -8,8 +8,8 @@ from ..exceptions import NoModuleError
 
 try:
     from redis.asyncio.client import Redis
-except ImportError:
-    raise NoModuleError(name="RedisManager", module_name="redis")
+except ImportError as e:
+    raise NoModuleError(name="RedisManager", module_name="redis") from e
 from redis.asyncio.connection import ConnectionPool
 
 from .base import BaseManager

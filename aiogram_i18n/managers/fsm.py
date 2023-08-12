@@ -16,8 +16,8 @@ class FSMManager(BaseManager):
     async def startup(self, dispatcher: Dispatcher) -> None:
         try:
             dispatcher.update.outer_middleware._middlewares.index(dispatcher.fsm)  # noqa
-        except ValueError:
-            raise ValueError("your dispatcher is not configured to work with fsm")
+        except ValueError as e:
+            raise ValueError("dispatcher is not configured to work with fsm") from e
 
     async def get_locale(self, state: FSMContext) -> str:
         fsm_data = await state.get_data()
