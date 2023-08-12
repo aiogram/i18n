@@ -10,7 +10,6 @@ from aiogram import types
 
 from aiogram_i18n.lazy import LazyProxy
 
-
 StrOrLazy = Union[str, LazyProxy]
 
 
