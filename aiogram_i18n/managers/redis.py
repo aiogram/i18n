@@ -1,4 +1,4 @@
-from typing import Optional, Union
+from typing import Optional, Union, cast
 
 from aiogram import Dispatcher
 from aiogram.fsm.context import FSMContext
@@ -18,7 +18,7 @@ from .base import BaseManager
 class RedisManager(BaseManager):
     def __init__(
         self,
-        redis: Optional[Union[Redis, ConnectionPool]] = None,
+        redis: Optional[Union[Redis[bytes], ConnectionPool]] = None,
         key_builder: Optional[KeyBuilder] = None,
         default_locale: Optional[str] = None,
     ):
@@ -26,7 +26,7 @@ class RedisManager(BaseManager):
         self.key_builder: KeyBuilder = key_builder or DefaultKeyBuilder()
         if isinstance(redis, ConnectionPool):
             redis = Redis(connection_pool=redis)
-        self.redis: Optional[Redis] = redis
+        self.redis: Optional[Redis[bytes]] = redis
 
     async def startup(self, dispatcher: Dispatcher) -> None:
         if self.redis is not None:
@@ -36,12 +36,14 @@ class RedisManager(BaseManager):
         self.redis = dispatcher.fsm.storage.redis
 
     async def get_locale(self, state: FSMContext) -> str:
-        redis_key = self.key_builder.build(state.key, "locale")  # noqa
-        value = await self.redis.get(redis_key)
+        redis_key = self.key_builder.build(state.key, "locale")  # type: ignore[arg-type]
+        redis = cast(Redis[bytes], self.redis)
+        value = await redis.get(redis_key)
         if isinstance(value, bytes):
             return value.decode("utf-8")
-        return value or self.default_locale
+        return value or cast(str, self.default_locale)
 
     async def set_locale(self, locale: str, state: FSMContext) -> None:
-        redis_key = self.key_builder.build(state.key, "locale")  # noqa
-        await self.redis.set(redis_key, locale)
+        redis_key = self.key_builder.build(state.key, "locale")  # type: ignore[arg-type]
+        redis = cast(Redis[bytes], self.redis)
+        await redis.set(redis_key, locale)

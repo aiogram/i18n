@@ -16,7 +16,7 @@ class BaseManager(ABC):
 
     if TYPE_CHECKING:
         set_locale: Callable[..., Awaitable[None]]
-        get_locale: Callable[..., Awaitable[None]]
+        get_locale: Callable[..., Awaitable[str]]
 
     else:
 
@@ -28,10 +28,10 @@ class BaseManager(ABC):
         async def get_locale(self, *args: Any, **kwargs: Any) -> str:
             ...
 
-    async def startup(self, *args, **kwargs) -> None:
+    async def startup(self, *args: Any, **kwargs: Any) -> None:
         ...
 
-    async def shutdown(self, *args, **kwargs) -> None:
+    async def shutdown(self, *args: Any, **kwargs: Any) -> None:
         ...
 
 
