@@ -137,15 +137,15 @@ class Attr:
         self.params: Optional[list[str]] = None
         self.name = name
 
-    def render(self, cls: BaseClass) -> None:
+    def render(self, node: BaseClass) -> None:
         if self.attrs:
-            me = cls.create_class(self.name)
+            me = node.create_class(self.name)
             for attr in self.attrs:
                 attr.render(me)
             if self.params:
                 me.create_call(self.params)
         else:
-            cls.create_method(name=self.name, params=self.params)
+            node.create_method(name=self.name, params=self.params)
 
     def add(self, name: str) -> Attr:
         if name not in self.attrs:
@@ -184,7 +184,7 @@ class Key(Attr):
             attr.params = mv
         stub = Stub()
         for attr_ in self.attrs:
-            attr_.render(cls=stub)
+            attr_.render(node=stub)
         return stub.render()
 
     def __str__(self) -> str:

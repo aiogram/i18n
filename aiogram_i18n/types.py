@@ -18,6 +18,7 @@ class BotCommand(types.BotCommand):
     description: StrOrLazy
 
     if TYPE_CHECKING:
+
         def __init__(
             __pydantic__self__,
             *,
@@ -25,11 +26,7 @@ class BotCommand(types.BotCommand):
             description: StrOrLazy,
             **__pydantic_kwargs: Any,
         ) -> None:
-            super().__init__(
-                command=command,
-                description=description,
-                **__pydantic_kwargs
-            )
+            super().__init__(command=command, description=description, **__pydantic_kwargs)
 
 
 class ChatPermissions(types.ChatPermissions):
@@ -40,16 +37,14 @@ class ForceReply(types.ForceReply):
     input_field_placeholder: Optional[StrOrLazy] = None
 
     if TYPE_CHECKING:
+
         def __init__(
             __pydantic__self__,
             *,
             input_field_placeholder: Optional[StrOrLazy] = None,
             **__pydantic_kwargs: Any,
         ) -> None:
-            super().__init__(
-                input_field_placeholder=input_field_placeholder,
-                **__pydantic_kwargs
-            )
+            super().__init__(input_field_placeholder=input_field_placeholder, **__pydantic_kwargs)
 
 
 class InlineKeyboardButton(types.InlineKeyboardButton):
@@ -60,6 +55,7 @@ class InlineKeyboardButton(types.InlineKeyboardButton):
     switch_inline_query_current_chat: Optional[StrOrLazy] = None
 
     if TYPE_CHECKING:
+
         def __init__(
             __pydantic__self__,
             *,
@@ -76,7 +72,7 @@ class InlineKeyboardButton(types.InlineKeyboardButton):
                 callback_data=callback_data,
                 switch_inline_query=switch_inline_query,
                 switch_inline_query_current_chat=switch_inline_query_current_chat,
-                **__pydantic_kwargs
+                **__pydantic_kwargs,
             )
 
 
@@ -96,6 +92,7 @@ class InlineQueryResultArticle(types.InlineQueryResultArticle):
     thumbnail_url: Optional[StrOrLazy] = None
 
     if TYPE_CHECKING:
+
         def __init__(
             __pydantic__self__,
             *,
@@ -112,7 +109,7 @@ class InlineQueryResultArticle(types.InlineQueryResultArticle):
                 url=url,
                 description=description,
                 thumbnail_url=thumbnail_url,
-                **__pydantic_kwargs
+                **__pydantic_kwargs,
             )
 
 
@@ -125,6 +122,7 @@ class InlineQueryResultAudio(types.InlineQueryResultAudio):
     performer: Optional[StrOrLazy] = None
 
     if TYPE_CHECKING:
+
         def __init__(
             __pydantic__self__,
             *,
@@ -143,7 +141,7 @@ class InlineQueryResultAudio(types.InlineQueryResultAudio):
                 caption=caption,
                 parse_mode=parse_mode,
                 performer=performer,
-                **__pydantic_kwargs
+                **__pydantic_kwargs,
             )
 
 
@@ -154,6 +152,7 @@ class InlineQueryResultCachedAudio(types.InlineQueryResultCachedAudio):
     parse_mode: Optional[StrOrLazy] = None
 
     if TYPE_CHECKING:
+
         def __init__(
             __pydantic__self__,
             *,
@@ -168,7 +167,7 @@ class InlineQueryResultCachedAudio(types.InlineQueryResultCachedAudio):
                 audio_file_id=audio_file_id,
                 caption=caption,
                 parse_mode=parse_mode,
-                **__pydantic_kwargs
+                **__pydantic_kwargs,
             )
 
 
@@ -181,6 +180,7 @@ class InlineQueryResultCachedDocument(types.InlineQueryResultCachedDocument):
     parse_mode: Optional[StrOrLazy] = None
 
     if TYPE_CHECKING:
+
         def __init__(
             __pydantic__self__,
             *,
@@ -199,7 +199,7 @@ class InlineQueryResultCachedDocument(types.InlineQueryResultCachedDocument):
                 description=description,
                 caption=caption,
                 parse_mode=parse_mode,
-                **__pydantic_kwargs
+                **__pydantic_kwargs,
             )
 
 
@@ -211,6 +211,7 @@ class InlineQueryResultCachedGif(types.InlineQueryResultCachedGif):
     parse_mode: Optional[StrOrLazy] = None
 
     if TYPE_CHECKING:
+
         def __init__(
             __pydantic__self__,
             *,
@@ -227,7 +228,7 @@ class InlineQueryResultCachedGif(types.InlineQueryResultCachedGif):
                 title=title,
                 caption=caption,
                 parse_mode=parse_mode,
-                **__pydantic_kwargs
+                **__pydantic_kwargs,
             )
 
 
@@ -239,6 +240,7 @@ class InlineQueryResultCachedMpeg4Gif(types.InlineQueryResultCachedMpeg4Gif):
     parse_mode: Optional[StrOrLazy] = None
 
     if TYPE_CHECKING:
+
         def __init__(
             __pydantic__self__,
             *,
@@ -255,7 +257,7 @@ class InlineQueryResultCachedMpeg4Gif(types.InlineQueryResultCachedMpeg4Gif):
                 title=title,
                 caption=caption,
                 parse_mode=parse_mode,
-                **__pydantic_kwargs
+                **__pydantic_kwargs,
             )
 
 
@@ -268,6 +270,7 @@ class InlineQueryResultCachedPhoto(types.InlineQueryResultCachedPhoto):
     parse_mode: Optional[StrOrLazy] = None
 
     if TYPE_CHECKING:
+
         def __init__(
             __pydantic__self__,
             *,
@@ -286,7 +289,7 @@ class InlineQueryResultCachedPhoto(types.InlineQueryResultCachedPhoto):
                 description=description,
                 caption=caption,
                 parse_mode=parse_mode,
-                **__pydantic_kwargs
+                **__pydantic_kwargs,
             )
 
 
@@ -295,6 +298,7 @@ class InlineQueryResultCachedSticker(types.InlineQueryResultCachedSticker):
     sticker_file_id: StrOrLazy
 
     if TYPE_CHECKING:
+
         def __init__(
             __pydantic__self__,
             *,
@@ -302,11 +306,7 @@ class InlineQueryResultCachedSticker(types.InlineQueryResultCachedSticker):
             sticker_file_id: StrOrLazy,
             **__pydantic_kwargs: Any,
         ) -> None:
-            super().__init__(
-                id=id,
-                sticker_file_id=sticker_file_id,
-                **__pydantic_kwargs
-            )
+            super().__init__(id=id, sticker_file_id=sticker_file_id, **__pydantic_kwargs)
 
 
 class InlineQueryResultCachedVideo(types.InlineQueryResultCachedVideo):
@@ -318,6 +318,7 @@ class InlineQueryResultCachedVideo(types.InlineQueryResultCachedVideo):
     parse_mode: Optional[StrOrLazy] = None
 
     if TYPE_CHECKING:
+
         def __init__(
             __pydantic__self__,
             *,
@@ -336,7 +337,7 @@ class InlineQueryResultCachedVideo(types.InlineQueryResultCachedVideo):
                 description=description,
                 caption=caption,
                 parse_mode=parse_mode,
-                **__pydantic_kwargs
+                **__pydantic_kwargs,
             )
 
 
@@ -348,6 +349,7 @@ class InlineQueryResultCachedVoice(types.InlineQueryResultCachedVoice):
     parse_mode: Optional[StrOrLazy] = None
 
     if TYPE_CHECKING:
+
         def __init__(
             __pydantic__self__,
             *,
@@ -364,7 +366,7 @@ class InlineQueryResultCachedVoice(types.InlineQueryResultCachedVoice):
                 title=title,
                 caption=caption,
                 parse_mode=parse_mode,
-                **__pydantic_kwargs
+                **__pydantic_kwargs,
             )
 
 
@@ -377,6 +379,7 @@ class InlineQueryResultContact(types.InlineQueryResultContact):
     thumbnail_url: Optional[StrOrLazy] = None
 
     if TYPE_CHECKING:
+
         def __init__(
             __pydantic__self__,
             *,
@@ -395,7 +398,7 @@ class InlineQueryResultContact(types.InlineQueryResultContact):
                 last_name=last_name,
                 vcard=vcard,
                 thumbnail_url=thumbnail_url,
-                **__pydantic_kwargs
+                **__pydantic_kwargs,
             )
 
 
@@ -410,6 +413,7 @@ class InlineQueryResultDocument(types.InlineQueryResultDocument):
     thumbnail_url: Optional[StrOrLazy] = None
 
     if TYPE_CHECKING:
+
         def __init__(
             __pydantic__self__,
             *,
@@ -432,7 +436,7 @@ class InlineQueryResultDocument(types.InlineQueryResultDocument):
                 parse_mode=parse_mode,
                 description=description,
                 thumbnail_url=thumbnail_url,
-                **__pydantic_kwargs
+                **__pydantic_kwargs,
             )
 
 
@@ -441,6 +445,7 @@ class InlineQueryResultGame(types.InlineQueryResultGame):
     game_short_name: StrOrLazy
 
     if TYPE_CHECKING:
+
         def __init__(
             __pydantic__self__,
             *,
@@ -448,11 +453,7 @@ class InlineQueryResultGame(types.InlineQueryResultGame):
             game_short_name: StrOrLazy,
             **__pydantic_kwargs: Any,
         ) -> None:
-            super().__init__(
-                id=id,
-                game_short_name=game_short_name,
-                **__pydantic_kwargs
-            )
+            super().__init__(id=id, game_short_name=game_short_name, **__pydantic_kwargs)
 
 
 class InlineQueryResultGif(types.InlineQueryResultGif):
@@ -465,6 +466,7 @@ class InlineQueryResultGif(types.InlineQueryResultGif):
     parse_mode: Optional[StrOrLazy] = None
 
     if TYPE_CHECKING:
+
         def __init__(
             __pydantic__self__,
             *,
@@ -485,7 +487,7 @@ class InlineQueryResultGif(types.InlineQueryResultGif):
                 title=title,
                 caption=caption,
                 parse_mode=parse_mode,
-                **__pydantic_kwargs
+                **__pydantic_kwargs,
             )
 
 
@@ -495,6 +497,7 @@ class InlineQueryResultLocation(types.InlineQueryResultLocation):
     thumbnail_url: Optional[StrOrLazy] = None
 
     if TYPE_CHECKING:
+
         def __init__(
             __pydantic__self__,
             *,
@@ -503,12 +506,7 @@ class InlineQueryResultLocation(types.InlineQueryResultLocation):
             thumbnail_url: Optional[StrOrLazy] = None,
             **__pydantic_kwargs: Any,
         ) -> None:
-            super().__init__(
-                id=id,
-                title=title,
-                thumbnail_url=thumbnail_url,
-                **__pydantic_kwargs
-            )
+            super().__init__(id=id, title=title, thumbnail_url=thumbnail_url, **__pydantic_kwargs)
 
 
 class InlineQueryResultMpeg4Gif(types.InlineQueryResultMpeg4Gif):
@@ -521,6 +519,7 @@ class InlineQueryResultMpeg4Gif(types.InlineQueryResultMpeg4Gif):
     parse_mode: Optional[StrOrLazy] = None
 
     if TYPE_CHECKING:
+
         def __init__(
             __pydantic__self__,
             *,
@@ -541,7 +540,7 @@ class InlineQueryResultMpeg4Gif(types.InlineQueryResultMpeg4Gif):
                 title=title,
                 caption=caption,
                 parse_mode=parse_mode,
-                **__pydantic_kwargs
+                **__pydantic_kwargs,
             )
 
 
@@ -555,6 +554,7 @@ class InlineQueryResultPhoto(types.InlineQueryResultPhoto):
     parse_mode: Optional[StrOrLazy] = None
 
     if TYPE_CHECKING:
+
         def __init__(
             __pydantic__self__,
             *,
@@ -575,7 +575,7 @@ class InlineQueryResultPhoto(types.InlineQueryResultPhoto):
                 description=description,
                 caption=caption,
                 parse_mode=parse_mode,
-                **__pydantic_kwargs
+                **__pydantic_kwargs,
             )
 
 
@@ -590,6 +590,7 @@ class InlineQueryResultVenue(types.InlineQueryResultVenue):
     thumbnail_url: Optional[StrOrLazy] = None
 
     if TYPE_CHECKING:
+
         def __init__(
             __pydantic__self__,
             *,
@@ -612,7 +613,7 @@ class InlineQueryResultVenue(types.InlineQueryResultVenue):
                 google_place_id=google_place_id,
                 google_place_type=google_place_type,
                 thumbnail_url=thumbnail_url,
-                **__pydantic_kwargs
+                **__pydantic_kwargs,
             )
 
 
@@ -627,6 +628,7 @@ class InlineQueryResultVideo(types.InlineQueryResultVideo):
     description: Optional[StrOrLazy] = None
 
     if TYPE_CHECKING:
+
         def __init__(
             __pydantic__self__,
             *,
@@ -649,7 +651,7 @@ class InlineQueryResultVideo(types.InlineQueryResultVideo):
                 caption=caption,
                 parse_mode=parse_mode,
                 description=description,
-                **__pydantic_kwargs
+                **__pydantic_kwargs,
             )
 
 
@@ -661,6 +663,7 @@ class InlineQueryResultVoice(types.InlineQueryResultVoice):
     parse_mode: Optional[StrOrLazy] = None
 
     if TYPE_CHECKING:
+
         def __init__(
             __pydantic__self__,
             *,
@@ -677,7 +680,7 @@ class InlineQueryResultVoice(types.InlineQueryResultVoice):
                 title=title,
                 caption=caption,
                 parse_mode=parse_mode,
-                **__pydantic_kwargs
+                **__pydantic_kwargs,
             )
 
 
@@ -688,6 +691,7 @@ class InputContactMessageContent(types.InputContactMessageContent):
     vcard: Optional[StrOrLazy] = None
 
     if TYPE_CHECKING:
+
         def __init__(
             __pydantic__self__,
             *,
@@ -702,7 +706,7 @@ class InputContactMessageContent(types.InputContactMessageContent):
                 first_name=first_name,
                 last_name=last_name,
                 vcard=vcard,
-                **__pydantic_kwargs
+                **__pydantic_kwargs,
             )
 
 
@@ -716,6 +720,7 @@ class InputInvoiceMessageContent(types.InputInvoiceMessageContent):
     photo_url: Optional[StrOrLazy] = None
 
     if TYPE_CHECKING:
+
         def __init__(
             __pydantic__self__,
             *,
@@ -736,7 +741,7 @@ class InputInvoiceMessageContent(types.InputInvoiceMessageContent):
                 currency=currency,
                 provider_data=provider_data,
                 photo_url=photo_url,
-                **__pydantic_kwargs
+                **__pydantic_kwargs,
             )
 
 
@@ -753,6 +758,7 @@ class InputMediaAnimation(types.InputMediaAnimation):
     parse_mode: Optional[StrOrLazy] = None
 
     if TYPE_CHECKING:
+
         def __init__(
             __pydantic__self__,
             *,
@@ -760,11 +766,7 @@ class InputMediaAnimation(types.InputMediaAnimation):
             parse_mode: Optional[StrOrLazy] = None,
             **__pydantic_kwargs: Any,
         ) -> None:
-            super().__init__(
-                caption=caption,
-                parse_mode=parse_mode,
-                **__pydantic_kwargs
-            )
+            super().__init__(caption=caption, parse_mode=parse_mode, **__pydantic_kwargs)
 
 
 class InputMediaAudio(types.InputMediaAudio):
@@ -774,6 +776,7 @@ class InputMediaAudio(types.InputMediaAudio):
     title: Optional[StrOrLazy] = None
 
     if TYPE_CHECKING:
+
         def __init__(
             __pydantic__self__,
             *,
@@ -788,7 +791,7 @@ class InputMediaAudio(types.InputMediaAudio):
                 parse_mode=parse_mode,
                 performer=performer,
                 title=title,
-                **__pydantic_kwargs
+                **__pydantic_kwargs,
             )
 
 
@@ -797,6 +800,7 @@ class InputMediaDocument(types.InputMediaDocument):
     parse_mode: Optional[StrOrLazy] = None
 
     if TYPE_CHECKING:
+
         def __init__(
             __pydantic__self__,
             *,
@@ -804,11 +808,7 @@ class InputMediaDocument(types.InputMediaDocument):
             parse_mode: Optional[StrOrLazy] = None,
             **__pydantic_kwargs: Any,
         ) -> None:
-            super().__init__(
-                caption=caption,
-                parse_mode=parse_mode,
-                **__pydantic_kwargs
-            )
+            super().__init__(caption=caption, parse_mode=parse_mode, **__pydantic_kwargs)
 
 
 class InputMediaPhoto(types.InputMediaPhoto):
@@ -816,6 +816,7 @@ class InputMediaPhoto(types.InputMediaPhoto):
     parse_mode: Optional[StrOrLazy] = None
 
     if TYPE_CHECKING:
+
         def __init__(
             __pydantic__self__,
             *,
@@ -823,11 +824,7 @@ class InputMediaPhoto(types.InputMediaPhoto):
             parse_mode: Optional[StrOrLazy] = None,
             **__pydantic_kwargs: Any,
         ) -> None:
-            super().__init__(
-                caption=caption,
-                parse_mode=parse_mode,
-                **__pydantic_kwargs
-            )
+            super().__init__(caption=caption, parse_mode=parse_mode, **__pydantic_kwargs)
 
 
 class InputMediaVideo(types.InputMediaVideo):
@@ -835,6 +832,7 @@ class InputMediaVideo(types.InputMediaVideo):
     parse_mode: Optional[StrOrLazy] = None
 
     if TYPE_CHECKING:
+
         def __init__(
             __pydantic__self__,
             *,
@@ -842,11 +840,7 @@ class InputMediaVideo(types.InputMediaVideo):
             parse_mode: Optional[StrOrLazy] = None,
             **__pydantic_kwargs: Any,
         ) -> None:
-            super().__init__(
-                caption=caption,
-                parse_mode=parse_mode,
-                **__pydantic_kwargs
-            )
+            super().__init__(caption=caption, parse_mode=parse_mode, **__pydantic_kwargs)
 
 
 class InputMessageContent(types.InputMessageContent):
@@ -858,6 +852,7 @@ class InputTextMessageContent(types.InputTextMessageContent):
     parse_mode: Optional[StrOrLazy] = None
 
     if TYPE_CHECKING:
+
         def __init__(
             __pydantic__self__,
             *,
@@ -865,11 +860,7 @@ class InputTextMessageContent(types.InputTextMessageContent):
             parse_mode: Optional[StrOrLazy] = None,
             **__pydantic_kwargs: Any,
         ) -> None:
-            super().__init__(
-                message_text=message_text,
-                parse_mode=parse_mode,
-                **__pydantic_kwargs
-            )
+            super().__init__(message_text=message_text, parse_mode=parse_mode, **__pydantic_kwargs)
 
 
 class InputVenueMessageContent(types.InputVenueMessageContent):
@@ -881,6 +872,7 @@ class InputVenueMessageContent(types.InputVenueMessageContent):
     google_place_type: Optional[StrOrLazy] = None
 
     if TYPE_CHECKING:
+
         def __init__(
             __pydantic__self__,
             *,
@@ -899,7 +891,7 @@ class InputVenueMessageContent(types.InputVenueMessageContent):
                 foursquare_type=foursquare_type,
                 google_place_id=google_place_id,
                 google_place_type=google_place_type,
-                **__pydantic_kwargs
+                **__pydantic_kwargs,
             )
 
 
@@ -907,48 +899,42 @@ class KeyboardButton(types.KeyboardButton):
     text: StrOrLazy
 
     if TYPE_CHECKING:
+
         def __init__(
             __pydantic__self__,
             *,
             text: StrOrLazy,
             **__pydantic_kwargs: Any,
         ) -> None:
-            super().__init__(
-                text=text,
-                **__pydantic_kwargs
-            )
+            super().__init__(text=text, **__pydantic_kwargs)
 
 
 class KeyboardButtonPollType(types.KeyboardButtonPollType):
     type: Optional[StrOrLazy] = None
 
     if TYPE_CHECKING:
+
         def __init__(
             __pydantic__self__,
             *,
             type: Optional[StrOrLazy] = None,
             **__pydantic_kwargs: Any,
         ) -> None:
-            super().__init__(
-                type=type,
-                **__pydantic_kwargs
-            )
+            super().__init__(type=type, **__pydantic_kwargs)
 
 
 class LabeledPrice(types.LabeledPrice):
     label: StrOrLazy
 
     if TYPE_CHECKING:
+
         def __init__(
             __pydantic__self__,
             *,
             label: StrOrLazy,
             **__pydantic_kwargs: Any,
         ) -> None:
-            super().__init__(
-                label=label,
-                **__pydantic_kwargs
-            )
+            super().__init__(label=label, **__pydantic_kwargs)
 
 
 class MenuButton(types.MenuButton):
@@ -956,6 +942,7 @@ class MenuButton(types.MenuButton):
     text: Optional[StrOrLazy] = None
 
     if TYPE_CHECKING:
+
         def __init__(
             __pydantic__self__,
             *,
@@ -963,59 +950,49 @@ class MenuButton(types.MenuButton):
             text: Optional[StrOrLazy] = None,
             **__pydantic_kwargs: Any,
         ) -> None:
-            super().__init__(
-                type=type,
-                text=text,
-                **__pydantic_kwargs
-            )
+            super().__init__(type=type, text=text, **__pydantic_kwargs)
 
 
 class MenuButtonCommands(types.MenuButtonCommands):
     text: Optional[StrOrLazy] = None
 
     if TYPE_CHECKING:
+
         def __init__(
             __pydantic__self__,
             *,
             text: Optional[StrOrLazy] = None,
             **__pydantic_kwargs: Any,
         ) -> None:
-            super().__init__(
-                text=text,
-                **__pydantic_kwargs
-            )
+            super().__init__(text=text, **__pydantic_kwargs)
 
 
 class MenuButtonDefault(types.MenuButtonDefault):
     text: Optional[StrOrLazy] = None
 
     if TYPE_CHECKING:
+
         def __init__(
             __pydantic__self__,
             *,
             text: Optional[StrOrLazy] = None,
             **__pydantic_kwargs: Any,
         ) -> None:
-            super().__init__(
-                text=text,
-                **__pydantic_kwargs
-            )
+            super().__init__(text=text, **__pydantic_kwargs)
 
 
 class MenuButtonWebApp(types.MenuButtonWebApp):
     text: StrOrLazy
 
     if TYPE_CHECKING:
+
         def __init__(
             __pydantic__self__,
             *,
             text: StrOrLazy,
             **__pydantic_kwargs: Any,
         ) -> None:
-            super().__init__(
-                text=text,
-                **__pydantic_kwargs
-            )
+            super().__init__(text=text, **__pydantic_kwargs)
 
 
 class MessageEntity(types.MessageEntity):
@@ -1025,6 +1002,7 @@ class MessageEntity(types.MessageEntity):
     custom_emoji_id: Optional[StrOrLazy] = None
 
     if TYPE_CHECKING:
+
         def __init__(
             __pydantic__self__,
             *,
@@ -1039,7 +1017,7 @@ class MessageEntity(types.MessageEntity):
                 url=url,
                 language=language,
                 custom_emoji_id=custom_emoji_id,
-                **__pydantic_kwargs
+                **__pydantic_kwargs,
             )
 
 
@@ -1054,6 +1032,7 @@ class PassportElementErrorDataField(types.PassportElementErrorDataField):
     message: StrOrLazy
 
     if TYPE_CHECKING:
+
         def __init__(
             __pydantic__self__,
             *,
@@ -1068,7 +1047,7 @@ class PassportElementErrorDataField(types.PassportElementErrorDataField):
                 field_name=field_name,
                 data_hash=data_hash,
                 message=message,
-                **__pydantic_kwargs
+                **__pydantic_kwargs,
             )
 
 
@@ -1078,6 +1057,7 @@ class PassportElementErrorFile(types.PassportElementErrorFile):
     message: StrOrLazy
 
     if TYPE_CHECKING:
+
         def __init__(
             __pydantic__self__,
             *,
@@ -1086,12 +1066,7 @@ class PassportElementErrorFile(types.PassportElementErrorFile):
             message: StrOrLazy,
             **__pydantic_kwargs: Any,
         ) -> None:
-            super().__init__(
-                type=type,
-                file_hash=file_hash,
-                message=message,
-                **__pydantic_kwargs
-            )
+            super().__init__(type=type, file_hash=file_hash, message=message, **__pydantic_kwargs)
 
 
 class PassportElementErrorFiles(types.PassportElementErrorFiles):
@@ -1099,6 +1074,7 @@ class PassportElementErrorFiles(types.PassportElementErrorFiles):
     message: StrOrLazy
 
     if TYPE_CHECKING:
+
         def __init__(
             __pydantic__self__,
             *,
@@ -1106,11 +1082,7 @@ class PassportElementErrorFiles(types.PassportElementErrorFiles):
             message: StrOrLazy,
             **__pydantic_kwargs: Any,
         ) -> None:
-            super().__init__(
-                type=type,
-                message=message,
-                **__pydantic_kwargs
-            )
+            super().__init__(type=type, message=message, **__pydantic_kwargs)
 
 
 class PassportElementErrorFrontSide(types.PassportElementErrorFrontSide):
@@ -1119,6 +1091,7 @@ class PassportElementErrorFrontSide(types.PassportElementErrorFrontSide):
     message: StrOrLazy
 
     if TYPE_CHECKING:
+
         def __init__(
             __pydantic__self__,
             *,
@@ -1127,12 +1100,7 @@ class PassportElementErrorFrontSide(types.PassportElementErrorFrontSide):
             message: StrOrLazy,
             **__pydantic_kwargs: Any,
         ) -> None:
-            super().__init__(
-                type=type,
-                file_hash=file_hash,
-                message=message,
-                **__pydantic_kwargs
-            )
+            super().__init__(type=type, file_hash=file_hash, message=message, **__pydantic_kwargs)
 
 
 class PassportElementErrorReverseSide(types.PassportElementErrorReverseSide):
@@ -1141,6 +1109,7 @@ class PassportElementErrorReverseSide(types.PassportElementErrorReverseSide):
     message: StrOrLazy
 
     if TYPE_CHECKING:
+
         def __init__(
             __pydantic__self__,
             *,
@@ -1149,12 +1118,7 @@ class PassportElementErrorReverseSide(types.PassportElementErrorReverseSide):
             message: StrOrLazy,
             **__pydantic_kwargs: Any,
         ) -> None:
-            super().__init__(
-                type=type,
-                file_hash=file_hash,
-                message=message,
-                **__pydantic_kwargs
-            )
+            super().__init__(type=type, file_hash=file_hash, message=message, **__pydantic_kwargs)
 
 
 class PassportElementErrorSelfie(types.PassportElementErrorSelfie):
@@ -1163,6 +1127,7 @@ class PassportElementErrorSelfie(types.PassportElementErrorSelfie):
     message: StrOrLazy
 
     if TYPE_CHECKING:
+
         def __init__(
             __pydantic__self__,
             *,
@@ -1171,12 +1136,7 @@ class PassportElementErrorSelfie(types.PassportElementErrorSelfie):
             message: StrOrLazy,
             **__pydantic_kwargs: Any,
         ) -> None:
-            super().__init__(
-                type=type,
-                file_hash=file_hash,
-                message=message,
-                **__pydantic_kwargs
-            )
+            super().__init__(type=type, file_hash=file_hash, message=message, **__pydantic_kwargs)
 
 
 class PassportElementErrorTranslationFile(types.PassportElementErrorTranslationFile):
@@ -1185,6 +1145,7 @@ class PassportElementErrorTranslationFile(types.PassportElementErrorTranslationF
     message: StrOrLazy
 
     if TYPE_CHECKING:
+
         def __init__(
             __pydantic__self__,
             *,
@@ -1193,12 +1154,7 @@ class PassportElementErrorTranslationFile(types.PassportElementErrorTranslationF
             message: StrOrLazy,
             **__pydantic_kwargs: Any,
         ) -> None:
-            super().__init__(
-                type=type,
-                file_hash=file_hash,
-                message=message,
-                **__pydantic_kwargs
-            )
+            super().__init__(type=type, file_hash=file_hash, message=message, **__pydantic_kwargs)
 
 
 class PassportElementErrorTranslationFiles(types.PassportElementErrorTranslationFiles):
@@ -1206,6 +1162,7 @@ class PassportElementErrorTranslationFiles(types.PassportElementErrorTranslation
     message: StrOrLazy
 
     if TYPE_CHECKING:
+
         def __init__(
             __pydantic__self__,
             *,
@@ -1213,11 +1170,7 @@ class PassportElementErrorTranslationFiles(types.PassportElementErrorTranslation
             message: StrOrLazy,
             **__pydantic_kwargs: Any,
         ) -> None:
-            super().__init__(
-                type=type,
-                message=message,
-                **__pydantic_kwargs
-            )
+            super().__init__(type=type, message=message, **__pydantic_kwargs)
 
 
 class PassportElementErrorUnspecified(types.PassportElementErrorUnspecified):
@@ -1226,6 +1179,7 @@ class PassportElementErrorUnspecified(types.PassportElementErrorUnspecified):
     message: StrOrLazy
 
     if TYPE_CHECKING:
+
         def __init__(
             __pydantic__self__,
             *,
@@ -1235,10 +1189,7 @@ class PassportElementErrorUnspecified(types.PassportElementErrorUnspecified):
             **__pydantic_kwargs: Any,
         ) -> None:
             super().__init__(
-                type=type,
-                element_hash=element_hash,
-                message=message,
-                **__pydantic_kwargs
+                type=type, element_hash=element_hash, message=message, **__pydantic_kwargs
             )
 
 
@@ -1246,16 +1197,14 @@ class ReplyKeyboardMarkup(types.ReplyKeyboardMarkup):
     input_field_placeholder: Optional[StrOrLazy] = None
 
     if TYPE_CHECKING:
+
         def __init__(
             __pydantic__self__,
             *,
             input_field_placeholder: Optional[StrOrLazy] = None,
             **__pydantic_kwargs: Any,
         ) -> None:
-            super().__init__(
-                input_field_placeholder=input_field_placeholder,
-                **__pydantic_kwargs
-            )
+            super().__init__(input_field_placeholder=input_field_placeholder, **__pydantic_kwargs)
 
 
 class ReplyKeyboardRemove(types.ReplyKeyboardRemove):
