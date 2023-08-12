@@ -95,4 +95,4 @@ class BaseFluentKeyParser(ABC):
 
     @abstractmethod
     def run(self) -> None:
-        ...
+        pass

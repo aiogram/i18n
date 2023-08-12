@@ -10,6 +10,7 @@ from aiogram import types
 
 from aiogram_i18n.lazy import LazyProxy
 
+
 StrOrLazy = Union[str, LazyProxy]
 
 
@@ -30,7 +31,7 @@ class BotCommand(types.BotCommand):
 
 
 class ChatPermissions(types.ChatPermissions):
-    ...
+    pass
 
 
 class ForceReply(types.ForceReply):
@@ -77,11 +78,11 @@ class InlineKeyboardButton(types.InlineKeyboardButton):
 
 
 class InlineKeyboardMarkup(types.InlineKeyboardMarkup):
-    ...
+    pass
 
 
 class InlineQueryResult(types.InlineQueryResult):
-    ...
+    pass
 
 
 class InlineQueryResultArticle(types.InlineQueryResultArticle):
@@ -746,11 +747,11 @@ class InputInvoiceMessageContent(types.InputInvoiceMessageContent):
 
 
 class InputLocationMessageContent(types.InputLocationMessageContent):
-    ...
+    pass
 
 
 class InputMedia(types.InputMedia):
-    ...
+    pass
 
 
 class InputMediaAnimation(types.InputMediaAnimation):
@@ -844,7 +845,7 @@ class InputMediaVideo(types.InputMediaVideo):
 
 
 class InputMessageContent(types.InputMessageContent):
-    ...
+    pass
 
 
 class InputTextMessageContent(types.InputTextMessageContent):
@@ -1022,7 +1023,7 @@ class MessageEntity(types.MessageEntity):
 
 
 class PassportElementError(types.PassportElementError):
-    ...
+    pass
 
 
 class PassportElementErrorDataField(types.PassportElementErrorDataField):
@@ -1208,7 +1209,7 @@ class ReplyKeyboardMarkup(types.ReplyKeyboardMarkup):
 
 
 class ReplyKeyboardRemove(types.ReplyKeyboardRemove):
-    ...
+    pass
 
 
 __all__ = (

@@ -22,17 +22,17 @@ class BaseManager(ABC):
 
         @abstractmethod
         async def set_locale(self, *args: Any, **kwargs: Any) -> None:
-            ...
+            pass
 
         @abstractmethod
         async def get_locale(self, *args: Any, **kwargs: Any) -> str:
-            ...
+            pass
 
     async def startup(self, *args: Any, **kwargs: Any) -> None:
-        ...
+        pass
 
     async def shutdown(self, *args: Any, **kwargs: Any) -> None:
-        ...
+        pass
 
 
 class LocaleSetter(CallableMixin):
