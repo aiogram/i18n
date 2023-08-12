@@ -99,10 +99,15 @@ exclude = [
     "\\.idea",
     "\\.tests?",
 ]
+ignore_missing_imports = true
 
 [[tool.mypy.overrides]]
 module = "mre"
 strict_optional = false
+
+[[tool.mypy.overrides]]
+module = "aiogram_i18n.types"
+disable_error_code = ["arg-type", "assignment"]
 
 
 [tool.black]
@@ -144,7 +149,7 @@ select = [
     "YTT",
 ]
 ignore = [
-
+    "N805"
 ]
 unfixable = [
 

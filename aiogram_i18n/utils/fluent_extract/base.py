@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from abc import ABC, abstractmethod
 from pathlib import Path
 from typing import Any, Dict, Sequence, Union, cast
 
@@ -7,11 +8,12 @@ from click import echo
 from libcst import Module, parse_module
 from libcst import matchers as m
 
-from ... import LazyProxy
+from aiogram_i18n import LazyProxy
+
 from .models import FluentKeywords, FluentMatch
 
 
-class BaseFluentKeyParser:
+class BaseFluentKeyParser(ABC):
     def __init__(
         self,
         exclude_dirs: Sequence[Path],
@@ -91,5 +93,6 @@ class BaseFluentKeyParser:
             elif p.suffix == ".py":
                 self.parse_file(p)
 
+    @abstractmethod
     def run(self) -> None:
-        raise NotImplementedError
+        pass
