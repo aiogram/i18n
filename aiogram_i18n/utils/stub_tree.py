@@ -99,7 +99,7 @@ class ClassNode(BaseClass):
         name: str,
         stub: BaseClass,
         mro: Optional[list[str]] = None,
-        number: Optional[int] = 0,
+        number: int = 0,
     ) -> None:
         super().__init__(name)
         self.number = number

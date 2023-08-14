@@ -1,8 +1,7 @@
 from typing import Optional, Union, cast
 
-from aiogram import Dispatcher
 from aiogram.fsm.context import FSMContext
-from aiogram.fsm.storage.redis import DefaultKeyBuilder, KeyBuilder, RedisStorage
+from aiogram.fsm.storage.redis import DefaultKeyBuilder, KeyBuilder
 
 from ..exceptions import NoModuleError
 
@@ -18,7 +17,7 @@ from .base import BaseManager
 class RedisManager(BaseManager):
     def __init__(
         self,
-        redis: Optional[Union[Redis, ConnectionPool]] = None,
+        redis: Union[Redis, ConnectionPool],
         key_builder: Optional[KeyBuilder] = None,
         default_locale: Optional[str] = None,
     ):
@@ -26,14 +25,7 @@ class RedisManager(BaseManager):
         self.key_builder: KeyBuilder = key_builder or DefaultKeyBuilder()
         if isinstance(redis, ConnectionPool):
             redis = Redis(connection_pool=redis)
-        self.redis: Optional[Redis] = redis
-
-    async def startup(self, dispatcher: Dispatcher) -> None:
-        if self.redis is not None:
-            return
-        if not isinstance(dispatcher.fsm.storage, RedisStorage):
-            raise ValueError("no source specified with Redis")
-        self.redis = dispatcher.fsm.storage.redis
+        self.redis: Redis = redis
 
     async def get_locale(self, state: FSMContext) -> str:
         redis_key = self.key_builder.build(state.key, "locale")  # type: ignore[arg-type]

@@ -6,7 +6,7 @@ from aiogram.types import TelegramObject
 from aiogram_i18n.context import I18nContext
 from aiogram_i18n.cores.base import BaseCore
 from aiogram_i18n.managers.base import BaseManager
-from aiogram_i18n.managers.fsm import FSMManager
+from aiogram_i18n.managers.memory import MemoryManager
 
 
 class I18nMiddleware(BaseMiddleware):
@@ -30,7 +30,7 @@ class I18nMiddleware(BaseMiddleware):
         with_context: bool = True,
     ) -> None:
         self.core = core
-        self.manager = manager or FSMManager(locale_key or "locale")
+        self.manager = manager or MemoryManager()
         self.context_key = context_key
         self.locale_key = locale_key
         self.middleware_key = middleware_key
