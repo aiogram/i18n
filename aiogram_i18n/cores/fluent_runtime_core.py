@@ -31,16 +31,16 @@ class FluentRuntimeCore(BaseCore[FluentBundle]):
         self.pre_compile = pre_compile
         self.raise_key_error = raise_key_error
 
-    def get(self, key: str, /, locale: str, **kwargs: Any) -> str:
+    def get(self, message_id: str, locale: Optional[str] = None, /, **kwargs: Any) -> str:
         translator: FluentBundle = self.get_translator(locale=locale)
         try:
-            message = translator.get_message(message_id=key)
+            message = translator.get_message(message_id=message_id)
             if message.value is None:
-                raise KeyError(key)
+                raise KeyError(message)
         except KeyError:
             if self.raise_key_error:
-                raise KeyNotFoundError(key) from None
-            return key
+                raise KeyNotFoundError(message_id) from None
+            return message_id
         text, errors = translator.format_pattern(pattern=message.value, args=kwargs)
         if errors:
             raise errors[0]

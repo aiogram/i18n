@@ -2,6 +2,7 @@ import os
 from abc import ABC, abstractmethod
 from typing import Any, Dict, Generic, List, Optional, Tuple, TypeVar, cast
 
+from aiogram_i18n import I18nContext
 from aiogram_i18n.exceptions import (
     NoLocalesError,
     NoLocalesFoundError,
@@ -20,10 +21,12 @@ class BaseCore(Generic[Translator], ABC):
         self.locales = {}
 
     @abstractmethod
-    def get(self, key: str, /, locale: str, **kwargs: Any) -> str:
+    def get(self, message: str, locale: Optional[str] = None, /, **kwargs: Any) -> str:
         pass
 
-    def get_translator(self, locale: str) -> Translator:
+    def get_translator(self, locale: Optional[str] = None) -> Translator:
+        if locale is None:
+            locale = cast(I18nContext, I18nContext.get_current(no_error=False)).locale
         if locale not in self.locales:
             locale = cast(str, self.default_locale)
         return self.locales[locale]

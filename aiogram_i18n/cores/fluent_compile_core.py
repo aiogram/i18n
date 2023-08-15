@@ -29,14 +29,14 @@ class FluentCompileCore(BaseCore[FluentBundle]):
             self.functions.update(td.functions)
         self.raise_key_error = raise_key_error
 
-    def get(self, key: str, /, locale: str, **kwargs: Any) -> str:
+    def get(self, message: str, locale: Optional[str] = None, /, **kwargs: Any) -> str:
         translator: FluentBundle = self.get_translator(locale=locale)
         try:
-            text, errors = translator.format(message_id=key, args=kwargs)
+            text, errors = translator.format(message_id=message, args=kwargs)
         except KeyError:
             if self.raise_key_error:
-                raise KeyNotFoundError(key) from None
-            return key
+                raise KeyNotFoundError(message) from None
+            return message
         if errors:
             raise errors[0]
         return cast(str, text)  # 'cause fluent_compiler type-ignored
