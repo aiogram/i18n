@@ -35,7 +35,7 @@ keywords = [
 ]
 dynamic = ["version"]
 dependencies = [
-    "aiogram~=3.0.0rc1",
+    "aiogram>=3.0.0b8",
     "click~=8.1.0",
 ]
 
@@ -66,7 +66,6 @@ test = [
 ]
 dev = [
     "black~=23.7.0",
-    "isort~=5.11",
     "ruff~=0.0.280",
     "mypy~=1.4.1",
     "pre-commit~=3.3.3",
