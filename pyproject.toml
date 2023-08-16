@@ -87,7 +87,7 @@ features = [
 [tool.hatch.envs.default.scripts]
 reformat = [
     "black aiogram_i18n tests examples",
-    "isort aiogram_i18n tests examples",
+#    "isort aiogram_i18n tests examples",
 ]
 lint = "ruff aiogram_i18n"
 
@@ -124,8 +124,8 @@ exclude = '''
 )
 '''
 
-[tool.isort]
-profile = "black"
+#[tool.isort]
+#profile = "black"
 
 [tool.ruff]
 target-version = "py38"
