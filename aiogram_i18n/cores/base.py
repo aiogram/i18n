@@ -15,21 +15,29 @@ Translator = TypeVar("Translator")
 class BaseCore(Generic[Translator], ABC):
     default_locale: Optional[str]
     locales: Dict[str, Translator]
+    locales_map: Dict[str, str]
 
-    def __init__(self, default_locale: Optional[str] = None) -> None:
+    def __init__(self,
+                 default_locale: Optional[str] = None,
+                 locales_map: Optional[Dict[str, str]] = None,
+                 ) -> None:
         self.default_locale = default_locale
         self.locales = {}
+        self.locales_map = locales_map or {}
 
     @abstractmethod
     def get(self, message: str, locale: Optional[str] = None, /, **kwargs: Any) -> str:
         pass
 
-    def get_translator(self, locale: Optional[str] = None) -> Translator:
+    def get_translator(self, locale: str) -> Translator:
+        return self.locales[locale]
+
+    def get_locale(self, locale: Optional[str] = None) -> str:
         if locale is None:
-            locale = cast(I18nContext, I18nContext.get_current(no_error=False)).locale
+            locale = I18nContext.get_current(no_error=False).locale
         if locale not in self.locales:
             locale = cast(str, self.default_locale)
-        return self.locales[locale]
+        return locale
 
     async def startup(self) -> None:
         self.locales.update(self.find_locales())
@@ -46,7 +54,7 @@ class BaseCore(Generic[Translator], ABC):
             if os.path.isdir(os.path.join(path, file_path)):
                 locales.append(file_path)
         if not locales:
-            raise NoLocalesFoundError(locales=["..."], path=path)
+            raise NoLocalesFoundError(locales=[], path=path)
         return locales
 
     @staticmethod

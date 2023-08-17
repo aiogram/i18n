@@ -21,8 +21,9 @@ class FluentRuntimeCore(BaseCore[FluentBundle]):
         pre_compile: bool = True,
         raise_key_error: bool = True,
         use_td: bool = True,
+        locales_map: Optional[Dict[str, str]] = None,
     ) -> None:
-        super().__init__(default_locale=default_locale)
+        super().__init__(default_locale=default_locale, locales_map=locales_map)
         self.path = path
         self.use_isolating = use_isolating
         self.functions = functions or {}
@@ -32,12 +33,15 @@ class FluentRuntimeCore(BaseCore[FluentBundle]):
         self.raise_key_error = raise_key_error
 
     def get(self, message_id: str, locale: Optional[str] = None, /, **kwargs: Any) -> str:
+        locale = self.get_locale(locale=locale)
         translator: FluentBundle = self.get_translator(locale=locale)
         try:
             message = translator.get_message(message_id=message_id)
             if message.value is None:
                 raise KeyError(message)
         except KeyError:
+            if locale := self.locales_map.get(locale):
+                return self.get(message_id, locale, **kwargs)
             if self.raise_key_error:
                 raise KeyNotFoundError(message_id) from None
             return message_id
