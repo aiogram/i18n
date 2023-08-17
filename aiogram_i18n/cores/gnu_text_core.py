@@ -6,10 +6,10 @@ from aiogram_i18n.exceptions import KeyNotFoundError
 
 
 class Fallback:
-    def gettext(self, message):
+    def gettext(self, message: str):
         raise KeyError
 
-    def ngettext(self, msgid1, msgid2, n):
+    def ngettext(self, msgid1: str, msgid2: Optional[str], n: int):
         raise KeyError
 
 
@@ -37,7 +37,7 @@ class GNUTextCore(BaseCore[GNUTranslations]):
         locales = self._extract_locales(self.path)
         for locale, paths in self._find_locales(self.path, locales, ".mo").items():
             trans = translations[locale] = GNUTranslations()
-            trans._fallback = fallback
+            trans._fallback = fallback  # noqa
             for path in paths:
                 with open(path, "rb") as fp:
                     trans._parse(fp=fp)  # noqa
@@ -52,6 +52,7 @@ class GNUTextCore(BaseCore[GNUTranslations]):
         return translations
 
     def get(self, message: str, locale: Optional[str] = None, /, **kwargs: Any) -> str:
+        locale = self.get_locale(locale=locale)
         translator = self.get_translator(locale=locale)
         try:
             return translator.gettext(message=message).format(**kwargs)
@@ -69,13 +70,14 @@ class GNUTextCore(BaseCore[GNUTranslations]):
         /,
         **kwargs: Any,
     ) -> str:
+        locale = self.get_locale(locale=locale)
         translator = self.get_translator(locale=locale)
+        if plural is None:
+            plural = singular
         try:
-            return translator.ngettext(
-                msgid1=singular,
-                msgid2=plural or singular,
-                n=n
-            ).format(**kwargs)
+            return translator.ngettext(msgid1=singular, msgid2=plural, n=n).format(
+                **kwargs
+            )
         except KeyError:
             if self.raise_key_error:
                 raise KeyNotFoundError(singular) from None

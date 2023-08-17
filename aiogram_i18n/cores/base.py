@@ -17,10 +17,11 @@ class BaseCore(Generic[Translator], ABC):
     locales: Dict[str, Translator]
     locales_map: Dict[str, str]
 
-    def __init__(self,
-                 default_locale: Optional[str] = None,
-                 locales_map: Optional[Dict[str, str]] = None,
-                 ) -> None:
+    def __init__(
+        self,
+        default_locale: Optional[str] = None,
+        locales_map: Optional[Dict[str, str]] = None,
+    ) -> None:
         self.default_locale = default_locale
         self.locales = {}
         self.locales_map = locales_map or {}

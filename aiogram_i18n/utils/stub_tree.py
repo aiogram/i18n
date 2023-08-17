@@ -107,22 +107,22 @@ class ClassNode(BaseClass):
         self.stub = stub
         self.mro = mro
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         body = "\n   ".join(str(i) for i in self.attrs)
         mro = "" if self.mro is None else f"{', '.join(self.mro)}"
         return f"class {self.class_name}{mro}:\n   {body}"
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self.name} = {self.class_name}()"
 
     @property
-    def class_name(self):
+    def class_name(self) -> str:
         return f"{self.name.title()}{self.number or ''}"
 
-    def __hash__(self):
+    def __hash__(self) -> int:
         return self.class_name.__hash__()
 
-    def __eq__(self, other):
+    def __eq__(self, other) -> bool:
         if isinstance(other, ClassNode):
             return hash(other) == hash(self)
         raise ValueError(f"unknown type {type(other)}")
