@@ -1,15 +1,15 @@
 from gettext import GNUTranslations
-from typing import Any, Dict, Optional
+from typing import Any, Dict, NoReturn, Optional
 
 from aiogram_i18n.cores.base import BaseCore
 from aiogram_i18n.exceptions import KeyNotFoundError
 
 
 class Fallback:
-    def gettext(self, message: str):
+    def gettext(self, message: str) -> NoReturn:
         raise KeyError
 
-    def ngettext(self, msgid1: str, msgid2: Optional[str], n: int):
+    def ngettext(self, msgid1: str, msgid2: Optional[str], n: int) -> NoReturn:
         raise KeyError
 
 

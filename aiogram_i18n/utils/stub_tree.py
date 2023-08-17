@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import Optional
+from typing import Any, Optional
 
 STUB_TEMPLATE = """from contextlib import contextmanager
 from typing import Any, Generator, Union
@@ -122,7 +122,7 @@ class ClassNode(BaseClass):
     def __hash__(self) -> int:
         return self.class_name.__hash__()
 
-    def __eq__(self, other) -> bool:
+    def __eq__(self, other: Any) -> bool:
         if isinstance(other, ClassNode):
             return hash(other) == hash(self)
         raise ValueError(f"unknown type {type(other)}")
