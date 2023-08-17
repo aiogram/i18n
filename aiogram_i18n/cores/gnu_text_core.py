@@ -75,9 +75,7 @@ class GNUTextCore(BaseCore[GNUTranslations]):
         if plural is None:
             plural = singular
         try:
-            return translator.ngettext(msgid1=singular, msgid2=plural, n=n).format(
-                **kwargs
-            )
+            return translator.ngettext(msgid1=singular, msgid2=plural, n=n).format(**kwargs)
         except KeyError:
             if self.raise_key_error:
                 raise KeyNotFoundError(singular) from None
