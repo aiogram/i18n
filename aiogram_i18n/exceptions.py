@@ -59,7 +59,7 @@ class KeyNotFoundError(AiogramI18nError):
         return self.message.format(key=self.key)
 
 
-class ContextItemError(BaseException):
+class ContextItemError(AiogramI18nError):
     message = "context({context}) has no item '{key}'"
 
     def __init__(self, key: str, context: Dict[str, Any]) -> None:
@@ -68,3 +68,13 @@ class ContextItemError(BaseException):
 
     def __str__(self) -> str:
         return self.message.format(key=self.key, context=self.context)
+
+
+class UnknownLocaleError(AiogramI18nError):
+    message = "Unknown locale: '{locale}'"
+
+    def __init__(self, locale: str) -> None:
+        self.locale = locale
+
+    def __str__(self) -> str:
+        return self.message.format(locale=self.locale)

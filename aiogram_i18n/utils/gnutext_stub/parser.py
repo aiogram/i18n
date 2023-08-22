@@ -33,6 +33,7 @@ def parse_po_file(file: str) -> Messages:
         return parse(cast(list[POEntry], pofile(file)))
     except ValueError as e:
         red(f"file {file} {e.args[0]}")
+        raise
 
 
 def parse_mo_file(file: str) -> Messages:
@@ -40,3 +41,4 @@ def parse_mo_file(file: str) -> Messages:
         return parse(cast(list[MOEntry], mofile(file)))
     except ValueError as e:
         red(f"file {file} {e.args[0]}")
+        raise
