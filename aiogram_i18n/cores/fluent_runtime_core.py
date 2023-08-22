@@ -1,11 +1,12 @@
-from typing import Dict, Callable, Optional, Any, cast
+from typing import Any, Callable, Dict, Optional, cast
 
-from aiogram_i18n.exceptions import NoModuleError, KeyNotFound
+from aiogram_i18n.exceptions import KeyNotFoundError, NoModuleError
+from aiogram_i18n.utils.text_decorator import td
 
 try:
     from fluent.runtime import FluentBundle, FluentResource
-except ImportError:
-    raise NoModuleError(name="FluentRuntimeCore", module_name="fluent.runtime")
+except ImportError as e:
+    raise NoModuleError(name="FluentRuntimeCore", module_name="fluent.runtime") from e
 
 from aiogram_i18n.cores.base import BaseCore
 
@@ -18,29 +19,33 @@ class FluentRuntimeCore(BaseCore[FluentBundle]):
         use_isolating: bool = False,
         functions: Optional[Dict[str, Callable[..., Any]]] = None,
         pre_compile: bool = True,
-        raise_key_error: bool = True
+        raise_key_error: bool = True,
+        use_td: bool = True,
+        locales_map: Optional[Dict[str, str]] = None,
     ) -> None:
-        super().__init__(default_locale=default_locale)
+        super().__init__(default_locale=default_locale, locales_map=locales_map)
         self.path = path
         self.use_isolating = use_isolating
-        self.functions = functions
-        self.pre_compile = pre_compile,
+        self.functions = functions or {}
+        if use_td:
+            self.functions.update(td.functions)
+        self.pre_compile = pre_compile
         self.raise_key_error = raise_key_error
 
-    def get(self, key: str, /, locale: str, **kwargs: Any) -> str:
+    def get(self, message_id: str, locale: Optional[str] = None, /, **kwargs: Any) -> str:
+        locale = self.get_locale(locale=locale)
         translator: FluentBundle = self.get_translator(locale=locale)
         try:
-            message = translator.get_message(message_id=key)
+            message = translator.get_message(message_id=message_id)
             if message.value is None:
-                raise KeyError(key)
+                raise KeyError(message)
         except KeyError:
+            if locale := self.locales_map.get(locale):
+                return self.get(message_id, locale, **kwargs)
             if self.raise_key_error:
-                raise KeyNotFound(key)
-            return key
-        text, errors = translator.format_pattern(
-            pattern=message.value,
-            args=kwargs
-        )
+                raise KeyNotFoundError(message_id) from None
+            return message_id
+        text, errors = translator.format_pattern(pattern=message.value, args=kwargs)
         if errors:
             raise errors[0]
         return cast(str, text)
@@ -51,9 +56,7 @@ class FluentRuntimeCore(BaseCore[FluentBundle]):
 
         for locale, paths in self._find_locales(self.path, locales, ".ftl").items():
             translations[locale] = FluentBundle(
-                locales=[locale],
-                use_isolating=self.use_isolating,
-                functions=self.functions
+                locales=[locale], use_isolating=self.use_isolating, functions=self.functions
             )
 
             for path in paths:

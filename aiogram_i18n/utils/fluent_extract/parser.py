@@ -1,102 +1,93 @@
 from __future__ import annotations
 
 import os
-from typing import Sequence, Dict, cast, Any
+from pathlib import Path
+from typing import Sequence, Union
 
-from click import echo
-from libcst import parse_module, matchers as m, Module
-
-from .models import FluentTemplate, FluentMatch, FluentKeywords
-from ... import LazyProxy
+from .base import BaseFluentKeyParser
+from .models import FluentTemplate, FluentTemplateDir
 
 
-class FluentKeyParser:
+class FluentKeyParser(BaseFluentKeyParser):
     def __init__(
         self,
-        input_dirs: Sequence[str], output_file: str,
-        i18n_keys: Sequence[str], separator: str,
-        exclude_dirs: Sequence[str], exclude_keys: Sequence[str]
+        input_dirs: Sequence[Path],
+        output_file: Path,
+        i18n_keys: Sequence[str],
+        separator: str,
+        locales: Union[Sequence[str], None],
+        exclude_dirs: Sequence[Path],
+        exclude_keys: Sequence[str],
     ) -> None:
+        super().__init__(exclude_dirs, i18n_keys, separator, locales)
         self.input_dirs = set(input_dirs)
         self.output_file = output_file
-        self.i18n_keys = set(i18n_keys)
-        self.separator = separator
         self.exclude_dirs = exclude_dirs
         self.exclude_keys = list(exclude_keys)
-        self.result: Dict[str, FluentKeywords] = {}
 
-    @property
-    def _matcher(self) -> m.OneOf[m.Call]:
-        keywords = m.SaveMatchedNode(
-            m.ZeroOrMore(m.Arg(keyword=m.Name())), name="keywords"
-        )
-
-        return m.Call(
-            func=m.Attribute(
-                value=m.OneOf(*map(m.Name, self.i18n_keys)),
-                attr=m.Name(value="get"),
-            ) | m.Name(value=LazyProxy.__name__),
-            args=[
-                m.Arg(value=m.SaveMatchedNode(m.SimpleString(), name="key")),
-                keywords
-            ]
-        ) | m.Call(
-            func=m.Attribute(
-                value=m.OneOf(*map(m.Name, self.i18n_keys)),
-                attr=m.SaveMatchedNode(m.Name(), name="key"),
-            ),
-            args=[keywords]
-        )
-
-    def parse_tree(self, tree: Module) -> None:
-        keys: Dict[str, FluentKeywords] = {}
-        matches = tuple(
-            FluentMatch(**cast(Dict[str, Any], match)) for match in
-            m.extractall(tree, self._matcher)
-        )
-
-        for match in matches:
-            key = match.extract_key(self.separator)
-            kw = keys.get(key)
-            if not kw:
-                keys[key] = FluentKeywords(keywords=match.extract_keywords())
-            else:
-                kw.keywords.extend(match.extract_keywords())
-
-        self.result.update(keys)
-
-    def parse_file(self, path: str) -> None:
-        try:
-            with open(path, mode="r", encoding="utf-8") as py:
-                tree = parse_module(py.read())
-                self.parse_tree(tree)
-
-        except PermissionError as e:
-            echo(f"Can't parse file {path}: {e}")
-
-    def parse_dir(self, path: str) -> None:
-        for p in os.listdir(path):
-            _path = os.path.join(path, p)
-
-            if p.startswith(".") or p in self.exclude_dirs:
-                continue
-
-            if os.path.isdir(_path):
-                self.parse_dir(_path)
-
-            elif _path.endswith(".py"):
-                self.parse_file(os.path.join(path, p))
-
-    def run(self) -> None:
+    def run(self, create_missing_dirs: bool = False) -> None:
         for path in self.input_dirs:
             if os.path.isdir(path):
                 self.parse_dir(path)
             else:
                 self.parse_file(path)
 
-        template = FluentTemplate(
-            filename=self.output_file,
-            keys=self.result,
-            exclude_keys=self.exclude_keys
-        )
-        template.write()
+        if self.locales:
+            for locale in self.locales:
+                template = FluentTemplate(
+                    filename=self.output_file.parent / locale / self.output_file.name,
+                    keys=self.result,
+                    exclude_keys=self.exclude_keys,
+                )
+                template.write(create_missing_dirs=create_missing_dirs)
+
+        else:
+            template = FluentTemplate(
+                filename=self.output_file,
+                keys=self.result,
+                exclude_keys=self.exclude_keys,
+            )
+            template.write(create_missing_dirs=create_missing_dirs)
+
+
+class FluentMultipleKeyParser(BaseFluentKeyParser):
+    def __init__(
+        self,
+        input_paths: Sequence[Path],
+        output_dir: Path,
+        i18n_keys: Sequence[str],
+        separator: str,
+        locales: Union[Sequence[str], None],
+        exclude_dirs: Sequence[Path],
+        exclude_keys: Sequence[str],
+    ) -> None:
+        super().__init__(exclude_dirs, i18n_keys, separator, locales)
+        self.input_paths = set(input_paths)
+        self.output_dir = output_dir
+        self.exclude_keys = list(exclude_keys)
+
+    def run(self, create_missing_dirs: bool = False) -> None:
+        for path in self.input_paths:
+            if path.is_dir():
+                self.parse_dir(path)
+            else:
+                self.parse_file(path)
+
+        if self.locales:
+            for locale in self.locales:
+                template = FluentTemplateDir(
+                    path=self.output_dir / locale,
+                    separator=self.separator,
+                    keys=self.result,
+                    exclude_keys=self.exclude_keys,
+                )
+                template.write(create_missing_dirs=create_missing_dirs)
+
+        else:
+            template = FluentTemplateDir(
+                path=self.output_dir,
+                separator=self.separator,
+                keys=self.result,
+                exclude_keys=self.exclude_keys,
+            )
+            template.write(create_missing_dirs=create_missing_dirs)

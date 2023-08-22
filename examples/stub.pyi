@@ -1,21 +1,27 @@
-from typing import Any, Union
+from __future__ import annotations
 
-from aiogram_i18n import I18nContext as _I18nContext
-from aiogram_i18n.lazy import LazyProxy, LazyFactory as _LazyFactory
+from contextlib import contextmanager
+from typing import Any, Generator, Union
 
+from aiogram_i18n import LazyProxy
+
+class __Cur:
+    def lang(self, *, language: Any) -> Union[str, LazyProxy]: ...
 
 class I18nStubs:
     def hello(self, *, user: Any) -> Union[str, LazyProxy]: ...
-    def cur_lang(self, *, language: Any) -> Union[str, LazyProxy]: ...
+    cur: __Cur
     def help(self) -> Union[str, LazyProxy]: ...
 
+class I18nContext(I18nStubs):
+    def get(self, key: str, /, **kwargs: Any) -> str: ...
+    async def set_locale(self, locale: str, **kwargs: Any) -> None: ...
+    @contextmanager
+    def use_locale(self, locale: str) -> Generator[I18nContext, None, None]: ...
 
-class I18nContext(I18nStubs, _I18nContext):
-    ...
-    
+class LazyFactory(I18nStubs):
+    key_separator: str
+    def set_separator(self, key_separator: str) -> None: ...
+    def __call__(self, key: str, /, **kwargs: dict[str, Any]) -> LazyProxy: ...
 
-class LazyFactory(I18nStubs, _LazyFactory):
-    ...
-    
-
-L: LazyFactory    
+L: LazyFactory

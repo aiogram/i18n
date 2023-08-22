@@ -1,8 +1,13 @@
 import os
-from abc import abstractmethod, ABC
-from typing import List, Dict, Optional, Any, Tuple, TypeVar, Generic, cast
-from aiogram_i18n.exceptions import NoTranslateFileExistsError, NoLocalesFoundError, NoLocalesError
+from abc import ABC, abstractmethod
+from typing import Any, Dict, Generic, List, Optional, Tuple, TypeVar, cast
 
+from aiogram_i18n import I18nContext
+from aiogram_i18n.exceptions import (
+    NoLocalesError,
+    NoLocalesFoundError,
+    NoTranslateFileExistsError,
+)
 
 Translator = TypeVar("Translator")
 
@@ -10,19 +15,30 @@ Translator = TypeVar("Translator")
 class BaseCore(Generic[Translator], ABC):
     default_locale: Optional[str]
     locales: Dict[str, Translator]
+    locales_map: Dict[str, str]
 
-    def __init__(self, default_locale: Optional[str] = None) -> None:
+    def __init__(
+        self,
+        default_locale: Optional[str] = None,
+        locales_map: Optional[Dict[str, str]] = None,
+    ) -> None:
         self.default_locale = default_locale
         self.locales = {}
+        self.locales_map = locales_map or {}
 
     @abstractmethod
-    def get(self, key: str, /, locale: str, **kwargs: Any) -> str:
-        ...
+    def get(self, message: str, locale: Optional[str] = None, /, **kwargs: Any) -> str:
+        pass
 
     def get_translator(self, locale: str) -> Translator:
+        return self.locales[locale]
+
+    def get_locale(self, locale: Optional[str] = None) -> str:
+        if locale is None:
+            locale = I18nContext.get_current(no_error=False).locale
         if locale not in self.locales:
             locale = cast(str, self.default_locale)
-        return self.locales[locale]
+        return locale
 
     async def startup(self) -> None:
         self.locales.update(self.find_locales())
@@ -39,11 +55,13 @@ class BaseCore(Generic[Translator], ABC):
             if os.path.isdir(os.path.join(path, file_path)):
                 locales.append(file_path)
         if not locales:
-            raise NoLocalesFoundError(locales=["..."], path=path)
+            raise NoLocalesFoundError(locales=[], path=path)
         return locales
 
     @staticmethod
-    def _find_locales(path: str, locales: List[str], ext: Optional[str] = None) -> Dict[str, List[str]]:
+    def _find_locales(
+        path: str, locales: List[str], ext: Optional[str] = None
+    ) -> Dict[str, List[str]]:
         if not locales:
             raise NoLocalesError
         paths: Dict[str, List[str]] = {}
@@ -68,7 +86,7 @@ class BaseCore(Generic[Translator], ABC):
 
     @abstractmethod
     def find_locales(self) -> Dict[str, Translator]:
-        ...
+        pass
 
     @property
     def available_locales(self) -> Tuple[str, ...]:

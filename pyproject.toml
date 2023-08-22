@@ -4,25 +4,23 @@ build-backend = "hatchling.build"
 
 [project]
 name = "aiogram_i18n"
-version = "1.2"
 authors = [
-  { name="RootShinobi" },
+    { name = "RootShinobi" },
 ]
 description = "small translation tools for aiogram"
 readme = "README.md"
-license = {text = "MIT License"}
+license = { text = "MIT License" }
 requires-python = ">=3.8"
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
+    "Typing :: Typed",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
 ]
-
-dependencies = [
-    "aiogram~=3.0.0b7",
-    "click~=8.1.4"
-]
-
 keywords = [
     "telegram",
     "bot",
@@ -33,11 +31,19 @@ keywords = [
     "i18n",
     "aiogram",
     "fluent",
-    "gnutext"
+    "gnutext",
+]
+dynamic = ["version"]
+dependencies = [
+    "aiogram>=3.0.0b8",
+    "click~=8.1.0",
 ]
 
+[tool.hatch.version]
+path = "aiogram_i18n/__meta__.py"
+
 [project.urls]
-Repository = "https://github.com/RootShinobi/aiogram_i18n"
+Repository = "https://github.com/aiogram/aiogram_i18n"
 
 [project.scripts]
 i18n = "aiogram_i18n.__main__:main"
@@ -51,21 +57,116 @@ runtime = [
 ]
 test = [
     "pytest~=7.4.0",
+    "pytest-cov~=4.0.0",
     "pytest-asyncio~=0.21.1",
     "pytest-lazy-fixture~=0.6.3",
-    "flake8~=6.0.0",
     "fluent_compiler~=1.0",
-    "fluent.runtime~=0.4.0"
+    "fluent.runtime~=0.4.0",
+    "libcst~=1.0.1",
 ]
+dev = [
+    "black~=23.7.0",
+    "ruff~=0.0.280",
+    "mypy~=1.4.1",
+    "pre-commit~=3.3.3",
+    "packaging~=23.0",
+]
+
+[tool.hatch.envs.dev]
+post-install = [
+    "pre-commit install",
+]
+
+features = [
+    "compiler",
+    "runtime",
+    "dev",
+    "test",
+]
+
+[tool.hatch.envs.default.scripts]
+reformat = [
+    "black aiogram_i18n tests examples",
+#    "isort aiogram_i18n tests examples",
+]
+lint = "ruff aiogram_i18n"
 
 [tool.mypy]
 plugins = ["pydantic.mypy"]
 exclude = [
     "\\.?venv",
     "\\.idea",
-    "\\.test"
+    "\\.tests?",
 ]
 
 [[tool.mypy.overrides]]
 module = "mre"
 strict_optional = false
+
+[[tool.mypy.overrides]]
+module = "aiogram_i18n.types"
+disable_error_code = ["arg-type", "assignment"]
+
+[[tool.mypy.overrides]]
+module = [
+    "redis.*", "fluent_compiler.*"
+]
+ignore_missing_imports = true
+
+[tool.black]
+line-length = 99
+target-version = ['py38', 'py39', 'py310', 'py311']
+exclude = '''
+(
+    \.eggs
+  | \.git
+  | \.tox
+  | build
+  | dist
+  | venv
+  | docs
+)
+'''
+
+#[tool.isort]
+#profile = "black"
+
+[tool.ruff]
+target-version = "py38"
+line-length = 99
+select = [
+    "C",
+    "DTZ",
+    "E",
+    "F",
+    "I",
+    "ICN",
+    "ISC",
+    "N",
+    "PLC",
+    "PLE",
+    "Q",
+    "S",
+    "T",
+    "W",
+    "YTT",
+]
+ignore = [
+    "N805"
+]
+unfixable = [
+
+]
+exclude = [
+    "examples"
+]
+
+#[tool.ruff.isort]
+#known-first-party = ["exp"]
+
+[tool.ruff.flake8-tidy-imports]
+ban-relative-imports = "all"
+
+[tool.ruff.per-file-ignores]
+# Tests can use magic values, assertions, and relative imports
+"tests/**/*" = ["PLR2004", "S101", "TID252"]

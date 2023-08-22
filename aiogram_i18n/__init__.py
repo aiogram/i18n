@@ -1,6 +1,5 @@
-
 from .context import I18nContext
-from .lazy import LazyProxy, LazyFactory
+from .lazy import LazyFactory, LazyProxy
 from .middleware import I18nMiddleware
 
 L = LazyFactory()
@@ -10,7 +9,7 @@ __all__ = (
     "I18nContext",
     "LazyProxy",
     "I18nMiddleware",
-    "L"
+    "L",
 )
 
-__version__ = "1.2"
+__version__ = "1.3"

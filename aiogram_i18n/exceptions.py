@@ -1,4 +1,4 @@
-from typing import Optional, List
+from typing import Any, Dict, List, Optional
 
 
 class AiogramI18nError(Exception):
@@ -25,10 +25,7 @@ class NoModuleError(AiogramI18nError):
 class NoTranslateFileExistsError(AiogramI18nError):
     message = "files {ext}in folder ({locale_path}) not found"
 
-    def __init__(
-        self,
-        locale_path: str, ext: Optional[str] = None
-    ) -> None:
+    def __init__(self, locale_path: str, ext: Optional[str] = None) -> None:
         self.locale_path = locale_path
         self.ext = ext
 
@@ -52,7 +49,7 @@ class NoLocalesFoundError(AiogramI18nError):
         return self.message.format(locales=", ".join(self.locales), path=self.path)
 
 
-class KeyNotFound(AiogramI18nError):
+class KeyNotFoundError(AiogramI18nError):
     message = "Key '{key}' not found."
 
     def __init__(self, key: str) -> None:
@@ -60,3 +57,24 @@ class KeyNotFound(AiogramI18nError):
 
     def __str__(self) -> str:
         return self.message.format(key=self.key)
+
+
+class ContextItemError(AiogramI18nError):
+    message = "context({context}) has no item '{key}'"
+
+    def __init__(self, key: str, context: Dict[str, Any]) -> None:
+        self.key = key
+        self.context = context
+
+    def __str__(self) -> str:
+        return self.message.format(key=self.key, context=self.context)
+
+
+class UnknownLocaleError(AiogramI18nError):
+    message = "Unknown locale: '{locale}'"
+
+    def __init__(self, locale: str) -> None:
+        self.locale = locale
+
+    def __str__(self) -> str:
+        return self.message.format(locale=self.locale)
