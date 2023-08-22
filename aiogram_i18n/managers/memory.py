@@ -1,6 +1,7 @@
 from typing import Dict, Optional, cast
 
-from aiogram.fsm.context import FSMContext, StorageKey
+from aiogram.fsm.context import FSMContext
+from aiogram.fsm.storage.base import StorageKey
 
 from .base import BaseManager
 

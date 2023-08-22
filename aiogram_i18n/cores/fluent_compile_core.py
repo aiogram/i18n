@@ -20,8 +20,9 @@ class FluentCompileCore(BaseCore[FluentBundle]):
         functions: Optional[Dict[str, Callable[..., Any]]] = None,
         raise_key_error: bool = True,
         use_td: bool = True,
+        locales_map: Optional[Dict[str, str]] = None,
     ) -> None:
-        super().__init__(default_locale=default_locale)
+        super().__init__(default_locale=default_locale, locales_map=locales_map)
         self.path = path
         self.use_isolating = use_isolating
         self.functions = functions or {}
@@ -29,14 +30,17 @@ class FluentCompileCore(BaseCore[FluentBundle]):
             self.functions.update(td.functions)
         self.raise_key_error = raise_key_error
 
-    def get(self, key: str, /, locale: str, **kwargs: Any) -> str:
+    def get(self, message: str, locale: Optional[str] = None, /, **kwargs: Any) -> str:
+        locale = self.get_locale(locale=locale)
         translator: FluentBundle = self.get_translator(locale=locale)
         try:
-            text, errors = translator.format(message_id=key, args=kwargs)
+            text, errors = translator.format(message_id=message, args=kwargs)
         except KeyError:
+            if locale := self.locales_map.get(locale):
+                return self.get(message, locale, **kwargs)
             if self.raise_key_error:
-                raise KeyNotFoundError(key) from None
-            return key
+                raise KeyNotFoundError(message) from None
+            return message
         if errors:
             raise errors[0]
         return cast(str, text)  # 'cause fluent_compiler type-ignored

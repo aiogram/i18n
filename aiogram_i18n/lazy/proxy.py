@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from typing import Any, Dict, Tuple, Union
 
+from aiogram.types import Message
 from pydantic import BaseModel, model_serializer
 
 from aiogram_i18n.context import I18nContext
@@ -26,6 +27,9 @@ class LazyProxy(BaseModel):  # type: ignore[no-redef]
                 v = v.resolve(AttrDict(i18n.context))
             kwargs[k] = v
         return i18n.get(self.key, **kwargs)
+
+    def __call__(self, event: Message) -> bool:
+        return event.text == self.data
 
     @model_serializer
     def dump(self) -> str:

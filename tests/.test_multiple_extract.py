@@ -57,17 +57,17 @@ class Test:
         assert set(i18n.available_locales) == {"en", "uk"}
 
     async def test_get(self, i18n: BaseCore[Any]) -> None:
-        assert i18n.get("start", locale="en") == "start"
-        assert i18n.get("start", locale="uk") == "start"
+        assert i18n.get("start", "en") == "start"
+        assert i18n.get("start", "uk") == "start"
 
-        assert i18n.get("buttons-cancel", locale="en") == "buttons-cancel"
-        assert i18n.get("buttons-cancel", locale="uk") == "buttons-cancel"
+        assert i18n.get("buttons-cancel", "en") == "buttons-cancel"
+        assert i18n.get("buttons-cancel", "uk") == "buttons-cancel"
 
-        assert i18n.get("buttons-add-user", locale="en", user="Bob") == "buttons-add-user Bob"
-        assert i18n.get("buttons-add-user", locale="uk", user="Боб") == "buttons-add-user Боб"
+        assert i18n.get("buttons-add-user", "en", user="Bob") == "buttons-add-user Bob"
+        assert i18n.get("buttons-add-user", "uk", user="Боб") == "buttons-add-user Боб"
 
-        assert i18n.get("msgs-hello", locale="en", user="Bob") == "msgs-hello Bob"
-        assert i18n.get("msgs-hello", locale="uk", user="Боб") == "msgs-hello Боб"
+        assert i18n.get("msgs-hello", "en", user="Bob") == "msgs-hello Bob"
+        assert i18n.get("msgs-hello", "uk", user="Боб") == "msgs-hello Боб"
 
-        assert i18n.get("msgs-bye", locale="en", user="Bob") == "msgs-bye Bob"
-        assert i18n.get("msgs-bye", locale="uk", user="Боб") == "msgs-bye Боб"
+        assert i18n.get("msgs-bye", "en", user="Bob") == "msgs-bye Bob"
+        assert i18n.get("msgs-bye", "uk", user="Боб") == "msgs-bye Боб"

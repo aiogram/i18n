@@ -22,5 +22,5 @@ class Test:
         assert set(core.available_locales) == {"en", "uk"}
 
     async def test_get(self, core: BaseCore[Any]) -> None:
-        assert core.get("hello", locale="en", user="Bob") == "Hello, <b>Bob</b>!"
-        assert core.get("cur-lang", locale="uk", language="uk") == "Твоя мова: <i>uk</i>"
+        assert core.get("hello", "en", user="Bob") == "Hello, <b>Bob</b>!"
+        assert core.get("cur-lang", "uk", language="uk") == "Твоя мова: <i>uk</i>"
