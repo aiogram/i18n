@@ -98,7 +98,6 @@ exclude = [
     "\\.idea",
     "\\.tests?",
 ]
-ignore_missing_imports = true
 
 [[tool.mypy.overrides]]
 module = "mre"
@@ -108,6 +107,11 @@ strict_optional = false
 module = "aiogram_i18n.types"
 disable_error_code = ["arg-type", "assignment"]
 
+[[tool.mypy.overrides]]
+module = [
+    "redis.*", "fluent_compiler.*"
+]
+ignore_missing_imports = true
 
 [tool.black]
 line-length = 99

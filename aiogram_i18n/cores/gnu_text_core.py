@@ -2,7 +2,7 @@ from gettext import GNUTranslations
 from typing import Any, Dict, NoReturn, Optional
 
 from aiogram_i18n.cores.base import BaseCore
-from aiogram_i18n.exceptions import KeyNotFoundError
+from aiogram_i18n.exceptions import KeyNotFoundError, UnknownLocaleError
 
 
 class Fallback:
@@ -37,17 +37,19 @@ class GNUTextCore(BaseCore[GNUTranslations]):
         locales = self._extract_locales(self.path)
         for locale, paths in self._find_locales(self.path, locales, ".mo").items():
             trans = translations[locale] = GNUTranslations()
-            trans._fallback = fallback  # noqa
+            trans._fallback = fallback  # type: ignore[attr-defined]
             for path in paths:
                 with open(path, "rb") as fp:
                     trans._parse(fp=fp)  # noqa
 
         for locale, fallback_locale in self.locales_map.items():
             if locale not in translations:
-                raise ValueError
+                raise UnknownLocaleError(locale)
             if fallback_locale not in translations:
-                raise ValueError
-            translations[locale]._fallback = translations[fallback_locale]  # noqa
+                raise UnknownLocaleError(fallback_locale)
+            translations[locale]._fallback = translations[  # type: ignore[attr-defined]  # noqa
+                fallback_locale
+            ]
 
         return translations
 
