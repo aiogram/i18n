@@ -1,5 +1,6 @@
 from gettext import GNUTranslations
-from typing import Any, Dict, NoReturn, Optional
+from pathlib import Path
+from typing import Any, Dict, NoReturn, Optional, Union
 
 from aiogram_i18n.cores.base import BaseCore
 from aiogram_i18n.exceptions import KeyNotFoundError, UnknownLocaleError
@@ -17,13 +18,13 @@ class GNUTextCore(BaseCore[GNUTranslations]):
     def __init__(
         self,
         *,
-        path: str,
+        path: Union[str, Path],
         default_locale: Optional[str] = None,
         raise_key_error: bool = False,
         locales_map: Optional[Dict[str, str]] = None,
     ) -> None:
         super().__init__(default_locale=default_locale, locales_map=locales_map)
-        self.path = path
+        self.path = path if isinstance(path, Path) else Path(path)
         self.raise_key_error = raise_key_error
 
     def find_locales(self) -> Dict[str, GNUTranslations]:
@@ -39,7 +40,7 @@ class GNUTextCore(BaseCore[GNUTranslations]):
             trans = translations[locale] = GNUTranslations()
             trans._fallback = fallback  # type: ignore[attr-defined]
             for path in paths:
-                with open(path, "rb") as fp:
+                with path.open("rb") as fp:
                     trans._parse(fp=fp)  # noqa
 
         for locale, fallback_locale in self.locales_map.items():

@@ -1,4 +1,5 @@
-from typing import Any, Callable, Dict, Optional, cast
+from pathlib import Path
+from typing import Any, Callable, Dict, Optional, Union, cast
 
 from aiogram_i18n.exceptions import KeyNotFoundError, NoModuleError
 from aiogram_i18n.utils.text_decorator import td
@@ -14,7 +15,7 @@ from aiogram_i18n.cores.base import BaseCore
 class FluentCompileCore(BaseCore[FluentBundle]):
     def __init__(
         self,
-        path: str,
+        path: Union[str, Path],
         default_locale: Optional[str] = None,
         use_isolating: bool = False,
         functions: Optional[Dict[str, Callable[..., Any]]] = None,
@@ -23,7 +24,7 @@ class FluentCompileCore(BaseCore[FluentBundle]):
         locales_map: Optional[Dict[str, str]] = None,
     ) -> None:
         super().__init__(default_locale=default_locale, locales_map=locales_map)
-        self.path = path
+        self.path = path if isinstance(path, Path) else Path(path)
         self.use_isolating = use_isolating
         self.functions = functions or {}
         if use_td:
@@ -56,7 +57,7 @@ class FluentCompileCore(BaseCore[FluentBundle]):
         for locale, paths in self._find_locales(self.path, locales, ".ftl").items():
             texts = []
             for path in paths:
-                with open(path, "r", encoding="utf8") as fp:
+                with path.open("r", encoding="utf8") as fp:
                     texts.append(fp.read())
             translations[locale] = FluentBundle.from_string(
                 text="\n".join(texts),

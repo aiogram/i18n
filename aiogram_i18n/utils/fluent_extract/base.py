@@ -32,11 +32,14 @@ class BaseFluentKeyParser(ABC):
         keywords = m.SaveMatchedNode(m.ZeroOrMore(m.Arg(keyword=m.Name())), name="keywords")
 
         return m.Call(
-            func=m.Attribute(
-                value=m.OneOf(*map(m.Name, self.i18n_keys)),
-                attr=m.Name(value="get"),
-            )
-            | m.Name(value=LazyProxy.__name__),
+            func=m.OneOf(
+                m.Attribute(
+                    value=m.OneOf(*map(m.Name, self.i18n_keys)),
+                    attr=m.Name(value="get"),
+                ),
+                m.Name(value=LazyProxy.__name__),
+                *map(m.Name, self.i18n_keys),
+            ),
             args=[
                 m.Arg(value=m.SaveMatchedNode(m.SimpleString(), name="string")),
                 keywords,
