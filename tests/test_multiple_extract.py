@@ -24,6 +24,18 @@ def multiple_locales_output(tmpdir_factory: TempdirFactory) -> Path:
     return Path(*tmpdir_factory.mktemp("multiple_locales_output").parts())
 
 
+@pytest.fixture(scope="session")
+def code_sample_dir(tmpdir_factory: TempdirFactory) -> Path:
+    tmp = Path(*tmpdir_factory.mktemp("code_sample_dir").parts())
+
+    for path in TEST_CODE_DIR.rglob("*.txt"):
+        if path.is_file():
+            target_path = (tmp / path.relative_to(TEST_CODE_DIR)).with_suffix(".py")
+            target_path.write_text(path.read_text(encoding="utf-8"), encoding="utf-8")
+
+    return tmp
+
+
 @fixture(scope="function")
 def fluent_runtime_core_no_locales(no_locales_output: Path) -> BaseCore[Any]:
     from aiogram_i18n.cores import FluentRuntimeCore
@@ -60,9 +72,11 @@ def fluent_compile_core_multiple_locales(multiple_locales_output: Path) -> BaseC
     ],
 )
 @pytest.mark.asyncio
-async def test_multiple_extract(i18n: BaseCore[Any], multiple_locales_output: Path) -> None:
+async def test_multiple_extract(
+    i18n: BaseCore[Any], multiple_locales_output: Path, code_sample_dir: Path
+) -> None:
     fkp = FluentMultipleKeyParser(
-        input_paths=(TEST_CODE_DIR,),
+        input_paths=(code_sample_dir,),
         output_dir=multiple_locales_output,
         i18n_keys=["i18n", "L", "I18NFormat"],
         separator="-",
@@ -82,9 +96,9 @@ async def test_multiple_extract(i18n: BaseCore[Any], multiple_locales_output: Pa
 
 @pytest.mark.asyncio
 @pytest.mark.xfail(raises=FileNotFoundError)
-async def test_file_not_found_exception(multiple_locales_output: Path):
+async def test_file_not_found_exception(multiple_locales_output: Path, code_sample_dir: Path):
     fkp = FluentMultipleKeyParser(
-        input_paths=(TEST_CODE_DIR / "._ERROR_PATH",),
+        input_paths=(code_sample_dir / "._ERROR_PATH",),
         output_dir=multiple_locales_output,
         i18n_keys=["i18n", "L", "I18NFormat"],
         separator="-",
@@ -105,9 +119,11 @@ async def test_file_not_found_exception(multiple_locales_output: Path):
 )
 @pytest.mark.asyncio
 @pytest.mark.xfail(raises=(UnknownLocaleError, TypeError))
-async def test_unknown_locale_error(i18n: BaseCore[Any], no_locales_output: Path):
+async def test_unknown_locale_error(
+    i18n: BaseCore[Any], no_locales_output: Path, code_sample_dir: Path
+):
     fkp = FluentMultipleKeyParser(
-        input_paths=(TEST_CODE_DIR,),
+        input_paths=(code_sample_dir,),
         output_dir=no_locales_output,
         i18n_keys=["i18n", "L", "I18NFormat"],
         separator="-",
