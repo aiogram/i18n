@@ -48,8 +48,8 @@ class BaseCore(Generic[Translator], ABC):
 
     @staticmethod
     def _extract_locales(path: Path) -> List[str]:
-        if "{locale}" in path.as_posix():
-            path = Path(path.as_posix().split("{locale}")[0])
+        if "{locale}" in path.parts:
+            path = Path(*path.parts[: path.parts.index("{locale}")])
 
         locales: List[str] = []
 

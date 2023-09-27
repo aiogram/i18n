@@ -26,7 +26,11 @@ class FluentCompileCore(BaseCore[FluentBundle]):
         fix_number: bool = False,
     ) -> None:
         super().__init__(default_locale=default_locale, locales_map=locales_map)
-        self.path = path if isinstance(path, Path) else Path(path)
+        self.path = (
+            path.absolute()
+            if isinstance(path, Path) and not path.is_absolute()
+            else Path(path).absolute()
+        )
         self.use_isolating = use_isolating
         self.functions = functions or {}
         if use_td:
