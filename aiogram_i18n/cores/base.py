@@ -1,5 +1,5 @@
-import os
 from abc import ABC, abstractmethod
+from pathlib import Path
 from typing import Any, Dict, Generic, List, Optional, Tuple, TypeVar, cast
 
 from aiogram_i18n import I18nContext
@@ -47,41 +47,43 @@ class BaseCore(Generic[Translator], ABC):
         self.locales.clear()
 
     @staticmethod
-    def _extract_locales(path: str) -> List[str]:
-        if "{locale}" in path:
-            path = path.split("{locale}")[0]
+    def _extract_locales(path: Path) -> List[str]:
+        if "{locale}" in path.as_posix():
+            path = Path(path.as_posix().split("{locale}")[0])
+
         locales: List[str] = []
-        for file_path in os.listdir(path):
-            if os.path.isdir(os.path.join(path, file_path)):
-                locales.append(file_path)
+
+        for file_path in path.iterdir():
+            if path.joinpath(file_path).is_dir():
+                locales.append(file_path.name)
+
         if not locales:
-            raise NoLocalesFoundError(locales=[], path=path)
+            raise NoLocalesFoundError(locales=[], path=path.as_posix())
+
         return locales
 
     @staticmethod
     def _find_locales(
-        path: str, locales: List[str], ext: Optional[str] = None
-    ) -> Dict[str, List[str]]:
+        path: Path, locales: List[str], ext: Optional[str] = None
+    ) -> Dict[str, List[Path]]:
         if not locales:
             raise NoLocalesError
-        paths: Dict[str, List[str]] = {}
-        if "{locale}" not in path:
-            path = os.path.join(path, "{locale}")
+
+        paths: Dict[str, List[Path]] = {}
+
+        if "{locale}" not in path.as_posix():
+            path = path.joinpath("{locale}")
+
         for locale in locales:
-            paths[locale] = []
-            locale_path = path.format(locale=locale)
-            for obj in os.listdir(locale_path):
-                if ext is not None:
-                    if not obj.endswith(ext):
-                        continue
-                obj_path = os.path.join(locale_path, obj)
-                if not os.path.isfile(obj_path):
-                    continue
-                paths[locale].append(obj_path)
+            locale_path = Path(path.as_posix().format(locale=locale))
+            recursive_paths = locale_path.rglob(f"*{ext}")  # Will recursively search for files
+            paths.setdefault(locale, []).extend(recursive_paths)
+
             if not paths[locale]:
-                raise NoTranslateFileExistsError(ext=ext, locale_path=locale_path)
+                raise NoTranslateFileExistsError(ext=ext, locale_path=locale_path.as_posix())
         if not paths:
-            raise NoLocalesFoundError(locales=locales, path=path)
+            raise NoLocalesFoundError(locales=locales, path=path.as_posix())
+
         return paths
 
     @abstractmethod

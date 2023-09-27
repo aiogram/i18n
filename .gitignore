@@ -26,4 +26,3 @@ docker-compose.yml
 .env
 
 .tests
-/tests/data/test_multiple_locales/
