@@ -6,6 +6,7 @@ from aiogram_i18n.utils.text_decorator import td
 
 try:
     from fluent_compiler.bundle import FluentBundle
+    from fluent_compiler.types import FluentNumber
 except ImportError as e:
     raise NoModuleError(name="FluentCompileCore", module_name="fluent_compiler") from e
 
@@ -22,6 +23,7 @@ class FluentCompileCore(BaseCore[FluentBundle]):
         raise_key_error: bool = True,
         use_td: bool = True,
         locales_map: Optional[Dict[str, str]] = None,
+        fix_number: bool = False,
     ) -> None:
         super().__init__(default_locale=default_locale, locales_map=locales_map)
         self.path = path if isinstance(path, Path) else Path(path)
@@ -30,6 +32,7 @@ class FluentCompileCore(BaseCore[FluentBundle]):
         if use_td:
             self.functions.update(td.functions)
         self.raise_key_error = raise_key_error
+        FluentNumber.default_number_format_options.useGrouping = fix_number
 
     def get(self, message: str, locale: Optional[str] = None, /, **kwargs: Any) -> str:
         locale = self.get_locale(locale=locale)

@@ -6,6 +6,7 @@ from aiogram_i18n.utils.text_decorator import td
 
 try:
     from fluent.runtime import FluentBundle, FluentResource
+    from fluent.runtime.types import FluentNumber
 except ImportError as e:
     raise NoModuleError(name="FluentRuntimeCore", module_name="fluent.runtime") from e
 
@@ -23,6 +24,7 @@ class FluentRuntimeCore(BaseCore[FluentBundle]):
         raise_key_error: bool = True,
         use_td: bool = True,
         locales_map: Optional[Dict[str, str]] = None,
+        fix_number: bool = False,
     ) -> None:
         super().__init__(default_locale=default_locale, locales_map=locales_map)
         self.path = path if isinstance(path, Path) else Path(path)
@@ -32,6 +34,7 @@ class FluentRuntimeCore(BaseCore[FluentBundle]):
             self.functions.update(td.functions)
         self.pre_compile = pre_compile
         self.raise_key_error = raise_key_error
+        FluentNumber.default_number_format_options.useGrouping = fix_number
 
     def get(self, message_id: str, locale: Optional[str] = None, /, **kwargs: Any) -> str:
         locale = self.get_locale(locale=locale)
