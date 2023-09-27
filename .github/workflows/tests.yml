@@ -64,7 +64,7 @@ jobs:
       - name: Lint code
         if: "env.IS_PYPY == 'false'"
         run: |
-          ruff --format=github --exclude=tests/data/test_code aiogram_i18n tests
+          ruff --format=github aiogram_i18n tests
           black --check --diff aiogram_i18n tests examples
 
       - name: Run tests
