@@ -25,8 +25,7 @@ class FluentCompileCore(BaseCore[FluentBundle]):
         locales_map: Optional[Dict[str, str]] = None,
         fix_number: bool = False,
     ) -> None:
-        super().__init__(default_locale=default_locale, locales_map=locales_map)
-        self.path = path if isinstance(path, Path) else Path(path)
+        super().__init__(path=path, default_locale=default_locale, locales_map=locales_map)
         self.use_isolating = use_isolating
         self.functions = functions or {}
         if use_td:
