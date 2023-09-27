@@ -3,7 +3,10 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING, Any, Awaitable, Callable, Optional
 
-from aiogram.dispatcher.event.handler import CallableMixin
+try:
+    from aiogram.dispatcher.event.handler import CallableObject as CallableMixin
+except ImportError:
+    from aiogram.dispatcher.event.handler import CallableMixin
 
 
 class BaseManager(ABC):
