@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import Any, Dict, Generic, List, Optional, Tuple, TypeVar, cast
+from typing import Any, Dict, Generic, List, Optional, Tuple, TypeVar, Union, cast
 
 from aiogram_i18n import I18nContext
 from aiogram_i18n.exceptions import (
@@ -19,9 +19,11 @@ class BaseCore(Generic[Translator], ABC):
 
     def __init__(
         self,
+        path: Union[str, Path],
         default_locale: Optional[str] = None,
         locales_map: Optional[Dict[str, str]] = None,
     ) -> None:
+        self.path = path if isinstance(path, Path) else Path(path)
         self.default_locale = default_locale
         self.locales = {}
         self.locales_map = locales_map or {}
@@ -54,7 +56,7 @@ class BaseCore(Generic[Translator], ABC):
         locales: List[str] = []
 
         for file_path in path.iterdir():
-            if path.joinpath(file_path).is_dir():
+            if file_path.is_dir():
                 locales.append(file_path.name)
 
         if not locales:

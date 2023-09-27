@@ -23,12 +23,7 @@ class GNUTextCore(BaseCore[GNUTranslations]):
         raise_key_error: bool = False,
         locales_map: Optional[Dict[str, str]] = None,
     ) -> None:
-        super().__init__(default_locale=default_locale, locales_map=locales_map)
-        self.path = (
-            path.absolute()
-            if isinstance(path, Path) and not path.is_absolute()
-            else Path(path).absolute()
-        )
+        super().__init__(path=path, default_locale=default_locale, locales_map=locales_map)
         self.raise_key_error = raise_key_error
 
     def find_locales(self) -> Dict[str, GNUTranslations]:
