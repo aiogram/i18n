@@ -1,3 +1,4 @@
+from .__meta__ import __version__
 from .context import I18nContext
 from .lazy import LazyFactory, LazyProxy
 from .middleware import I18nMiddleware
@@ -11,5 +12,3 @@ __all__ = (
     "I18nMiddleware",
     "L",
 )
-
-__version__ = "1.3"

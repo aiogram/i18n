@@ -60,11 +60,13 @@ class FluentMultipleKeyParser(BaseFluentKeyParser):
         locales: Union[Sequence[str], None],
         exclude_dirs: Sequence[Path],
         exclude_keys: Sequence[str],
+        default_ftl_file: str,
     ) -> None:
         super().__init__(exclude_dirs, i18n_keys, separator, locales)
         self.input_paths = set(input_paths)
         self.output_dir = output_dir
         self.exclude_keys = list(exclude_keys)
+        self.default_ftl_file = default_ftl_file
 
     def run(self, create_missing_dirs: bool = False) -> None:
         for path in self.input_paths:
@@ -80,6 +82,7 @@ class FluentMultipleKeyParser(BaseFluentKeyParser):
                     separator=self.separator,
                     keys=self.result,
                     exclude_keys=self.exclude_keys,
+                    default_ftl_file=self.default_ftl_file,
                 )
                 template.write(create_missing_dirs=create_missing_dirs)
 
@@ -89,5 +92,6 @@ class FluentMultipleKeyParser(BaseFluentKeyParser):
                 separator=self.separator,
                 keys=self.result,
                 exclude_keys=self.exclude_keys,
+                default_ftl_file=self.default_ftl_file,
             )
             template.write(create_missing_dirs=create_missing_dirs)

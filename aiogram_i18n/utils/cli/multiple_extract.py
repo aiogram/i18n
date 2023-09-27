@@ -56,6 +56,11 @@ from .base import main
     is_flag=True,
     default=False,
 )
+@click.option(
+    "--default-ftl-file",
+    default="_default.ftl",
+    show_default=True,
+)
 def multiple_extract(
     input_paths: Tuple[str, ...],
     output_dir: str,
@@ -65,17 +70,24 @@ def multiple_extract(
     exclude_dirs: Tuple[str, ...],
     exclude_keys: Tuple[str, ...],
     create_missing_dirs: bool,
+    default_ftl_file: str,
 ) -> None:
     """
-    Extracts all used fluent keys from code and saves them in the specified files.
+    Extracts all used fluent keys from code and saves them in the specified paths.
 
-    Keys should be separated by <type>-<key_name>.
-    Keys will be saved in multiple files, depending on the type.
-    The type is specified by the first part of the key.
+    Key has 2 parts separated by "--".
+    First part is the KeyPath, second part is the KeyName.
+
+    KeyPath is separated by `separator` argument. If KeyPath has more than 1 part,
+    it will take all parts (except the last one) as directories and the last one as file name.
+    If KeyPath has only 1 part, it will be used as file name.
+    If KeyPath is not specified, the `default_ftl_file` will be used.
 
     Example:
-        - "buttons-cancel" -> "buttons" is the type, "cancel" is the key name.
-        - "checker-no-rights" -> "checker" is the type, "no-rights" is the key name.
+        - "cmds-start--greeting" -> will be saved in `cmds/start.ftl`
+        file with key "cmds-start--greeting".
+        - "cmds--greeting" -> will be saved in `cmds.ftl` file with key "cmds--greeting".
+        - "greeting" -> will be saved in `_default.ftl` file with key "greeting".
     """
     from aiogram_i18n import I18nContext
     from aiogram_i18n.utils.fluent_extract import FluentMultipleKeyParser
@@ -83,7 +95,7 @@ def multiple_extract(
     input_paths_ = tuple(Path(input_path) for input_path in input_paths)
     output_dir_ = Path(output_dir)
 
-    exclude_dirs_ = (Path("__pycache__"), *(Path(exclude_dir) for exclude_dir in exclude_dirs))
+    exclude_dirs_ = (Path("__pycache__"), *[Path(exclude_dir) for exclude_dir in exclude_dirs])
     exclude_keys += tuple(key for key, value in I18nContext.__dict__.items() if callable(value))
 
     fkp = FluentMultipleKeyParser(
@@ -94,5 +106,6 @@ def multiple_extract(
         locales=locales,
         exclude_dirs=exclude_dirs_,
         exclude_keys=exclude_keys,
+        default_ftl_file=default_ftl_file,
     )
     fkp.run(create_missing_dirs=create_missing_dirs)

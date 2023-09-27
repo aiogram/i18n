@@ -152,7 +152,8 @@ select = [
     "YTT",
 ]
 ignore = [
-    "N805"
+    "N805",
+    "C901",
 ]
 unfixable = [
 
