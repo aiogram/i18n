@@ -6,12 +6,11 @@ from aiogram_i18n.utils.stub_tree import Key
 
 try:
     from fluent.syntax import FluentParser
-
     from .visitor import FluentVisitor
 except ImportError:
     raise NoModuleError(name="Fluent stub generator", module_name="fluent.syntax")
 
-MESSAGES = dict[str, list[str]]
+MESSAGES = dict[str, set[str]]
 
 
 def parse(text: str) -> MESSAGES:
@@ -37,6 +36,6 @@ def from_files_to_file_ex(files: Sequence[str], to_file: str) -> None:
     with open(file=to_file, mode="w", encoding="utf8") as w:
         w.write(
             Key().run(
-                messages={k: v for file in files for k, v in parse_file(file).items()},
+                messages={k: list(v) for file in files for k, v in parse_file(file).items()},
             )
         )

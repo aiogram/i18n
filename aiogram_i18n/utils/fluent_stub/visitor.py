@@ -1,4 +1,4 @@
-from typing import Dict, Generator, List
+from typing import Dict, Generator, Set
 
 from fluent.syntax import ast
 from fluent.syntax.visitor import Visitor
@@ -6,7 +6,7 @@ from fluent.syntax.visitor import Visitor
 
 class FluentVisitor(Visitor):
     def __init__(self) -> None:
-        self.messages: Dict[str, List[str]] = {}
+        self.messages: Dict[str, Set[str]] = {}
 
     def _get_placeholders(self, element: ast.BaseNode) -> Generator[str, None, None]:
         if isinstance(element, ast.VariableReference):
@@ -20,13 +20,13 @@ class FluentVisitor(Visitor):
                 yield from self._get_placeholders(pos_arg)
 
     def visit_Message(self, message: ast.Message) -> None:  # noqa: N802
-        m = self.messages[message.id.name] = []
+        m = self.messages[message.id.name] = set()
 
         if not message.value:
             return self.generic_visit(message)
 
         for element in message.value.elements:
             if isinstance(element, ast.Placeable):
-                m.extend(self._get_placeholders(element))
+                m.update(self._get_placeholders(element))
 
         return self.generic_visit(message)
