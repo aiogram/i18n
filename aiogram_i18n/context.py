@@ -3,9 +3,8 @@ from __future__ import annotations
 from contextlib import contextmanager
 from typing import TYPE_CHECKING, Any, Dict, Generator
 
-from aiogram.utils.mixins import ContextInstanceMixin
-
 from aiogram_i18n.managers.base import BaseManager
+from aiogram_i18n.utils.context_instance import ContextInstanceMixin
 from aiogram_i18n.utils.magic_proxy import MagicProxy
 
 if TYPE_CHECKING:

@@ -6,6 +6,7 @@ from aiogram_i18n.utils.stub_tree import Key
 
 try:
     from fluent.syntax import FluentParser
+
     from .visitor import FluentVisitor
 except ImportError:
     raise NoModuleError(name="Fluent stub generator", module_name="fluent.syntax")

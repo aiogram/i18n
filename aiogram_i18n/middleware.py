@@ -7,9 +7,10 @@ from aiogram_i18n.context import I18nContext
 from aiogram_i18n.cores.base import BaseCore
 from aiogram_i18n.managers.base import BaseManager
 from aiogram_i18n.managers.memory import MemoryManager
+from aiogram_i18n.utils.context_instance import ContextInstanceMixin
 
 
-class I18nMiddleware(BaseMiddleware):
+class I18nMiddleware(BaseMiddleware, ContextInstanceMixin["I18nMiddleware"]):
     core: BaseCore[Any]
     manager: BaseManager
     context_key: str
@@ -39,6 +40,7 @@ class I18nMiddleware(BaseMiddleware):
             self.core.default_locale = default_locale
         if self.manager.default_locale is None:
             self.manager.default_locale = default_locale
+        I18nMiddleware.set_current(self)
 
     def setup(self, dispatcher: Dispatcher) -> None:
         dispatcher.update.outer_middleware.register(self)
@@ -65,5 +67,5 @@ class I18nMiddleware(BaseMiddleware):
             data[self.locale_key] = locale
         data[self.middleware_key] = self
 
-        I18nContext.set_current(context)
-        return await handler(event, data)
+        with I18nContext.with_current(context):
+            return await handler(event, data)
