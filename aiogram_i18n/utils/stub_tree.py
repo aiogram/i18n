@@ -111,7 +111,7 @@ class ClassNode(BaseClass):
         self.mro = mro
 
     def __repr__(self) -> str:
-        body = "\n   ".join(str(i) for i in self.attrs)
+        body = "\n    ".join(str(i) for i in self.attrs)
         mro = "" if self.mro is None else f"{', '.join(self.mro)}"
         return f"class {self.class_name}{mro}:\n   {body}"
 
