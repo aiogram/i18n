@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Any, Dict, Tuple, Union
+from typing import Any, Dict, Optional, Tuple, Union
 
 from aiogram.types import Message
 from pydantic import BaseModel, model_serializer
@@ -11,10 +11,11 @@ from aiogram_i18n.utils.attrdict import AttrDict
 
 class LazyProxy(BaseModel):  # type: ignore[no-redef]
     key: str
+    locale: Optional[str]
     kwargs: Dict[str, Any]
 
-    def __init__(self, key: str, /, **kwargs: Any) -> None:
-        super().__init__(key=key, kwargs=kwargs)
+    def __init__(self, key: str, locale: Optional[str] = None, /, **kwargs: Any) -> None:
+        super().__init__(_key=key, _locale=locale, kwargs=kwargs)
 
     @property
     def data(self) -> str:
@@ -26,7 +27,7 @@ class LazyProxy(BaseModel):  # type: ignore[no-redef]
             if hasattr(v, "resolve"):
                 v = v.resolve(AttrDict(i18n.context))
             kwargs[k] = v
-        return i18n.get(self.key, **kwargs)
+        return i18n.get(self.key, self.locale, **kwargs)
 
     def __call__(self, event: Message) -> bool:
         return event.text == self.data

@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from contextlib import contextmanager
-from typing import TYPE_CHECKING, Any, Dict, Generator
+from typing import TYPE_CHECKING, Any, Dict, Generator, Optional
 
 from aiogram_i18n.managers.base import BaseManager
 from aiogram_i18n.utils.context_instance import ContextInstanceMixin
@@ -34,8 +34,8 @@ class I18nContext(ContextInstanceMixin["I18nContext"]):
         self.key_separator = key_separator
         self.context = {}
 
-    def get(self, key: str, /, **kwargs: Any) -> str:
-        return self.core.get(key, self.locale, **kwargs)
+    def get(self, key: str, locale: Optional[str] = None, /, **kwargs: Any) -> str:
+        return self.core.get(key, locale or self.locale, **kwargs)
 
     __call__ = get
 
