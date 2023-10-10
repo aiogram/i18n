@@ -4,7 +4,7 @@ from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING, Any, Awaitable, Callable, Optional
 
 try:
-    from aiogram.dispatcher.event.handler import CallableObject as CallableMixin
+    from aiogram.dispatcher.event.handler import CallableObject as CallableMixin  # type: ignore
 except ImportError:
     from aiogram.dispatcher.event.handler import CallableMixin
 

@@ -5,7 +5,7 @@ from aiogram_i18n.exceptions import NoModuleError
 from aiogram_i18n.utils.cli.echo import red
 
 try:
-    from polib import MOEntry, POEntry, mofile, pofile
+    from polib import MOEntry, POEntry, mofile, pofile  # type: ignore
 except ImportError:
     raise NoModuleError(name="GNUText stub generator", module_name="polib")
 

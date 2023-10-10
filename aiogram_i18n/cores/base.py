@@ -32,6 +32,17 @@ class BaseCore(Generic[Translator], ABC):
     def get(self, message: str, locale: Optional[str] = None, /, **kwargs: Any) -> str:
         pass
 
+    def nget(
+        self,
+        singular: str,
+        plural: Optional[str] = None,
+        n: int = 1,
+        locale: Optional[str] = None,
+        /,
+        **kwargs: Any,
+    ) -> str:
+        return self.get(singular, locale, **kwargs)
+
     def get_translator(self, locale: str) -> Translator:
         return self.locales[locale]
 
