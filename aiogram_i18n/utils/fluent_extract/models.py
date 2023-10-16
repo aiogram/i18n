@@ -144,12 +144,16 @@ class FluentTemplateDir:
                 self.exclude_keys.copy(),
             )
             template.write(create_missing_dirs=create_missing_dirs)
+            for key in keys:
+                self.keys.pop(key)
 
-        if not filepaths:
-            for ftl_file in self.ftl_files:
-                template = FluentTemplate(
-                    ftl_file,
-                    self.keys,
-                    self.exclude_keys.copy(),
-                )
-                template.write(create_missing_dirs=create_missing_dirs)
+        ftl_files = {ftl_file.relative_to(self.path) for ftl_file in self.ftl_files}
+        ftl_files -= set(filepaths.keys())
+
+        for ftl_file in ftl_files:
+            template = FluentTemplate(
+                self.path / ftl_file,
+                self.keys,
+                self.exclude_keys.copy(),
+            )
+            template.write(create_missing_dirs=create_missing_dirs)

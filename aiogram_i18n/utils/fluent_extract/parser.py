@@ -80,8 +80,8 @@ class FluentMultipleKeyParser(BaseFluentKeyParser):
                 template = FluentTemplateDir(
                     path=path,
                     separator=self.separator,
-                    keys=self.result,
-                    exclude_keys=self.exclude_keys,
+                    keys=self.result.copy(),
+                    exclude_keys=self.exclude_keys.copy(),
                     default_ftl_file=self.default_ftl_file,
                     ftl_files=tuple(path.rglob("*.ftl")),
                 )
@@ -91,8 +91,8 @@ class FluentMultipleKeyParser(BaseFluentKeyParser):
             template = FluentTemplateDir(
                 path=self.output_dir,
                 separator=self.separator,
-                keys=self.result,
-                exclude_keys=self.exclude_keys,
+                keys=self.result.copy(),
+                exclude_keys=self.exclude_keys.copy(),
                 default_ftl_file=self.default_ftl_file,
                 ftl_files=tuple(self.output_dir.rglob("*.ftl")),
             )
