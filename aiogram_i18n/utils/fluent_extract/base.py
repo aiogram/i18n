@@ -85,16 +85,13 @@ class BaseFluentKeyParser(ABC):
         except PermissionError as e:
             echo(f"Can't parse file {path}: {e}")
 
-    def parse_dir(self, path: Path) -> None:
-        for p in path.iterdir():
-            if p.name.startswith(".") or p in self.exclude_dirs:
-                continue
-
-            if p.is_dir():
-                self.parse_dir(p)
-
-            elif p.suffix == ".py":
-                self.parse_file(p)
+    def search_py_files(self, path: Path) -> Sequence[Path]:
+        return tuple(
+            filter(
+                lambda x: not x.name.startswith(".") and x.parent not in self.exclude_dirs,
+                path.rglob("*.py"),
+            )
+        )
 
     @abstractmethod
     def run(self) -> None:

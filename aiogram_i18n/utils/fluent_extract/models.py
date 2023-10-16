@@ -117,6 +117,7 @@ class FluentTemplateDir:
     keys: Dict[str, FluentKeywords]
     exclude_keys: List[str] = field(default_factory=list)
     default_ftl_file: str = "_default.ftl"
+    ftl_files: Sequence[Path] = field(default_factory=tuple)
 
     def write(self, create_missing_dirs: bool = False) -> None:
         filepaths: Dict[Path, List[str]] = {}
@@ -143,3 +144,12 @@ class FluentTemplateDir:
                 self.exclude_keys,
             )
             template.write(create_missing_dirs=create_missing_dirs)
+
+        if not filepaths:
+            for ftl_file in self.ftl_files:
+                template = FluentTemplate(
+                    ftl_file,
+                    self.keys,
+                    self.exclude_keys,
+                )
+                template.write(create_missing_dirs=create_missing_dirs)
