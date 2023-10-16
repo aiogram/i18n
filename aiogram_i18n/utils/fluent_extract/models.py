@@ -141,7 +141,7 @@ class FluentTemplateDir:
             template = FluentTemplate(
                 self.path / filepath.with_suffix(".ftl"),
                 {key: kw for key, kw in self.keys.items() if key in keys},
-                self.exclude_keys,
+                self.exclude_keys.copy(),
             )
             template.write(create_missing_dirs=create_missing_dirs)
 
@@ -150,6 +150,6 @@ class FluentTemplateDir:
                 template = FluentTemplate(
                     ftl_file,
                     self.keys,
-                    self.exclude_keys,
+                    self.exclude_keys.copy(),
                 )
                 template.write(create_missing_dirs=create_missing_dirs)
