@@ -61,7 +61,7 @@ class GNUTextCore(BaseCore[GNUTranslations]):
         except KeyError:
             if self.raise_key_error:
                 raise KeyNotFoundError(message) from None
-            return message
+            return message.format(**kwargs)
 
     def nget(
         self,
