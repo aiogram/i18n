@@ -57,11 +57,11 @@ class GNUTextCore(BaseCore[GNUTranslations]):
         locale = self.get_locale(locale=locale)
         translator = self.get_translator(locale=locale)
         try:
-            return translator.gettext(message=message).format(**kwargs)
+            return translator.gettext(message=message).format_map(kwargs)
         except KeyError:
             if self.raise_key_error:
                 raise KeyNotFoundError(message) from None
-            return message.format(**kwargs)
+            return message.format_map(kwargs)
 
     def nget(
         self,
