@@ -10,6 +10,7 @@ from click import echo
 from libcst import Arg, Attribute, CSTNode, Name, SimpleString
 
 RE_LINE: Final[re.Pattern[str]] = re.compile(r"([^#]+) =")
+DIR_SEPARATOR: Final[str] = "--"
 
 
 @dataclass
@@ -102,8 +103,7 @@ class FluentTemplate:
         echo(f"Found {counter} new keys.")
 
         if create_missing_dirs:
-            for path in reversed(self.filename.parents):
-                path.mkdir(exist_ok=True)
+            self.filename.parent.mkdir(parents=True, exist_ok=True)
 
         with self.filename.open(mode="w", encoding="utf-8") as template:
             echo(f"Writing '{self.filename.name}' template.")
@@ -116,26 +116,44 @@ class FluentTemplateDir:
     separator: str
     keys: Dict[str, FluentKeywords]
     exclude_keys: List[str] = field(default_factory=list)
+    default_ftl_file: str = "_default.ftl"
+    ftl_files: Sequence[Path] = field(default_factory=tuple)
 
     def write(self, create_missing_dirs: bool = False) -> None:
-        if create_missing_dirs:
-            for path in reversed(self.path.parents):
-                path.mkdir(exist_ok=True)
+        filepaths: Dict[Path, List[str]] = {}
 
-        filenames: Set[str] = {
-            key.split(self.separator, maxsplit=1)[0]
-            for key in self.keys.keys()
-            if key not in self.exclude_keys
-        }
+        for key in [key for key in self.keys.keys() if key not in self.exclude_keys]:
+            if len(dir_keys := key.split(DIR_SEPARATOR, maxsplit=1)) == 1:
+                filepaths.setdefault(Path(self.default_ftl_file), []).append(key)
+                continue
 
-        for filename in filenames:
+            filepath = Path()
+
+            for dir_key in dir_keys[0].split(self.separator):
+                filepath /= dir_key
+
+            else:
+                filepath = filepath.with_suffix(".ftl")
+
+            filepaths.setdefault(filepath, []).append(key)
+
+        for filepath, keys in filepaths.items():
             template = FluentTemplate(
-                self.path / f"{filename}.ftl",
-                {
-                    key: kw
-                    for key, kw in self.keys.items()
-                    if key.split(self.separator, maxsplit=1)[0] == filename
-                },
-                self.exclude_keys,
+                self.path / filepath.with_suffix(".ftl"),
+                {key: kw for key, kw in self.keys.items() if key in keys},
+                self.exclude_keys.copy(),
+            )
+            template.write(create_missing_dirs=create_missing_dirs)
+            for key in keys:
+                self.keys.pop(key)
+
+        ftl_files = {ftl_file.relative_to(self.path) for ftl_file in self.ftl_files}
+        ftl_files -= set(filepaths.keys())
+
+        for ftl_file in ftl_files:
+            template = FluentTemplate(
+                self.path / ftl_file,
+                self.keys,
+                self.exclude_keys.copy(),
             )
             template.write(create_missing_dirs=create_missing_dirs)

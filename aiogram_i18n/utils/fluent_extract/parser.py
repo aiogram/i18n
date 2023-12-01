@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import os
 from pathlib import Path
 from typing import Sequence, Union
 
@@ -27,10 +26,10 @@ class FluentKeyParser(BaseFluentKeyParser):
 
     def run(self, create_missing_dirs: bool = False) -> None:
         for path in self.input_dirs:
-            if os.path.isdir(path):
-                self.parse_dir(path)
-            else:
-                self.parse_file(path)
+            py_files = self.search_py_files(path)
+
+            for py_file in py_files:
+                self.parse_file(py_file)
 
         if self.locales:
             for locale in self.locales:
@@ -60,26 +59,31 @@ class FluentMultipleKeyParser(BaseFluentKeyParser):
         locales: Union[Sequence[str], None],
         exclude_dirs: Sequence[Path],
         exclude_keys: Sequence[str],
+        default_ftl_file: str,
     ) -> None:
         super().__init__(exclude_dirs, i18n_keys, separator, locales)
         self.input_paths = set(input_paths)
         self.output_dir = output_dir
         self.exclude_keys = list(exclude_keys)
+        self.default_ftl_file = default_ftl_file
 
     def run(self, create_missing_dirs: bool = False) -> None:
         for path in self.input_paths:
-            if path.is_dir():
-                self.parse_dir(path)
-            else:
-                self.parse_file(path)
+            py_files = self.search_py_files(path)
+
+            for py_file in py_files:
+                self.parse_file(py_file)
 
         if self.locales:
             for locale in self.locales:
+                path = self.output_dir / locale
                 template = FluentTemplateDir(
-                    path=self.output_dir / locale,
+                    path=path,
                     separator=self.separator,
-                    keys=self.result,
-                    exclude_keys=self.exclude_keys,
+                    keys=self.result.copy(),
+                    exclude_keys=self.exclude_keys.copy(),
+                    default_ftl_file=self.default_ftl_file,
+                    ftl_files=tuple(path.rglob("*.ftl")),
                 )
                 template.write(create_missing_dirs=create_missing_dirs)
 
@@ -87,7 +91,9 @@ class FluentMultipleKeyParser(BaseFluentKeyParser):
             template = FluentTemplateDir(
                 path=self.output_dir,
                 separator=self.separator,
-                keys=self.result,
-                exclude_keys=self.exclude_keys,
+                keys=self.result.copy(),
+                exclude_keys=self.exclude_keys.copy(),
+                default_ftl_file=self.default_ftl_file,
+                ftl_files=tuple(self.output_dir.rglob("*.ftl")),
             )
             template.write(create_missing_dirs=create_missing_dirs)

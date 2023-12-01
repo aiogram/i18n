@@ -2,72 +2,237 @@ from pathlib import Path
 from typing import Any, Final
 
 import pytest
+from _pytest.legacypath import TempdirFactory
+from babel import UnknownLocaleError
 from pytest_asyncio import fixture
 from pytest_lazyfixture import lazy_fixture
 
 from aiogram_i18n.cores import BaseCore
 from aiogram_i18n.utils.fluent_extract import FluentMultipleKeyParser
+from tests.check_translations import _check_translations
 
-TEST_LOCALES_DIR: Final[str] = "test_multiple_locales"
-LOCALES: Final[str] = str(
-    Path(__file__).parent.joinpath("data", TEST_LOCALES_DIR, "{locale}").absolute()
-)
+TEST_CODE_DIR: Final[Path] = Path(__file__).parent.joinpath("data", "test_code").absolute()
 
 
-@fixture(scope="class")
-def fluent_runtime_core_multiple() -> BaseCore[Any]:
+@pytest.fixture(scope="function")
+def no_locales_output(tmpdir_factory: TempdirFactory) -> Path:
+    return Path(*tmpdir_factory.mktemp("no_locales_output").parts())
+
+
+@pytest.fixture(scope="function")
+def multiple_locales_output(tmpdir_factory: TempdirFactory) -> Path:
+    return Path(*tmpdir_factory.mktemp("multiple_locales_output").parts())
+
+
+@pytest.fixture(scope="session")
+def code_sample_dir(tmpdir_factory: TempdirFactory) -> Path:
+    tmp = Path(*tmpdir_factory.mktemp("code_sample_dir").parts())
+
+    for path in TEST_CODE_DIR.rglob("*.txt"):
+        if path.is_file():
+            target_path = (tmp / path.relative_to(TEST_CODE_DIR)).with_suffix(".py")
+            target_path.write_text(path.read_text(encoding="utf-8"), encoding="utf-8")
+
+    return tmp
+
+
+@pytest.fixture(scope="session")
+def commented_code_sample_dir(tmpdir_factory: TempdirFactory) -> Path:
+    tmp = Path(*tmpdir_factory.mktemp("code_sample_dir").parts())
+
+    for path in TEST_CODE_DIR.rglob("*.txt"):
+        if path.is_file():
+            target_path = (tmp / path.relative_to(TEST_CODE_DIR)).with_suffix(".py")
+            with path.open(encoding="utf-8") as f:
+                lines = [f"#{line}" for line in f.readlines()]
+                target_path.write_text("\n".join(lines), encoding="utf-8")
+
+    return tmp
+
+
+@fixture(scope="function")
+def fluent_runtime_core_no_locales(no_locales_output: Path) -> BaseCore[Any]:
     from aiogram_i18n.cores import FluentRuntimeCore
 
-    return FluentRuntimeCore(path=LOCALES, use_isolating=False)
+    return FluentRuntimeCore(path=no_locales_output, use_isolating=False)
 
 
-@fixture(scope="class")
-def fluent_compile_core_multiple() -> BaseCore[Any]:
+@fixture(scope="function")
+def fluent_runtime_core_multiple_locales(multiple_locales_output: Path) -> BaseCore[Any]:
+    from aiogram_i18n.cores import FluentRuntimeCore
+
+    return FluentRuntimeCore(path=multiple_locales_output / "{locale}", use_isolating=False)
+
+
+@fixture(scope="function")
+def fluent_compile_core_no_locales(no_locales_output: Path) -> BaseCore[Any]:
     from aiogram_i18n.cores import FluentCompileCore
 
-    return FluentCompileCore(path=LOCALES, use_isolating=False)
+    return FluentCompileCore(path=no_locales_output, use_isolating=False)
+
+
+@fixture(scope="function")
+def fluent_compile_core_multiple_locales(multiple_locales_output: Path) -> BaseCore[Any]:
+    from aiogram_i18n.cores import FluentCompileCore
+
+    return FluentCompileCore(path=multiple_locales_output / "{locale}", use_isolating=False)
 
 
 @pytest.mark.parametrize(
     "i18n",
     [
-        lazy_fixture("fluent_runtime_core_multiple"),
-        lazy_fixture("fluent_compile_core_multiple"),
+        lazy_fixture("fluent_runtime_core_multiple_locales"),
+        lazy_fixture("fluent_compile_core_multiple_locales"),
     ],
 )
 @pytest.mark.asyncio
-class Test:
-    async def test_multiple_extract(self, i18n: BaseCore[Any]) -> None:
-        input_paths = (Path(__file__).absolute(),)
-        output_dir = Path(__file__).parent.joinpath("data", TEST_LOCALES_DIR).absolute()
+async def test_multiple_extract(
+    i18n: BaseCore[Any], multiple_locales_output: Path, code_sample_dir: Path
+) -> None:
+    fkp = FluentMultipleKeyParser(
+        input_paths=(code_sample_dir,),
+        output_dir=multiple_locales_output,
+        i18n_keys=["i18n", "L", "I18NFormat"],
+        separator="-",
+        locales=["en", "uk"],
+        exclude_dirs=[],
+        exclude_keys=["startup", "shutdown"],
+        default_ftl_file="_default.ftl",
+    )
+    fkp.run(create_missing_dirs=True)
 
-        fkp = FluentMultipleKeyParser(
-            input_paths=input_paths,
-            output_dir=output_dir,
-            i18n_keys=["i18n", "L"],
-            separator="-",
-            locales=["en", "uk"],
-            exclude_dirs=[],
-            exclude_keys=["startup", "shutdown"],
-        )
-        fkp.run(create_missing_dirs=True)
+    await i18n.startup()
+    assert set(i18n.available_locales) == {"en", "uk"}
+    assert multiple_locales_output.joinpath("en").exists()
+    assert multiple_locales_output.joinpath("uk").exists()
+    _check_translations(i18n)
 
-        assert i18n.available_locales == ()
-        await i18n.startup()
-        assert set(i18n.available_locales) == {"en", "uk"}
 
-    async def test_get(self, i18n: BaseCore[Any]) -> None:
-        assert i18n.get("start", locale="en") == "start"
-        assert i18n.get("start", locale="uk") == "start"
+@pytest.mark.asyncio
+@pytest.mark.parametrize(
+    "i18n",
+    [
+        lazy_fixture("fluent_runtime_core_multiple_locales"),
+        lazy_fixture("fluent_compile_core_multiple_locales"),
+    ],
+)
+async def test_multiple_extract_comment_non_existing_keys(
+    i18n: BaseCore[Any],
+    multiple_locales_output: Path,
+    code_sample_dir: Path,
+    commented_code_sample_dir: Path,
+):
+    fkp = FluentMultipleKeyParser(
+        input_paths=(code_sample_dir,),
+        output_dir=multiple_locales_output,
+        i18n_keys=["i18n", "L", "I18NFormat"],
+        separator="-",
+        locales=["en", "uk"],
+        exclude_dirs=[],
+        exclude_keys=["startup", "shutdown"],
+        default_ftl_file="_default.ftl",
+    )
+    fkp.run(create_missing_dirs=True)
 
-        assert i18n.get("buttons-cancel", locale="en") == "buttons-cancel"
-        assert i18n.get("buttons-cancel", locale="uk") == "buttons-cancel"
+    fkp = FluentMultipleKeyParser(
+        input_paths=(commented_code_sample_dir,),
+        output_dir=multiple_locales_output,
+        i18n_keys=["i18n", "L", "I18NFormat"],
+        separator="-",
+        locales=["en", "uk"],
+        exclude_dirs=[],
+        exclude_keys=["startup", "shutdown"],
+        default_ftl_file="_default.ftl",
+    )
+    fkp.run(create_missing_dirs=True)
 
-        assert i18n.get("buttons-add-user", locale="en", user="Bob") == "buttons-add-user Bob"
-        assert i18n.get("buttons-add-user", locale="uk", user="Боб") == "buttons-add-user Боб"
+    for ftl_file in multiple_locales_output.rglob("*.ftl"):
+        with ftl_file.open(encoding="utf-8") as f:
+            assert all(assert_line.startswith("#") for assert_line in f.readlines())
 
-        assert i18n.get("msgs-hello", locale="en", user="Bob") == "msgs-hello Bob"
-        assert i18n.get("msgs-hello", locale="uk", user="Боб") == "msgs-hello Боб"
 
-        assert i18n.get("msgs-bye", locale="en", user="Bob") == "msgs-bye Bob"
-        assert i18n.get("msgs-bye", locale="uk", user="Боб") == "msgs-bye Боб"
+@pytest.mark.asyncio
+@pytest.mark.parametrize(
+    "i18n",
+    [
+        lazy_fixture("fluent_runtime_core_no_locales"),
+        lazy_fixture("fluent_compile_core_no_locales"),
+    ],
+)
+async def test_multiple_extract_comment_non_existing_keys_no_locales(
+    i18n: BaseCore[Any],
+    no_locales_output: Path,
+    code_sample_dir: Path,
+    commented_code_sample_dir: Path,
+):
+    fkp = FluentMultipleKeyParser(
+        input_paths=(code_sample_dir,),
+        output_dir=no_locales_output,
+        i18n_keys=["i18n", "L", "I18NFormat"],
+        separator="-",
+        locales=[],
+        exclude_dirs=[],
+        exclude_keys=["startup", "shutdown"],
+        default_ftl_file="_default.ftl",
+    )
+    fkp.run(create_missing_dirs=True)
+
+    fkp = FluentMultipleKeyParser(
+        input_paths=(commented_code_sample_dir,),
+        output_dir=no_locales_output,
+        i18n_keys=["i18n", "L", "I18NFormat"],
+        separator="-",
+        locales=[],
+        exclude_dirs=[],
+        exclude_keys=["startup", "shutdown"],
+        default_ftl_file="_default.ftl",
+    )
+    fkp.run(create_missing_dirs=True)
+
+    for ftl_file in no_locales_output.rglob("*.ftl"):
+        with ftl_file.open(encoding="utf-8") as f:
+            assert all(assert_line.startswith("#") for assert_line in f.readlines())
+
+
+@pytest.mark.asyncio
+@pytest.mark.xfail(raises=FileNotFoundError)
+async def test_file_not_found_exception(multiple_locales_output: Path, code_sample_dir: Path):
+    fkp = FluentMultipleKeyParser(
+        input_paths=(code_sample_dir / "._ERROR_PATH",),
+        output_dir=multiple_locales_output,
+        i18n_keys=["i18n", "L", "I18NFormat"],
+        separator="-",
+        locales=["en", "uk"],
+        exclude_dirs=[],
+        exclude_keys=["startup", "shutdown"],
+        default_ftl_file="_default.ftl",
+    )
+    fkp.run(create_missing_dirs=True)
+
+
+@pytest.mark.parametrize(
+    "i18n",
+    [
+        lazy_fixture("fluent_runtime_core_no_locales"),
+        lazy_fixture("fluent_compile_core_no_locales"),
+    ],
+)
+@pytest.mark.asyncio
+@pytest.mark.xfail(raises=(UnknownLocaleError, TypeError))
+async def test_unknown_locale_error(
+    i18n: BaseCore[Any], no_locales_output: Path, code_sample_dir: Path
+):
+    fkp = FluentMultipleKeyParser(
+        input_paths=(code_sample_dir,),
+        output_dir=no_locales_output,
+        i18n_keys=["i18n", "L", "I18NFormat"],
+        separator="-",
+        locales=[],
+        exclude_dirs=[],
+        exclude_keys=["startup", "shutdown"],
+        default_ftl_file="_default.ftl",
+    )
+    fkp.run(create_missing_dirs=True)
+
+    assert i18n.available_locales == ()
+    await i18n.startup()

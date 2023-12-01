@@ -3,7 +3,10 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING, Any, Awaitable, Callable, Optional
 
-from aiogram.dispatcher.event.handler import CallableMixin
+try:
+    from aiogram.dispatcher.event.handler import CallableObject as CallableMixin
+except ImportError:
+    from aiogram.dispatcher.event.handler import CallableMixin
 
 
 class BaseManager(ABC):
@@ -16,23 +19,23 @@ class BaseManager(ABC):
 
     if TYPE_CHECKING:
         set_locale: Callable[..., Awaitable[None]]
-        get_locale: Callable[..., Awaitable[None]]
+        get_locale: Callable[..., Awaitable[str]]
 
     else:
 
         @abstractmethod
         async def set_locale(self, *args: Any, **kwargs: Any) -> None:
-            ...
+            pass
 
         @abstractmethod
         async def get_locale(self, *args: Any, **kwargs: Any) -> str:
-            ...
+            pass
 
-    async def startup(self, *args, **kwargs) -> None:
-        ...
+    async def startup(self, *args: Any, **kwargs: Any) -> None:
+        pass
 
-    async def shutdown(self, *args, **kwargs) -> None:
-        ...
+    async def shutdown(self, *args: Any, **kwargs: Any) -> None:
+        pass
 
 
 class LocaleSetter(CallableMixin):

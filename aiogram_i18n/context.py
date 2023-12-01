@@ -1,13 +1,15 @@
 from __future__ import annotations
 
 from contextlib import contextmanager
-from typing import Any, Dict, Generator
+from typing import TYPE_CHECKING, Any, Dict, Generator
 
 from aiogram.utils.mixins import ContextInstanceMixin
 
-from aiogram_i18n.cores.base import BaseCore
 from aiogram_i18n.managers.base import BaseManager
 from aiogram_i18n.utils.magic_proxy import MagicProxy
+
+if TYPE_CHECKING:
+    from aiogram_i18n.cores.base import BaseCore
 
 
 class I18nContext(ContextInstanceMixin["I18nContext"]):
@@ -34,7 +36,7 @@ class I18nContext(ContextInstanceMixin["I18nContext"]):
         self.context = {}
 
     def get(self, key: str, /, **kwargs: Any) -> str:
-        return self.core.get(key, locale=self.locale, **kwargs)
+        return self.core.get(key, self.locale, **kwargs)
 
     __call__ = get
 

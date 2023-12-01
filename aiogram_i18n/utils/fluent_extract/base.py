@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from abc import ABC, abstractmethod
 from pathlib import Path
 from typing import Any, Dict, Sequence, Union, cast
 
@@ -7,11 +8,12 @@ from click import echo
 from libcst import Module, parse_module
 from libcst import matchers as m
 
-from ... import LazyProxy
+from aiogram_i18n import LazyProxy
+
 from .models import FluentKeywords, FluentMatch
 
 
-class BaseFluentKeyParser:
+class BaseFluentKeyParser(ABC):
     def __init__(
         self,
         exclude_dirs: Sequence[Path],
@@ -30,11 +32,14 @@ class BaseFluentKeyParser:
         keywords = m.SaveMatchedNode(m.ZeroOrMore(m.Arg(keyword=m.Name())), name="keywords")
 
         return m.Call(
-            func=m.Attribute(
-                value=m.OneOf(*map(m.Name, self.i18n_keys)),
-                attr=m.Name(value="get"),
-            )
-            | m.Name(value=LazyProxy.__name__),
+            func=m.OneOf(
+                m.Attribute(
+                    value=m.OneOf(*map(m.Name, self.i18n_keys)),
+                    attr=m.Name(value="get"),
+                ),
+                m.Name(value=LazyProxy.__name__),
+                *map(m.Name, self.i18n_keys),
+            ),
             args=[
                 m.Arg(value=m.SaveMatchedNode(m.SimpleString(), name="string")),
                 keywords,
@@ -80,16 +85,14 @@ class BaseFluentKeyParser:
         except PermissionError as e:
             echo(f"Can't parse file {path}: {e}")
 
-    def parse_dir(self, path: Path) -> None:
-        for p in path.iterdir():
-            if p.name.startswith(".") or p in self.exclude_dirs:
-                continue
+    def search_py_files(self, path: Path) -> Sequence[Path]:
+        return tuple(
+            filter(
+                lambda x: not x.name.startswith(".") and x.parent not in self.exclude_dirs,
+                path.rglob("*.py"),
+            )
+        )
 
-            if p.is_dir():
-                self.parse_dir(p)
-
-            elif p.suffix == ".py":
-                self.parse_file(p)
-
+    @abstractmethod
     def run(self) -> None:
-        raise NotImplementedError
+        pass
