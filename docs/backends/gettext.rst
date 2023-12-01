@@ -1,5 +1,5 @@
 ===========
-GLU Gettext
+GNU Gettext
 ===========
 
 .. autoclass:: aiogram_i18n.cores.gnu_text_core.GNUTextCore
