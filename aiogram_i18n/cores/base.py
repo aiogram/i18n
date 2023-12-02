@@ -13,6 +13,10 @@ Translator = TypeVar("Translator")
 
 
 class BaseCore(Generic[Translator], ABC):
+    """
+    Is an abstract base class for implementing core functionality for translation.
+    """
+
     default_locale: Optional[str]
     locales: Dict[str, Translator]
     locales_map: Dict[str, str]
@@ -23,6 +27,11 @@ class BaseCore(Generic[Translator], ABC):
         default_locale: Optional[str] = None,
         locales_map: Optional[Dict[str, str]] = None,
     ) -> None:
+        """
+
+        :param default_locale: The default locale to be used for translations.
+            If not provided, it will default to None.
+        """
         self.path = path if isinstance(path, Path) else Path(path)
         self.default_locale = default_locale
         self.locales = {}

@@ -71,6 +71,11 @@ dev = [
     "pre-commit~=3.3.3",
     "packaging~=23.0",
 ]
+docs = [
+    "sphinx~=7.2.6",
+    "furo~=2023.9.10",
+    "sphinx-autobuild~=2021.3.14",
+]
 
 [tool.hatch.envs.dev]
 post-install = [
@@ -82,6 +87,7 @@ features = [
     "runtime",
     "dev",
     "test",
+    "docs",
 ]
 
 [tool.hatch.envs.default.scripts]
