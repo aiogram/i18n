@@ -1,6 +1,6 @@
 from contextlib import contextmanager
 from contextvars import ContextVar, Token
-from typing import Any, Generic, Literal, Optional, TypeVar, cast, overload
+from typing import Any, Generic, Literal, Optional, TypeVar, cast, overload, Generator
 
 ContextInstance = TypeVar("ContextInstance")
 
@@ -62,7 +62,7 @@ class ContextInstanceMixin(Generic[ContextInstance]):
 
     @classmethod
     @contextmanager
-    def with_current(cls, value: ContextInstance):
+    def with_current(cls, value: ContextInstance) -> Generator[ContextInstance, None, None]:
         token = cls.set_current(value=value)
-        yield
+        yield value
         cls.reset_current(token=token)
