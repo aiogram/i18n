@@ -15,7 +15,7 @@ class LazyProxy(BaseModel):  # type: ignore[no-redef]
     kwargs: Dict[str, Any]
 
     def __init__(self, key: str, locale: Optional[str] = None, /, **kwargs: Any) -> None:
-        super().__init__(_key=key, _locale=locale, kwargs=kwargs)
+        super().__init__(key=key, locale=locale, kwargs=kwargs)
 
     @property
     def data(self) -> str:
