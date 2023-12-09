@@ -36,6 +36,20 @@ def code_sample_dir(tmpdir_factory: TempdirFactory) -> Path:
     return tmp
 
 
+@pytest.fixture(scope="session")
+def commented_code_sample_dir(tmpdir_factory: TempdirFactory) -> Path:
+    tmp = Path(*tmpdir_factory.mktemp("code_sample_dir").parts())
+
+    for path in TEST_CODE_DIR.rglob("*.txt"):
+        if path.is_file():
+            target_path = (tmp / path.relative_to(TEST_CODE_DIR)).with_suffix(".py")
+            with path.open(encoding="utf-8") as f:
+                lines = [f"#{line}" for line in f.readlines()]
+                target_path.write_text("\n".join(lines), encoding="utf-8")
+
+    return tmp
+
+
 @fixture(scope="function")
 def fluent_runtime_core_no_locales(no_locales_output: Path) -> BaseCore[Any]:
     from aiogram_i18n.cores import FluentRuntimeCore
@@ -92,6 +106,92 @@ async def test_multiple_extract(
     assert multiple_locales_output.joinpath("en").exists()
     assert multiple_locales_output.joinpath("uk").exists()
     _check_translations(i18n)
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize(
+    "i18n",
+    [
+        lazy_fixture("fluent_runtime_core_multiple_locales"),
+        lazy_fixture("fluent_compile_core_multiple_locales"),
+    ],
+)
+async def test_multiple_extract_comment_non_existing_keys(
+    i18n: BaseCore[Any],
+    multiple_locales_output: Path,
+    code_sample_dir: Path,
+    commented_code_sample_dir: Path,
+):
+    fkp = FluentMultipleKeyParser(
+        input_paths=(code_sample_dir,),
+        output_dir=multiple_locales_output,
+        i18n_keys=["i18n", "L", "I18NFormat"],
+        separator="-",
+        locales=["en", "uk"],
+        exclude_dirs=[],
+        exclude_keys=["startup", "shutdown"],
+        default_ftl_file="_default.ftl",
+    )
+    fkp.run(create_missing_dirs=True)
+
+    fkp = FluentMultipleKeyParser(
+        input_paths=(commented_code_sample_dir,),
+        output_dir=multiple_locales_output,
+        i18n_keys=["i18n", "L", "I18NFormat"],
+        separator="-",
+        locales=["en", "uk"],
+        exclude_dirs=[],
+        exclude_keys=["startup", "shutdown"],
+        default_ftl_file="_default.ftl",
+    )
+    fkp.run(create_missing_dirs=True)
+
+    for ftl_file in multiple_locales_output.rglob("*.ftl"):
+        with ftl_file.open(encoding="utf-8") as f:
+            assert all(assert_line.startswith("#") for assert_line in f.readlines())
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize(
+    "i18n",
+    [
+        lazy_fixture("fluent_runtime_core_no_locales"),
+        lazy_fixture("fluent_compile_core_no_locales"),
+    ],
+)
+async def test_multiple_extract_comment_non_existing_keys_no_locales(
+    i18n: BaseCore[Any],
+    no_locales_output: Path,
+    code_sample_dir: Path,
+    commented_code_sample_dir: Path,
+):
+    fkp = FluentMultipleKeyParser(
+        input_paths=(code_sample_dir,),
+        output_dir=no_locales_output,
+        i18n_keys=["i18n", "L", "I18NFormat"],
+        separator="-",
+        locales=[],
+        exclude_dirs=[],
+        exclude_keys=["startup", "shutdown"],
+        default_ftl_file="_default.ftl",
+    )
+    fkp.run(create_missing_dirs=True)
+
+    fkp = FluentMultipleKeyParser(
+        input_paths=(commented_code_sample_dir,),
+        output_dir=no_locales_output,
+        i18n_keys=["i18n", "L", "I18NFormat"],
+        separator="-",
+        locales=[],
+        exclude_dirs=[],
+        exclude_keys=["startup", "shutdown"],
+        default_ftl_file="_default.ftl",
+    )
+    fkp.run(create_missing_dirs=True)
+
+    for ftl_file in no_locales_output.rglob("*.ftl"):
+        with ftl_file.open(encoding="utf-8") as f:
+            assert all(assert_line.startswith("#") for assert_line in f.readlines())
 
 
 @pytest.mark.asyncio
