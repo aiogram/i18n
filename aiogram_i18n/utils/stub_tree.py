@@ -159,7 +159,7 @@ class Attr:
             me = node.create_class(self.name)
             for attr in self.attrs:
                 attr.render(me)
-            if self.params:
+            if self.params is not None:
                 me.create_call(self.params)
         else:
             node.create_method(name=self.name, params=self.params)
