@@ -10,7 +10,6 @@ except ImportError as e:
     raise NoModuleError(name="FluentRuntimeCore", module_name="fluent.runtime") from e
 
 from aiogram_i18n.cores.base import BaseCore
-from aiogram_i18n.utils.fixs import fix_fluent_named_arguments, fix_fluent_number_grouping
 
 
 class FluentRuntimeCore(BaseCore[FluentBundle]):
@@ -24,8 +23,6 @@ class FluentRuntimeCore(BaseCore[FluentBundle]):
         raise_key_error: bool = True,
         use_td: bool = True,
         locales_map: Optional[Dict[str, str]] = None,
-        fix_number: bool = False,
-        fix_named_arguments: bool = True,
     ) -> None:
         super().__init__(path=path, default_locale=default_locale, locales_map=locales_map)
         self.use_isolating = use_isolating
@@ -34,8 +31,6 @@ class FluentRuntimeCore(BaseCore[FluentBundle]):
             self.functions.update(td.functions)
         self.pre_compile = pre_compile
         self.raise_key_error = raise_key_error
-        fix_fluent_number_grouping(fix=fix_number)
-        fix_fluent_named_arguments(fix=fix_named_arguments)
 
     def get(self, message_id: str, locale: Optional[str] = None, /, **kwargs: Any) -> str:
         locale = self.get_locale(locale=locale)

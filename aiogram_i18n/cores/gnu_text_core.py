@@ -29,7 +29,6 @@ class GNUTextCore(BaseCore[GNUTranslations]):
     def find_locales(self) -> Dict[str, GNUTranslations]:
         """
         Load all compiled locales from path
-
         :return: dict with locales
         """
         fallback = Fallback()
