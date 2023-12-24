@@ -71,7 +71,6 @@ class I18nMiddleware(BaseMiddleware, ContextInstanceMixin["I18nMiddleware"]):
         event: TelegramObject,
         data: Dict[str, Any],
     ) -> Any:
-        data[self.middleware_key] = self
         locale = await self.manager.locale_getter(event=event, **data)
         if self.locale_key is not None:
             data[self.locale_key] = locale
@@ -83,15 +82,17 @@ class I18nMiddleware(BaseMiddleware, ContextInstanceMixin["I18nMiddleware"]):
     def use_context(
         self,
         locale: Optional[str] = None,
-        data: Optional[Dict[str, Any]] = None
+        data: Optional[Dict[str, Any]] = None,
+        /,
+        **kwargs
     ) -> Generator[I18nContext, None, None]:
-        if data is None:
-            data = {}
+        if data:
+            kwargs.update(data)
 
         with I18nContext.with_current(
             self.new_context(
                 locale=locale or self.core.default_locale,
-                data=data,
+                data=kwargs,
             )
         ) as context:
             data[self.context_key] = context
