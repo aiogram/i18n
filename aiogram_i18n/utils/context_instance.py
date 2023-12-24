@@ -49,7 +49,7 @@ class ContextInstanceMixin(Generic[ContextInstance]):
         return current
 
     @classmethod
-    def set_current(cls, value: ContextInstance) -> Token[ContextInstance]:
+    def set_current(cls, value: ContextInstance) -> Token:  # Token[ContextInstance]
         if not isinstance(value, cls):
             raise TypeError(
                 f"Value should be instance of {cls.__name__!r} not {type(value).__name__!r}"
@@ -57,7 +57,7 @@ class ContextInstanceMixin(Generic[ContextInstance]):
         return cls.__context_instance.set(value)
 
     @classmethod
-    def reset_current(cls, token: Token[ContextInstance]) -> None:
+    def reset_current(cls, token: Token) -> None:  # Token[ContextInstance]
         cls.__context_instance.reset(token)
 
     @classmethod
