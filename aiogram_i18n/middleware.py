@@ -1,5 +1,5 @@
 from contextlib import contextmanager
-from typing import Any, Awaitable, Callable, Dict, Optional, Generator
+from typing import Any, Awaitable, Callable, Dict, Generator, Optional, cast
 from warnings import warn
 
 from aiogram import BaseMiddleware, Dispatcher
@@ -21,6 +21,7 @@ class I18nMiddleware(BaseMiddleware, ContextInstanceMixin["I18nMiddleware"]):
     middleware_key: str
     key_separator: str
     with_context: bool
+    enabled_startup: bool
 
     def __init__(
         self,
@@ -31,6 +32,7 @@ class I18nMiddleware(BaseMiddleware, ContextInstanceMixin["I18nMiddleware"]):
         middleware_key: str = "i18n_middleware",
         default_locale: str = "en",
         key_separator: str = "-",
+        enabled_startup: bool = True,
     ) -> None:
         self.core = core
         self.manager = manager or MemoryManager()
@@ -38,6 +40,7 @@ class I18nMiddleware(BaseMiddleware, ContextInstanceMixin["I18nMiddleware"]):
         self.locale_key = locale_key
         self.middleware_key = middleware_key
         self.key_separator = key_separator
+        self.enabled_startup = enabled_startup
 
         if self.core.default_locale is None:
             self.core.default_locale = default_locale
@@ -53,10 +56,11 @@ class I18nMiddleware(BaseMiddleware, ContextInstanceMixin["I18nMiddleware"]):
         dispatcher.shutdown.register(self.core.shutdown)
         dispatcher.startup.register(self.manager.startup)
         dispatcher.shutdown.register(self.manager.shutdown)
-        dispatcher.startup.register(self.startup)
+        if self.enabled_startup:
+            dispatcher.startup.register(self.startup)
         dispatcher[self.middleware_key] = self
 
-    async def startup(self, dispatcher: Dispatcher):
+    async def startup(self, dispatcher: Dispatcher) -> None:
         for sub_router in dispatcher.chain_tail:
             for observ in sub_router.observers.values():
                 for handler in observ.handlers:
@@ -83,16 +87,14 @@ class I18nMiddleware(BaseMiddleware, ContextInstanceMixin["I18nMiddleware"]):
         self,
         locale: Optional[str] = None,
         data: Optional[Dict[str, Any]] = None,
-        /,
-        **kwargs
     ) -> Generator[I18nContext, None, None]:
-        if data:
-            kwargs.update(data)
+        if data is None:
+            data = dict()  # noqa: C408
 
         with I18nContext.with_current(
             self.new_context(
-                locale=locale or self.core.default_locale,
-                data=kwargs,
+                locale=cast(str, locale or self.core.default_locale),
+                data=data,
             )
         ) as context:
             data[self.context_key] = context
