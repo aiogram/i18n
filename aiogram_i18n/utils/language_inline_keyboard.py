@@ -10,11 +10,11 @@ INLINE_MARKUP = List[List[InlineKeyboardButton]]
 
 class LanguageCallbackFilter(BaseLazyFilter):
     keyboard: "LanguageInlineMarkup"
-    len: int
+    slice: slice
 
     def __init__(self, keyboard: "LanguageInlineMarkup"):
         self.keyboard = keyboard
-        self.len = len(keyboard.prefix)
+        self.slice = slice(len(keyboard.prefix), None)
 
     async def startup(self, middleware: "I18nMiddleware") -> None:
         await self.keyboard.startup(middleware=middleware)
@@ -22,7 +22,7 @@ class LanguageCallbackFilter(BaseLazyFilter):
     async def __call__(self, callback: CallbackQuery) -> Union[bool, Dict[str, Any]]:
         if not callback.data or not callback.data.startswith(self.keyboard.prefix):
             return False
-        return {self.keyboard.param: callback.data[self.len:]}
+        return {self.keyboard.param: callback.data[self.slice]}
 
 
 class LanguageInlineMarkup:
