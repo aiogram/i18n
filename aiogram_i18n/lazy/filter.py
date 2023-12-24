@@ -1,4 +1,4 @@
-from typing import Any, Union, Dict, Optional, Tuple, TYPE_CHECKING
+from typing import TYPE_CHECKING, Any, Dict, Tuple, Union
 
 from aiogram.types import Message
 
@@ -10,13 +10,13 @@ if TYPE_CHECKING:
 
 class LazyFilter(BaseLazyFilter):
     keys: Tuple[str, ...]
-    all_keys: Optional[Tuple[str]]
+    all_keys: Tuple[str, ...]
 
     def __init__(self, *keys: str):
         self.keys = keys
-        self.all_keys = None
+        self.all_keys = ()
 
-    async def startup(self, middleware: "I18nMiddleware"):
+    async def startup(self, middleware: "I18nMiddleware") -> None:
         self.all_keys = tuple(
             middleware.core.get(key, locale)
             for locale in middleware.core.available_locales

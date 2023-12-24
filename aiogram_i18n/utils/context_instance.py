@@ -1,6 +1,6 @@
 from contextlib import contextmanager
 from contextvars import ContextVar, Token
-from typing import Any, Generic, Literal, Optional, TypeVar, cast, overload, Generator
+from typing import Any, Generator, Generic, Literal, Optional, TypeVar, cast, overload
 
 ContextInstance = TypeVar("ContextInstance")
 

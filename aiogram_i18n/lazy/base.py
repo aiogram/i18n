@@ -7,7 +7,7 @@ if TYPE_CHECKING:
 
 class BaseLazyFilter:
 
-    async def startup(self, middleware: "I18nMiddleware"):
+    async def startup(self, middleware: "I18nMiddleware") -> None:
         pass
 
     @abstractmethod

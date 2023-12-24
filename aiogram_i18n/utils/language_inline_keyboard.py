@@ -1,8 +1,8 @@
-from typing import Any, Union, Dict, Optional, List
+from typing import Any, Dict, List, Optional, Union
 
-from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
+from aiogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup
 
-from aiogram_i18n import I18nMiddleware, I18nContext
+from aiogram_i18n import I18nContext, I18nMiddleware
 from aiogram_i18n.lazy.base import BaseLazyFilter
 
 
@@ -14,7 +14,7 @@ class LanguageCallbackFilter(BaseLazyFilter):
         self.keyboard = keyboard
         self.len = len(keyboard.prefix)
 
-    async def startup(self, middleware: "I18nMiddleware"):
+    async def startup(self, middleware: "I18nMiddleware") -> None:
         await self.keyboard.startup(middleware=middleware)
 
     async def __call__(self, callback: CallbackQuery) -> Union[bool, Dict[str, Any]]:
@@ -31,7 +31,7 @@ class LanguageInlineMarkup:
         hide_current: bool = False,
         prefix: str = "__lang__",
         param: str = "lang",
-        keyboard: List[List[InlineKeyboardButton]] = None
+        keyboard: Optional[List[List[InlineKeyboardButton]]] = None
     ):
         self.key = key
         self.row = row
@@ -44,16 +44,16 @@ class LanguageInlineMarkup:
         self.keyboards: Dict[str, List[List[InlineKeyboardButton]]] = {
 
         }
-        self.keyboard = keyboard or tuple()
+        self.keyboard = keyboard or ()
 
     def reply_markup(self, locale: Optional[str] = None) -> InlineKeyboardMarkup:
         if locale is None:
             locale = I18nContext.get_current(False).locale
         return InlineKeyboardMarkup(
-            inline_keyboard=self.keyboards.get(locale)
+            inline_keyboard=self.keyboards.get(locale) or list()  # noqa: C408
         )
 
-    async def startup(self, middleware: "I18nMiddleware"):
+    async def startup(self, middleware: "I18nMiddleware") -> None:
         if self.keyboards:
             return
         for locale in middleware.core.available_locales:
