@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from typing import Any, Callable, Dict, Optional, cast
+from warnings import warn
 
 from aiogram import Bot
 from aiogram.utils.text_decorations import TextDecoration as TextD
@@ -79,6 +80,7 @@ class TextDecoration:
     def get_decoration(self, parse_mode: Optional[str] = None) -> TextD:
         parse_mode = parse_mode or self.i18n.context.get("parse_mode", None) or self.bot.parse_mode
         if parse_mode is None:
+            warn("parse mode is None")
             return self.decorations[parse_mode]
         return self.decorations[parse_mode.lower().strip()]
 
