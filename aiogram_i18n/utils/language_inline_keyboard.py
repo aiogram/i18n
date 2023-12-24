@@ -5,6 +5,8 @@ from aiogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMar
 from aiogram_i18n import I18nContext, I18nMiddleware
 from aiogram_i18n.lazy.base import BaseLazyFilter
 
+INLINE_MARKUP = List[List[InlineKeyboardButton]]
+
 
 class LanguageCallbackFilter(BaseLazyFilter):
     keyboard: "LanguageInlineMarkup"
@@ -31,7 +33,7 @@ class LanguageInlineMarkup:
         hide_current: bool = False,
         prefix: str = "__lang__",
         param: str = "lang",
-        keyboard: Optional[List[List[InlineKeyboardButton]]] = None,
+        keyboard: Optional[INLINE_MARKUP] = None,
     ):
         self.key = key
         self.row = row
@@ -39,8 +41,8 @@ class LanguageInlineMarkup:
         self.prefix = prefix
         self.param = param
         self.filter = LanguageCallbackFilter(keyboard=self)
-        self.keyboards: Dict[str, List[List[InlineKeyboardButton]]] = {}
-        self.keyboard = keyboard or tuple()  # noqa: C408
+        self.keyboards: Dict[str, INLINE_MARKUP] = {}
+        self.keyboard: Optional[INLINE_MARKUP] = keyboard or list()  # noqa: C408
 
     def reply_markup(self, locale: Optional[str] = None) -> InlineKeyboardMarkup:
         if locale is None:
@@ -68,5 +70,7 @@ class LanguageInlineMarkup:
                     self.keyboards[_locale].append([])
 
                 self.keyboards[_locale][-1].append(button)
+        if not self.keyboard:
+            return
         for keyboard in self.keyboards.values():
             keyboard.extend(self.keyboard)
