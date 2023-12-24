@@ -31,20 +31,16 @@ class LanguageInlineMarkup:
         hide_current: bool = False,
         prefix: str = "__lang__",
         param: str = "lang",
-        keyboard: Optional[List[List[InlineKeyboardButton]]] = None
+        keyboard: Optional[List[List[InlineKeyboardButton]]] = None,
     ):
         self.key = key
         self.row = row
         self.hide_current = hide_current
         self.prefix = prefix
         self.param = param
-        self.filter = LanguageCallbackFilter(
-            keyboard=self
-        )
-        self.keyboards: Dict[str, List[List[InlineKeyboardButton]]] = {
-
-        }
-        self.keyboard = keyboard or ()
+        self.filter = LanguageCallbackFilter(keyboard=self)
+        self.keyboards: Dict[str, List[List[InlineKeyboardButton]]] = {}
+        self.keyboard = keyboard or tuple()  # noqa: C408
 
     def reply_markup(self, locale: Optional[str] = None) -> InlineKeyboardMarkup:
         if locale is None:
@@ -59,7 +55,7 @@ class LanguageInlineMarkup:
         for locale in middleware.core.available_locales:
             button = InlineKeyboardButton(
                 text=middleware.core.get(self.key, locale),
-                callback_data=f"{self.prefix}{locale}"
+                callback_data=f"{self.prefix}{locale}",
             )
             for _locale in middleware.core.available_locales:
                 if self.hide_current and locale == _locale:
@@ -71,8 +67,6 @@ class LanguageInlineMarkup:
                 if len(self.keyboards[_locale][-1]) == self.row:
                     self.keyboards[_locale].append([])
 
-                self.keyboards[_locale][-1].append(
-                    button
-                )
+                self.keyboards[_locale][-1].append(button)
         for keyboard in self.keyboards.values():
             keyboard.extend(self.keyboard)
