@@ -60,14 +60,15 @@ class I18nMiddleware(BaseMiddleware, ContextInstanceMixin["I18nMiddleware"]):
             dispatcher.startup.register(self.startup)
         dispatcher[self.middleware_key] = self
 
-    async def startup(self, dispatcher: Dispatcher) -> None:
-        for sub_router in dispatcher.chain_tail:
-            for observ in sub_router.observers.values():
-                for handler in observ.handlers:
-                    if handler.filters:
-                        for filter_ in handler.filters:
-                            if isinstance(filter_.callback, BaseLazyFilter):
-                                await filter_.callback.startup(middleware=self)
+    async def startup(self, dispatcher: Dispatcher, **kwargs) -> None:
+        with self.use_context(data=kwargs):
+            for sub_router in dispatcher.chain_tail:
+                for observ in sub_router.observers.values():
+                    for handler in observ.handlers:
+                        if handler.filters:
+                            for filter_ in handler.filters:
+                                if isinstance(filter_.callback, BaseLazyFilter):
+                                    await filter_.callback.startup(middleware=self)
 
     async def __call__(
         self,
