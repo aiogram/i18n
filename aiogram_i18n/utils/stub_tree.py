@@ -89,9 +89,7 @@ class MethodNode(BaseNode):
         if params and self.kw_only:
             params.insert(0, "*")
         params.insert(0, "self")
-        return (
-            f"def {self.name.replace('-', '_')}({', '.join(params)}) -> str: ..."
-        )
+        return f"def {self.name.replace('-', '_')}({', '.join(params)}) -> str: ..."
 
     __repr__ = __str__
 
