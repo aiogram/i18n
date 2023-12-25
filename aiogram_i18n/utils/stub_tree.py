@@ -90,7 +90,7 @@ class MethodNode(BaseNode):
             params.insert(0, "*")
         params.insert(0, "self")
         return (
-            f"def {self.name.replace('-', '_')}({', '.join(params)}) -> Union[str, LazyProxy]: ..."
+            f"def {self.name.replace('-', '_')}({', '.join(params)}) -> str: ..."
         )
 
     __repr__ = __str__
