@@ -218,7 +218,6 @@ async def test_file_not_found_exception(multiple_locales_output: Path, code_samp
     ],
 )
 @pytest.mark.asyncio
-@pytest.mark.xfail(raises=(UnknownLocaleError, TypeError))
 async def test_unknown_locale_error(
     i18n: BaseCore[Any], no_locales_output: Path, code_sample_dir: Path
 ):
@@ -235,4 +234,5 @@ async def test_unknown_locale_error(
     fkp.run(create_missing_dirs=True)
 
     assert i18n.available_locales == ()
-    await i18n.startup()
+    with pytest.raises((TypeError, UnknownLocaleError)):  # type: ignore
+        await i18n.startup()

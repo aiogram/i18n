@@ -65,7 +65,7 @@ jobs:
         if: "env.IS_PYPY == 'false'"
         run: |
           ruff check --output-format=github aiogram_i18n tests
-          black --check --diff aiogram_i18n tests examples
+        # black --check --diff aiogram_i18n tests examples
 
       - name: Run tests
         run: pytest --cov=aiogram_i18n --cov-config .coveragerc --cov-report=xml

@@ -102,7 +102,6 @@ async def test_file_not_found_exception(
     ],
 )
 @pytest.mark.asyncio
-@pytest.mark.xfail(raises=NoLocalesFoundError)
 async def test_no_locales_found_error(
     i18n: BaseCore[Any], locales_output: Path, code_sample_dir: Path
 ):
@@ -118,4 +117,5 @@ async def test_no_locales_found_error(
     fkp.run(create_missing_dirs=True)
 
     assert i18n.available_locales == ()
-    await i18n.startup()
+    with pytest.raises(NoLocalesFoundError):
+        await i18n.startup()
