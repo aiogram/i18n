@@ -2,7 +2,7 @@ from typing import Any, Dict, List, Optional, Union
 
 from aiogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup
 
-from aiogram_i18n import I18nContext, I18nMiddleware
+from aiogram_i18n import I18nContext
 from aiogram_i18n.lazy.base import BaseLazyFilter
 
 INLINE_MARKUP = List[List[InlineKeyboardButton]]
@@ -16,8 +16,8 @@ class LanguageCallbackFilter(BaseLazyFilter):
         self.keyboard = keyboard
         self.slice = slice(len(keyboard.prefix), None)
 
-    async def startup(self, middleware: "I18nMiddleware") -> None:
-        await self.keyboard.startup(middleware=middleware)
+    async def startup(self, i18n: I18nContext) -> None:
+        await self.keyboard.startup(i18n=i18n)
 
     async def __call__(self, callback: CallbackQuery) -> Union[bool, Dict[str, Any]]:
         if not callback.data or not callback.data.startswith(self.keyboard.prefix):
@@ -51,15 +51,15 @@ class LanguageInlineMarkup:
             inline_keyboard=self.keyboards.get(locale) or list()  # noqa: C408
         )
 
-    async def startup(self, middleware: "I18nMiddleware") -> None:
+    async def startup(self, i18n: I18nContext) -> None:
         if self.keyboards:
             return
-        for locale in middleware.core.available_locales:
+        for locale in i18n.core.available_locales:
             button = InlineKeyboardButton(
-                text=middleware.core.get(self.key, locale),
+                text=i18n.core.get(self.key, locale),
                 callback_data=f"{self.prefix}{locale}",
             )
-            for _locale in middleware.core.available_locales:
+            for _locale in i18n.core.available_locales:
                 if self.hide_current and locale == _locale:
                     continue
 

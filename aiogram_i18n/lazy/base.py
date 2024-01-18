@@ -1,18 +1,15 @@
 from abc import abstractmethod
-from typing import TYPE_CHECKING, Any, Dict, Union
+from typing import Any
 
-if TYPE_CHECKING:
-    from aiogram_i18n import I18nMiddleware
+from aiogram.filters.base import Filter
+
+from aiogram_i18n.managers.base import CallableMixin
 
 
-class BaseLazyFilter:
-    async def startup(self, middleware: "I18nMiddleware") -> None:
-        pass
+class BaseLazyFilter(Filter):
+    async def call(self, context_key: str, **kwargs: Any):
+        return await CallableMixin(callback=self.startup).call(kwargs.pop(context_key), **kwargs)
 
     @abstractmethod
-    async def __call__(self, *args: Any, **kwargs: Any) -> Union[bool, Dict[str, Any]]:
+    async def startup(self, *args: Any, **kwargs: Any) -> None:
         pass
-
-    def __await__(self):  # type: ignore # pragma: no cover
-        # Is needed only for inspection and this method is never be called
-        return self.__call__

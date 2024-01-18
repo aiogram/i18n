@@ -8,8 +8,9 @@ from aiogram.types import TelegramObject
 from aiogram_i18n.context import I18nContext
 from aiogram_i18n.cores.base import BaseCore
 from aiogram_i18n.lazy.base import BaseLazyFilter
-from aiogram_i18n.managers.base import BaseManager
+from aiogram_i18n.managers.base import BaseManager, CallableMixin
 from aiogram_i18n.managers.memory import MemoryManager
+from aiogram_i18n.types import StartupFunction
 from aiogram_i18n.utils.context_instance import ContextInstanceMixin
 
 
@@ -49,6 +50,11 @@ class I18nMiddleware(BaseMiddleware, ContextInstanceMixin["I18nMiddleware"]):
         I18nMiddleware.set_current(self)
         if locale_key:
             warn("parameter locale_key deprecated since version 2.0")
+        self._startup: list[CallableMixin] = []
+
+    def on_startup(self, func: StartupFunction):
+        self._startup.append(CallableMixin(callback=func))
+        return func
 
     def setup(self, dispatcher: Dispatcher) -> None:
         dispatcher.update.outer_middleware.register(self)
@@ -61,14 +67,19 @@ class I18nMiddleware(BaseMiddleware, ContextInstanceMixin["I18nMiddleware"]):
         dispatcher[self.middleware_key] = self
 
     async def startup(self, dispatcher: Dispatcher, **kwargs) -> None:
+        kwargs.update(dispatcher=dispatcher)
         with self.use_context(data=kwargs):
+            for startup_func in self._startup:
+                await startup_func.call(**kwargs)
             for sub_router in dispatcher.chain_tail:
-                for observ in sub_router.observers.values():
-                    for handler in observ.handlers:
-                        if handler.filters:
-                            for filter_ in handler.filters:
-                                if isinstance(filter_.callback, BaseLazyFilter):
-                                    await filter_.callback.startup(middleware=self)
+                for observer in sub_router.observers.values():
+                    for handler in observer.handlers:
+                        if not handler.filters:
+                            continue
+                        for filter_ in handler.filters:
+                            if not isinstance(filter_.callback, BaseLazyFilter):
+                                continue
+                            await filter_.callback.call(self.context_key, **kwargs)
 
     async def __call__(
         self,

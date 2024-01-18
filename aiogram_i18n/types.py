@@ -4,13 +4,14 @@ This code is generated automatically.
 """
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, List, Literal, Optional, Union
+from typing import TYPE_CHECKING, Any, Awaitable, Callable, List, Literal, Optional, Union
 
 from aiogram import types
 
 from aiogram_i18n.lazy import LazyProxy
 
 StrOrLazy = Union[str, LazyProxy]
+StartupFunction = Callable[..., Awaitable[None]]  # Callable[[I18nContext, ...], Awaitable[None]]
 
 
 class BotCommand(types.BotCommand):
@@ -18,7 +19,6 @@ class BotCommand(types.BotCommand):
     description: StrOrLazy
 
     if TYPE_CHECKING:
-
         def __init__(
             __pydantic__self__,
             *,
@@ -37,7 +37,6 @@ class ForceReply(types.ForceReply):
     input_field_placeholder: Optional[StrOrLazy] = None
 
     if TYPE_CHECKING:
-
         def __init__(
             __pydantic__self__,
             *,
@@ -55,7 +54,6 @@ class InlineKeyboardButton(types.InlineKeyboardButton):
     switch_inline_query_current_chat: Optional[StrOrLazy] = None
 
     if TYPE_CHECKING:
-
         def __init__(
             __pydantic__self__,
             *,
@@ -92,7 +90,6 @@ class InlineQueryResultArticle(types.InlineQueryResultArticle):
     thumbnail_url: Optional[StrOrLazy] = None
 
     if TYPE_CHECKING:
-
         def __init__(
             __pydantic__self__,
             *,
@@ -122,7 +119,6 @@ class InlineQueryResultAudio(types.InlineQueryResultAudio):
     performer: Optional[StrOrLazy] = None
 
     if TYPE_CHECKING:
-
         def __init__(
             __pydantic__self__,
             *,
@@ -152,7 +148,6 @@ class InlineQueryResultCachedAudio(types.InlineQueryResultCachedAudio):
     parse_mode: Optional[StrOrLazy] = None
 
     if TYPE_CHECKING:
-
         def __init__(
             __pydantic__self__,
             *,
@@ -180,7 +175,6 @@ class InlineQueryResultCachedDocument(types.InlineQueryResultCachedDocument):
     parse_mode: Optional[StrOrLazy] = None
 
     if TYPE_CHECKING:
-
         def __init__(
             __pydantic__self__,
             *,
@@ -211,7 +205,6 @@ class InlineQueryResultCachedGif(types.InlineQueryResultCachedGif):
     parse_mode: Optional[StrOrLazy] = None
 
     if TYPE_CHECKING:
-
         def __init__(
             __pydantic__self__,
             *,
@@ -240,7 +233,6 @@ class InlineQueryResultCachedMpeg4Gif(types.InlineQueryResultCachedMpeg4Gif):
     parse_mode: Optional[StrOrLazy] = None
 
     if TYPE_CHECKING:
-
         def __init__(
             __pydantic__self__,
             *,
@@ -270,7 +262,6 @@ class InlineQueryResultCachedPhoto(types.InlineQueryResultCachedPhoto):
     parse_mode: Optional[StrOrLazy] = None
 
     if TYPE_CHECKING:
-
         def __init__(
             __pydantic__self__,
             *,
@@ -298,7 +289,6 @@ class InlineQueryResultCachedSticker(types.InlineQueryResultCachedSticker):
     sticker_file_id: StrOrLazy
 
     if TYPE_CHECKING:
-
         def __init__(
             __pydantic__self__,
             *,
@@ -318,7 +308,6 @@ class InlineQueryResultCachedVideo(types.InlineQueryResultCachedVideo):
     parse_mode: Optional[StrOrLazy] = None
 
     if TYPE_CHECKING:
-
         def __init__(
             __pydantic__self__,
             *,
@@ -349,7 +338,6 @@ class InlineQueryResultCachedVoice(types.InlineQueryResultCachedVoice):
     parse_mode: Optional[StrOrLazy] = None
 
     if TYPE_CHECKING:
-
         def __init__(
             __pydantic__self__,
             *,
@@ -379,7 +367,6 @@ class InlineQueryResultContact(types.InlineQueryResultContact):
     thumbnail_url: Optional[StrOrLazy] = None
 
     if TYPE_CHECKING:
-
         def __init__(
             __pydantic__self__,
             *,
@@ -413,7 +400,6 @@ class InlineQueryResultDocument(types.InlineQueryResultDocument):
     thumbnail_url: Optional[StrOrLazy] = None
 
     if TYPE_CHECKING:
-
         def __init__(
             __pydantic__self__,
             *,
@@ -445,7 +431,6 @@ class InlineQueryResultGame(types.InlineQueryResultGame):
     game_short_name: StrOrLazy
 
     if TYPE_CHECKING:
-
         def __init__(
             __pydantic__self__,
             *,
@@ -466,7 +451,6 @@ class InlineQueryResultGif(types.InlineQueryResultGif):
     parse_mode: Optional[StrOrLazy] = None
 
     if TYPE_CHECKING:
-
         def __init__(
             __pydantic__self__,
             *,
@@ -497,7 +481,6 @@ class InlineQueryResultLocation(types.InlineQueryResultLocation):
     thumbnail_url: Optional[StrOrLazy] = None
 
     if TYPE_CHECKING:
-
         def __init__(
             __pydantic__self__,
             *,
@@ -519,7 +502,6 @@ class InlineQueryResultMpeg4Gif(types.InlineQueryResultMpeg4Gif):
     parse_mode: Optional[StrOrLazy] = None
 
     if TYPE_CHECKING:
-
         def __init__(
             __pydantic__self__,
             *,
@@ -554,7 +536,6 @@ class InlineQueryResultPhoto(types.InlineQueryResultPhoto):
     parse_mode: Optional[StrOrLazy] = None
 
     if TYPE_CHECKING:
-
         def __init__(
             __pydantic__self__,
             *,
@@ -590,7 +571,6 @@ class InlineQueryResultVenue(types.InlineQueryResultVenue):
     thumbnail_url: Optional[StrOrLazy] = None
 
     if TYPE_CHECKING:
-
         def __init__(
             __pydantic__self__,
             *,
@@ -628,7 +608,6 @@ class InlineQueryResultVideo(types.InlineQueryResultVideo):
     description: Optional[StrOrLazy] = None
 
     if TYPE_CHECKING:
-
         def __init__(
             __pydantic__self__,
             *,
@@ -663,7 +642,6 @@ class InlineQueryResultVoice(types.InlineQueryResultVoice):
     parse_mode: Optional[StrOrLazy] = None
 
     if TYPE_CHECKING:
-
         def __init__(
             __pydantic__self__,
             *,
@@ -691,7 +669,6 @@ class InputContactMessageContent(types.InputContactMessageContent):
     vcard: Optional[StrOrLazy] = None
 
     if TYPE_CHECKING:
-
         def __init__(
             __pydantic__self__,
             *,
@@ -720,7 +697,6 @@ class InputInvoiceMessageContent(types.InputInvoiceMessageContent):
     photo_url: Optional[StrOrLazy] = None
 
     if TYPE_CHECKING:
-
         def __init__(
             __pydantic__self__,
             *,
@@ -758,7 +734,6 @@ class InputMediaAnimation(types.InputMediaAnimation):
     parse_mode: Optional[StrOrLazy] = None
 
     if TYPE_CHECKING:
-
         def __init__(
             __pydantic__self__,
             *,
@@ -776,7 +751,6 @@ class InputMediaAudio(types.InputMediaAudio):
     title: Optional[StrOrLazy] = None
 
     if TYPE_CHECKING:
-
         def __init__(
             __pydantic__self__,
             *,
@@ -800,7 +774,6 @@ class InputMediaDocument(types.InputMediaDocument):
     parse_mode: Optional[StrOrLazy] = None
 
     if TYPE_CHECKING:
-
         def __init__(
             __pydantic__self__,
             *,
@@ -816,7 +789,6 @@ class InputMediaPhoto(types.InputMediaPhoto):
     parse_mode: Optional[StrOrLazy] = None
 
     if TYPE_CHECKING:
-
         def __init__(
             __pydantic__self__,
             *,
@@ -832,7 +804,6 @@ class InputMediaVideo(types.InputMediaVideo):
     parse_mode: Optional[StrOrLazy] = None
 
     if TYPE_CHECKING:
-
         def __init__(
             __pydantic__self__,
             *,
@@ -852,7 +823,6 @@ class InputTextMessageContent(types.InputTextMessageContent):
     parse_mode: Optional[StrOrLazy] = None
 
     if TYPE_CHECKING:
-
         def __init__(
             __pydantic__self__,
             *,
@@ -872,7 +842,6 @@ class InputVenueMessageContent(types.InputVenueMessageContent):
     google_place_type: Optional[StrOrLazy] = None
 
     if TYPE_CHECKING:
-
         def __init__(
             __pydantic__self__,
             *,
@@ -899,7 +868,6 @@ class KeyboardButton(types.KeyboardButton):
     text: StrOrLazy
 
     if TYPE_CHECKING:
-
         def __init__(
             __pydantic__self__,
             *,
@@ -913,7 +881,6 @@ class KeyboardButtonPollType(types.KeyboardButtonPollType):
     type: Optional[StrOrLazy] = None
 
     if TYPE_CHECKING:
-
         def __init__(
             __pydantic__self__,
             *,
@@ -927,7 +894,6 @@ class LabeledPrice(types.LabeledPrice):
     label: StrOrLazy
 
     if TYPE_CHECKING:
-
         def __init__(
             __pydantic__self__,
             *,
@@ -942,7 +908,6 @@ class MenuButton(types.MenuButton):
     text: Optional[StrOrLazy] = None
 
     if TYPE_CHECKING:
-
         def __init__(
             __pydantic__self__,
             *,
@@ -957,7 +922,6 @@ class MenuButtonCommands(types.MenuButtonCommands):
     text: Optional[StrOrLazy] = None
 
     if TYPE_CHECKING:
-
         def __init__(
             __pydantic__self__,
             *,
@@ -971,7 +935,6 @@ class MenuButtonDefault(types.MenuButtonDefault):
     text: Optional[StrOrLazy] = None
 
     if TYPE_CHECKING:
-
         def __init__(
             __pydantic__self__,
             *,
@@ -985,7 +948,6 @@ class MenuButtonWebApp(types.MenuButtonWebApp):
     text: StrOrLazy
 
     if TYPE_CHECKING:
-
         def __init__(
             __pydantic__self__,
             *,
@@ -1002,7 +964,6 @@ class MessageEntity(types.MessageEntity):
     custom_emoji_id: Optional[StrOrLazy] = None
 
     if TYPE_CHECKING:
-
         def __init__(
             __pydantic__self__,
             *,
@@ -1032,7 +993,6 @@ class PassportElementErrorDataField(types.PassportElementErrorDataField):
     message: StrOrLazy
 
     if TYPE_CHECKING:
-
         def __init__(
             __pydantic__self__,
             *,
@@ -1057,7 +1017,6 @@ class PassportElementErrorFile(types.PassportElementErrorFile):
     message: StrOrLazy
 
     if TYPE_CHECKING:
-
         def __init__(
             __pydantic__self__,
             *,
@@ -1074,7 +1033,6 @@ class PassportElementErrorFiles(types.PassportElementErrorFiles):
     message: StrOrLazy
 
     if TYPE_CHECKING:
-
         def __init__(
             __pydantic__self__,
             *,
@@ -1091,7 +1049,6 @@ class PassportElementErrorFrontSide(types.PassportElementErrorFrontSide):
     message: StrOrLazy
 
     if TYPE_CHECKING:
-
         def __init__(
             __pydantic__self__,
             *,
@@ -1109,7 +1066,6 @@ class PassportElementErrorReverseSide(types.PassportElementErrorReverseSide):
     message: StrOrLazy
 
     if TYPE_CHECKING:
-
         def __init__(
             __pydantic__self__,
             *,
@@ -1127,7 +1083,6 @@ class PassportElementErrorSelfie(types.PassportElementErrorSelfie):
     message: StrOrLazy
 
     if TYPE_CHECKING:
-
         def __init__(
             __pydantic__self__,
             *,
@@ -1145,7 +1100,6 @@ class PassportElementErrorTranslationFile(types.PassportElementErrorTranslationF
     message: StrOrLazy
 
     if TYPE_CHECKING:
-
         def __init__(
             __pydantic__self__,
             *,
@@ -1162,7 +1116,6 @@ class PassportElementErrorTranslationFiles(types.PassportElementErrorTranslation
     message: StrOrLazy
 
     if TYPE_CHECKING:
-
         def __init__(
             __pydantic__self__,
             *,
@@ -1179,7 +1132,6 @@ class PassportElementErrorUnspecified(types.PassportElementErrorUnspecified):
     message: StrOrLazy
 
     if TYPE_CHECKING:
-
         def __init__(
             __pydantic__self__,
             *,
@@ -1197,7 +1149,6 @@ class ReplyKeyboardMarkup(types.ReplyKeyboardMarkup):
     input_field_placeholder: Optional[StrOrLazy] = None
 
     if TYPE_CHECKING:
-
         def __init__(
             __pydantic__self__,
             *,
@@ -1270,8 +1221,8 @@ __all__ = (
     "PassportElementErrorUnspecified",
     "ReplyKeyboardMarkup",
     "ReplyKeyboardRemove",
+    "StartupFunction",
 )
-
 
 for _entity_name in __all__:
     _entity = globals()[_entity_name]
