@@ -3,13 +3,14 @@ from contextlib import suppress
 from logging import INFO, basicConfig
 from typing import Any
 
-from aiogram import Bot, Dispatcher, F, Router
+from aiogram import Bot, Dispatcher, Router
 from aiogram.enums import ParseMode
 from aiogram.filters import CommandStart
 from aiogram.types import Message
 
 from aiogram_i18n import I18nContext, I18nMiddleware, LazyProxy
 from aiogram_i18n.cores.fluent_runtime_core import FluentRuntimeCore
+from aiogram_i18n.lazy.filter import LazyFilter
 from aiogram_i18n.types import (
     KeyboardButton,
     ReplyKeyboardMarkup,
@@ -29,7 +30,7 @@ async def cmd_start(message: Message, i18n: I18nContext) -> Any:
     )
 
 
-@router.message(F.text == LazyProxy("help"))
+@router.message(LazyFilter("help"))
 async def cmd_help(message: Message) -> Any:
     return message.reply(text="-- " + message.text + " --")
 
