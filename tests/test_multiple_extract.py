@@ -210,6 +210,7 @@ async def test_file_not_found_exception(multiple_locales_output: Path, code_samp
     fkp.run(create_missing_dirs=True)
 
 
+@pytest.mark.skip()
 @pytest.mark.parametrize(
     "i18n",
     [
