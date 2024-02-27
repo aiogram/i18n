@@ -81,7 +81,7 @@ class TextDecoration:
         return cast(Bot, self.i18n.data["bot"])
 
     def get_decoration(self, parse_mode: Optional[str] = None) -> TextD:
-        parse_mode = parse_mode or self.i18n.context.get("parse_mode", None) or self.bot.parse_mode
+        parse_mode = parse_mode or self.i18n.context.get("parse_mode", self.bot.default.parse_mode)
         if parse_mode is None:
             warn("parse mode is None")
             return self.decorations[parse_mode]
