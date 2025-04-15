@@ -1,6 +1,7 @@
 from pathlib import Path
-import yaml
 from typing import Optional
+
+import yaml
 
 from aiogram_i18n.cores.base import BaseCore
 
