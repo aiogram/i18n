@@ -8,6 +8,7 @@ if TYPE_CHECKING:
     from .fluent_runtime_core import FluentRuntimeCore
     from .gnu_text_core import GNUTextCore
     from .jinja2_core import Jinja2Core
+    from .yaml_core import YamlCore
 
 
 __cores__ = {
@@ -15,6 +16,7 @@ __cores__ = {
     "FluentRuntimeCore": ".fluent_runtime_core",
     "FluentCompileCore": ".fluent_compile_core",
     "Jinja2Core": ".jinja2_core",
+    "YamlCore": ".yaml_core",
 }
 
 __all__ = (
@@ -22,6 +24,7 @@ __all__ = (
     "FluentRuntimeCore",
     "FluentCompileCore",
     "Jinja2Core",
+    "YamlCore",
     "BaseCore",
 )
 
