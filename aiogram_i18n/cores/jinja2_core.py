@@ -50,6 +50,9 @@ class Jinja2Core(BaseCore[Dict]):
             translations[locale] = {}
             for file_path in paths:
                 with file_path.open(encoding="utf-8") as f:
-                    translations[locale][file_path.stem] = self.environment.from_string(f.read())
-
+                    content = self.environment.from_string(f.read())
+                    relative_parts = (
+                        file_path.relative_to(self.path / locale).with_suffix("").parts
+                    )
+                    translations[locale]["-".join(relative_parts)] = content
         return translations
