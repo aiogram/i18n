@@ -22,30 +22,37 @@ class YamlCore(BaseCore[Dict[str, Any]]):
         self.raise_key_error = raise_key_error
 
     # з цими функціями працює, але з оригінальними баг
-    # def _extract_locales(self, path: Path) -> list[str]:
-    #     return [p.stem for p in path.glob("*.yaml")] + [p.stem for p in path.glob("*.yml")]
+    def _extract_locales(self, path: Path) -> list[str]:
+        base = path.parent if '{locale}' in str(path) else path
+        return [p.name for p in base.iterdir() if p.is_dir()]
 
-    # def _find_locales(
-    #     self,
-    #     path: Path,
-    #     locales: list[str],
-    #     extensions: tuple[str, ...] = (".yaml", ".yml")
-    # ) -> Dict[str, list[Path]]:
-    #     found = {}
-    #     for loc in locales:
-    #         found[loc] = []
-    #         for ext in extensions:
-    #             file_path = path / f"{loc}{ext}"
-    #             if file_path.is_file():
-    #                 found[loc].append(file_path)
-    #     return found
+    def _find_locales(
+        self,
+        path: Path,
+        locales: list[str],
+        extensions: tuple[str, ...] = (".yaml", ".yml")
+    ) -> Dict[str, list[Path]]:
+        base = path.parent if '{locale}' in str(path) else path
+        found: Dict[str, list[Path]] = {}
+        for loc in locales:
+            found[loc] = []
+            locale_dir = base / loc
+            if locale_dir.is_dir():
+                for file in locale_dir.iterdir():
+                    if file.is_file() and file.suffix in extensions:
+                        found[loc].append(file)
+            else:
+                for ext in extensions:
+                    file_path = base / f"{loc}{ext}"
+                    if file_path.is_file():
+                        found[loc].append(file_path)
+        return found
 
     def find_locales(self) -> Dict[str, Dict[str, Any]]:
         translations: Dict[str, Dict[str, Any]] = {}
         locales = self._extract_locales(self.path)
         for file_ext in (".yaml", ".yml"):
             for locale, paths in self._find_locales(self.path, locales, file_ext).items():
-
                 if locale not in translations:
                     translations[locale] = {}
                 for file in paths:
