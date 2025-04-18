@@ -10,16 +10,17 @@ authors = [
 description = "small translation tools for aiogram"
 readme = "README.md"
 license = { text = "MIT License" }
-requires-python = ">=3.8"
+requires-python = ">=3.9"
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
     "Typing :: Typed",
-    "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
 ]
 keywords = [
     "telegram",
@@ -65,7 +66,7 @@ test = [
     "pytest-lazy-fixture~=0.6.3",
     "fluent_compiler~=1.0",
     "fluent.runtime~=0.4.0",
-    "libcst~=1.0.1",
+    "libcst~=1.7",
 ]
 dev = [
     "black~=23.12.0",
@@ -125,7 +126,7 @@ ignore_missing_imports = true
 
 [tool.black]
 line-length = 99
-target-version = ['py38', 'py39', 'py310', 'py311']
+target-version = ['py39', 'py310', 'py311']
 exclude = '''
 (
     \.eggs
@@ -142,7 +143,7 @@ exclude = '''
 #profile = "black"
 
 [tool.ruff]
-target-version = "py38"
+target-version = "py39"
 line-length = 99
 select = [
     "C",
