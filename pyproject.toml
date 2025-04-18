@@ -66,7 +66,7 @@ test = [
     "pytest-lazy-fixture~=0.6.3",
     "fluent_compiler~=1.0",
     "fluent.runtime~=0.4.0",
-    "libcst~=1.0.1",
+    "libcst~=1.7",
 ]
 dev = [
     "black~=23.12.0",
