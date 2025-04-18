@@ -4,12 +4,12 @@ from typing import Any, Final
 import pytest
 from _pytest.legacypath import TempdirFactory
 from babel import UnknownLocaleError
+from check_translations import _check_translations
 from pytest_asyncio import fixture
 from pytest_lazyfixture import lazy_fixture
 
 from aiogram_i18n.cores import BaseCore
 from aiogram_i18n.utils.fluent_extract import FluentMultipleKeyParser
-from tests.check_translations import _check_translations
 
 TEST_CODE_DIR: Final[Path] = Path(__file__).parent.joinpath("data", "test_code").absolute()
 

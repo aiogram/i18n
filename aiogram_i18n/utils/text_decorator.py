@@ -123,7 +123,7 @@ class TextDecoration:
         return self.get_decoration(parse_mode=parse_mode).quote(value)
 
     def custom_emoji(
-            self, value: str, custom_emoji_id: str, parse_mode: Optional[str] = None
+        self, value: str, custom_emoji_id: str, parse_mode: Optional[str] = None
     ) -> str:
         return self.get_decoration(parse_mode=parse_mode).custom_emoji(value, custom_emoji_id)
 

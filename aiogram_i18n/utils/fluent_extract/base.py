@@ -5,8 +5,9 @@ from pathlib import Path
 from typing import Any, Dict, Sequence, Union, cast
 
 from click import echo
-from libcst import Module, parse_module
+from libcst import Module
 from libcst import matchers as m
+from libcst import parse_module
 
 from aiogram_i18n import LazyProxy
 

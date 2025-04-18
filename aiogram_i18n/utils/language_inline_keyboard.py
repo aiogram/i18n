@@ -47,9 +47,7 @@ class LanguageInlineMarkup:
     def reply_markup(self, locale: Optional[str] = None) -> InlineKeyboardMarkup:
         if locale is None:
             locale = I18nContext.get_current(False).locale
-        return InlineKeyboardMarkup(
-            inline_keyboard=self.keyboards.get(locale) or []
-        )
+        return InlineKeyboardMarkup(inline_keyboard=self.keyboards.get(locale) or [])
 
     async def startup(self, i18n: I18nContext) -> None:
         if self.keyboards:

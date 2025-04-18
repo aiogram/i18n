@@ -1,15 +1,15 @@
 from typing import Optional, Union, cast
 
 from aiogram.fsm.context import FSMContext
-from aiogram.fsm.storage.redis import DefaultKeyBuilder, KeyBuilder
+from aiogram.fsm.storage.redis import DefaultKeyBuilder, KeyBuilder  # type: ignore[attr-defined]
 
 from ..exceptions import NoModuleError
 
 try:
     from redis.asyncio.client import Redis
+    from redis.asyncio.connection import ConnectionPool
 except ImportError as e:
     raise NoModuleError(name="RedisManager", module_name="redis") from e
-from redis.asyncio.connection import ConnectionPool
 
 from .base import BaseManager
 
@@ -29,13 +29,11 @@ class RedisManager(BaseManager):
 
     async def get_locale(self, state: FSMContext) -> str:
         redis_key = self.key_builder.build(state.key, "locale")  # type: ignore[arg-type]
-        redis = cast(Redis, self.redis)
-        value = await redis.get(redis_key)
+        value = await self.redis.get(redis_key)
         if isinstance(value, bytes):
             return value.decode("utf-8")
         return value or cast(str, self.default_locale)
 
     async def set_locale(self, locale: str, state: FSMContext) -> None:
         redis_key = self.key_builder.build(state.key, "locale")  # type: ignore[arg-type]
-        redis = cast(Redis, self.redis)
-        await redis.set(redis_key, locale)
+        await self.redis.set(redis_key, locale)

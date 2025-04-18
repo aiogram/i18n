@@ -3,11 +3,11 @@ from typing import Any
 
 from aiogram.filters.base import Filter
 
-from aiogram_i18n.managers.base import CallableMixin
+from aiogram_i18n.managers.base import CallableMixin  # type: ignore[attr-defined]
 
 
 class BaseLazyFilter(Filter):
-    async def call(self, context_key: str, **kwargs: Any):
+    async def call(self, context_key: str, **kwargs: Any) -> Any:
         return await CallableMixin(callback=self.startup).call(kwargs.pop(context_key), **kwargs)
 
     @abstractmethod
