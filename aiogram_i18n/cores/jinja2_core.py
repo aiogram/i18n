@@ -11,7 +11,7 @@ except ImportError as e:
     raise NoModuleError(name="Jinja2Core", module_name="jinja2") from e
 
 
-class Jinja2Core(BaseCore[Dict]):
+class Jinja2Core(BaseCore[Dict[str, Template]]):
     environment: Environment
 
     def __init__(
@@ -43,7 +43,7 @@ class Jinja2Core(BaseCore[Dict]):
             return message_id
         return message.render(kwargs)
 
-    def find_locales(self) -> Dict[str, Dict]:
+    def find_locales(self) -> Dict[str, Dict[str, Template]]:
         translations: Dict[str, Dict[str, Template]] = {}
         locales = self._extract_locales(self.path)
         for locale, paths in self._find_locales(self.path, locales, ".j2").items():

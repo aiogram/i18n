@@ -3,11 +3,7 @@ from pathlib import Path
 from typing import Any, Dict, Generic, List, Optional, Tuple, TypeVar, Union, cast
 
 from aiogram_i18n import I18nContext
-from aiogram_i18n.exceptions import (
-    NoLocalesError,
-    NoLocalesFoundError,
-    NoTranslateFileExistsError,
-)
+from aiogram_i18n.exceptions import NoLocalesError, NoLocalesFoundError, NoTranslateFileExistsError
 
 Translator = TypeVar("Translator")
 

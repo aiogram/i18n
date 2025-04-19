@@ -2,18 +2,14 @@ name: Tests
 
 on:
   push:
-    branches:
-      - main
-      - dev
+    branches: [ "master", "main", "dev" ]
   pull_request:
-    branches:
-      - main
-      - dev
+    branches: [ "master", "main", "dev" ]
 
 jobs:
   build:
     strategy:
-      fail-fast: false
+      fail-fast: true
       matrix:
         os:
           - ubuntu-latest
@@ -48,46 +44,32 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      - name: Set up Python ${{ matrix.python-version }} on ${{ matrix.os }}
-        uses: actions/setup-python@v4
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
         with:
-          python-version: ${{ matrix.python-version }}
-          cache: "pip"
-          cache-dependency-path: pyproject.toml
+          version: "latest"
+          enable-cache: true
+          cache-dependency-glob: "uv.lock"
 
-      - name: Install project dependencies
-        run: |
-          pip install -e .[test,dev,compiler,runtime]
+      - name: Set up Python ${{ matrix.python-version }}
+        run: uv python install ${{ matrix.python-version }}
+
+      - name: Install the project
+        run: uv sync --extra dev --extra test --extra compiler --extra runtime --extra jinja2
+
+      - name: Minimize uv cache
+        run: uv cache prune --ci
 
       - name: Lint code
         if: "env.IS_PYPY == 'false'"
-        run: |
-          ruff check --output-format=github aiogram_i18n tests
-        # black --check --diff aiogram_i18n tests examples
+        run: make lint
 
       - name: Run tests
-        run: pytest --cov=aiogram_i18n --cov-config .coveragerc --cov-report=xml
+        run: make test-ci
 
       - name: Check installable
-        if: "env.IS_WINDOWS == 'false'"
         run: |
-          pip install build
-          python -m build --wheel .
-          mkdir try_install
-          cd try_install
-          virtualenv .venv
-          .venv/bin/pip install ../dist/*.whl
-          .venv/bin/python -c "import aiogram_i18n; print(aiogram_i18n.__version__)"
-
-      - name: Check installable on Windows
-        if: "env.IS_WINDOWS == 'true'"
-        run: |
-          pip install build
-          python -m build --wheel .
-          mkdir try_install
-          cd try_install
-          virtualenv .venv
-          .venv/Scripts/pip install ../dist/*.whl
-          .venv/Scripts/python -c "import aiogram_i18n; print(aiogram_i18n.__version__)"
+          uv build
+          uv run --verbose --with aiogram_i18n --no-project --refresh-package aiogram_i18n -- python -c "import aiogram_i18n; print(aiogram_i18n.__version__)"

@@ -8,7 +8,7 @@ from aiogram.types import TelegramObject
 from aiogram_i18n.context import I18nContext
 from aiogram_i18n.cores.base import BaseCore
 from aiogram_i18n.lazy.base import BaseLazyFilter
-from aiogram_i18n.managers.base import BaseManager, CallableMixin
+from aiogram_i18n.managers.base import BaseManager, CallableMixin  # type: ignore[attr-defined]
 from aiogram_i18n.managers.memory import MemoryManager
 from aiogram_i18n.types import StartupFunction
 from aiogram_i18n.utils.context_instance import ContextInstanceMixin
@@ -52,7 +52,7 @@ class I18nMiddleware(BaseMiddleware, ContextInstanceMixin["I18nMiddleware"]):
             warn("parameter locale_key deprecated since version 2.0")
         self._startup: list[CallableMixin] = []
 
-    def on_startup(self, func: StartupFunction):
+    def on_startup(self, func: StartupFunction) -> StartupFunction:
         self._startup.append(CallableMixin(callback=func))
         return func
 
@@ -66,8 +66,8 @@ class I18nMiddleware(BaseMiddleware, ContextInstanceMixin["I18nMiddleware"]):
             dispatcher.startup.register(self.startup)
         dispatcher[self.middleware_key] = self
 
-    async def startup(self, dispatcher: Dispatcher, **kwargs) -> None:
-        kwargs.update(dispatcher=dispatcher)
+    async def startup(self, dispatcher: Dispatcher, **kwargs) -> None:  # type: ignore[no-untyped-def]
+        kwargs["dispatcher"] = dispatcher
         with self.use_context(data=kwargs):
             for startup_func in self._startup:
                 await startup_func.call(**kwargs)

@@ -26,3 +26,5 @@ docker-compose.yml
 .env
 
 .tests
+/coverage.xml
+/uv.lock

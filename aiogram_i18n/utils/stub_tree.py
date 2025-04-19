@@ -39,8 +39,7 @@ class BaseNode(ABC):
         self.name = name
 
     @abstractmethod
-    def __str__(self) -> str:
-        ...
+    def __str__(self) -> str: ...
 
 
 class BaseClass(BaseNode, ABC):
@@ -70,8 +69,7 @@ class BaseClass(BaseNode, ABC):
         return self.add_method(method=MethodNode(name=name, params=params))
 
     @abstractmethod
-    def __repr__(self) -> str:
-        ...
+    def __repr__(self) -> str: ...
 
 
 class MethodNode(BaseNode):
