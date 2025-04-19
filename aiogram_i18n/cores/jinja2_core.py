@@ -22,7 +22,7 @@ class Jinja2Core(BaseCore[Dict]):
         raise_key_error: bool = True,
         use_td: bool = True,
         locales_map: Optional[Dict[str, str]] = None,
-        key_seperator: str = "-",
+        key_separator: str = "-",
     ) -> None:
         super().__init__(path=path, default_locale=default_locale, locales_map=locales_map)
         self.environment = environment or Environment(autoescape=True)
@@ -55,6 +55,6 @@ class Jinja2Core(BaseCore[Dict]):
                     content = self.environment.from_string(f.read())
                     relative_file_path = file_path.relative_to(self.path / locale)
                     parts = relative_file_path.with_suffix("").parts
-                    key = self.key_seperator.join(parts)
+                    key = self.key_separator.join(parts)
                     translations[locale][key] = content
         return translations
