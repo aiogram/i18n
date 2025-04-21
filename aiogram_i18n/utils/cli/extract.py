@@ -69,7 +69,9 @@ def extract(
 ) -> None:
     echo(
         style(
-            text="This function is removed. Use FTL-Extract instead.\npip install ftl-extract",
+            text="This function is removed. Use FTL-Extract instead.\n"
+            "pip install ftl-extract\n"
+            "https://pypi.org/project/FTL-Extract/",
             fg="red",
         ),
         err=True,
