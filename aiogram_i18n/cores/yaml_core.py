@@ -75,4 +75,4 @@ class YamlCore(BaseCore[Dict[str, Any]]):
         try:
             return text.format_map(kwargs)
         except Exception:
-            return text
+            return text.format(**kwargs)
