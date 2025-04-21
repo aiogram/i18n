@@ -2,6 +2,7 @@ from pathlib import Path
 from typing import Tuple, Union
 
 import click
+from click import echo, style
 
 from .base import main
 
@@ -72,40 +73,11 @@ def multiple_extract(
     create_missing_dirs: bool,
     default_ftl_file: str,
 ) -> None:
-    """
-    Extracts all used fluent keys from code and saves them in the specified paths.
-
-    Key has 2 parts separated by "--".
-    First part is the KeyPath, second part is the KeyName.
-
-    KeyPath is separated by `separator` argument. If KeyPath has more than 1 part,
-    it will take all parts (except the last one) as directories and the last one as file name.
-    If KeyPath has only 1 part, it will be used as file name.
-    If KeyPath is not specified, the `default_ftl_file` will be used.
-
-    Example:
-        - "cmds-start--greeting" -> will be saved in `cmds/start.ftl`
-        file with key "cmds-start--greeting".
-        - "cmds--greeting" -> will be saved in `cmds.ftl` file with key "cmds--greeting".
-        - "greeting" -> will be saved in `_default.ftl` file with key "greeting".
-    """
-    from aiogram_i18n import I18nContext
-    from aiogram_i18n.utils.fluent_extract import FluentMultipleKeyParser
-
-    input_paths_ = tuple(Path(input_path) for input_path in input_paths)
-    output_dir_ = Path(output_dir)
-
-    exclude_dirs_ = (Path("__pycache__"), *[Path(exclude_dir) for exclude_dir in exclude_dirs])
-    exclude_keys += tuple(key for key, value in I18nContext.__dict__.items() if callable(value))
-
-    fkp = FluentMultipleKeyParser(
-        input_paths=input_paths_,
-        output_dir=output_dir_,
-        i18n_keys=i18n_keys,
-        separator=separator,
-        locales=locales,
-        exclude_dirs=exclude_dirs_,
-        exclude_keys=exclude_keys,
-        default_ftl_file=default_ftl_file,
+    echo(
+        style(
+            text="This function is removed. Use FTL-Extract instead.\npip install ftl-extract",
+            fg="red",
+        ),
+        err=True,
+        color=True,
     )
-    fkp.run(create_missing_dirs=create_missing_dirs)

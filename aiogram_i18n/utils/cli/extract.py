@@ -2,6 +2,7 @@ from pathlib import Path
 from typing import Tuple, Union
 
 import click
+from click import echo, style
 
 from .base import main
 
@@ -66,22 +67,11 @@ def extract(
     exclude_keys: Tuple[str, ...],
     create_missing_dirs: bool,
 ) -> None:
-    from aiogram_i18n import I18nContext
-    from aiogram_i18n.utils.fluent_extract import FluentKeyParser
-
-    input_dirs_ = tuple(Path(input_dir) for input_dir in input_dirs)
-    output_file_ = Path(output_file)
-
-    exclude_dirs_ = (Path("__pycache__"), *(Path(exclude_dir) for exclude_dir in exclude_dirs))
-    exclude_keys += tuple(key for key, value in I18nContext.__dict__.items() if callable(value))
-
-    fkp = FluentKeyParser(
-        input_dirs=input_dirs_,
-        output_file=output_file_,
-        i18n_keys=i18n_keys,
-        separator=separator,
-        locales=locales,
-        exclude_dirs=exclude_dirs_,
-        exclude_keys=exclude_keys,
+    echo(
+        style(
+            text="This function is removed. Use FTL-Extract instead.\npip install ftl-extract",
+            fg="red",
+        ),
+        err=True,
+        color=True,
     )
-    fkp.run(create_missing_dirs=create_missing_dirs)
