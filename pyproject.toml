@@ -3,7 +3,7 @@ name = "aiogram_i18n"
 authors = [
     { name = "RootShinobi" },
 ]
-description = "small translation tools for aiogram"
+description = "Translation tool for aiogram"
 readme = "README.md"
 license = "MIT"
 requires-python = ">=3.9"
