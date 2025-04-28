@@ -64,7 +64,6 @@ test = [
     "pytest-lazy-fixture~=0.6.3",
     "fluent_compiler~=1.0",
     "fluent.runtime~=0.4.0",
-    "libcst~=1.7",
     "coverage~=7.8",
 ]
 dev = [
@@ -72,7 +71,6 @@ dev = [
     "pre-commit==4.2.0",
     "ruff==0.11.6",
     "mypy==1.15.0",
-    "packaging~=24.0",
 ]
 docs = [
     "sphinx~=7.4",
