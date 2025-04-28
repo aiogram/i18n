@@ -5,7 +5,6 @@ from pathlib import Path
 from typing import Any, AsyncGenerator, List
 
 import pytest
-from pytest_asyncio import fixture
 
 from aiogram_i18n.cores import BaseCore
 
@@ -44,35 +43,35 @@ def pytest_collection_modifyitems(config: Any, items: list[pytest.Function]) -> 
         items.remove(remove)
 
 
-@fixture(scope="class")
+@pytest.fixture(scope="class")
 def gnu_text_core() -> BaseCore[Any]:
     from aiogram_i18n.cores import GNUTextCore
 
     return GNUTextCore(path=LOCALES)
 
 
-@fixture(scope="class")
+@pytest.fixture(scope="class")
 def fluent_runtime_core() -> BaseCore[Any]:
     from aiogram_i18n.cores import FluentRuntimeCore
 
     return FluentRuntimeCore(path=LOCALES, use_isolating=False)
 
 
-@fixture(scope="class")
+@pytest.fixture(scope="class")
 def fluent_compile_core() -> BaseCore[Any]:
     from aiogram_i18n.cores import FluentCompileCore
 
     return FluentCompileCore(path=LOCALES, use_isolating=False)
 
 
-@fixture(scope="class")
+@pytest.fixture(scope="class")
 async def gnu_text_ready(gnu_text: BaseCore[Any]) -> AsyncGenerator[BaseCore[Any], None]:
     await gnu_text.startup()
     yield gnu_text
     await gnu_text.shutdown()
 
 
-@fixture(scope="class")
+@pytest.fixture(scope="class")
 async def fluent_runtime_core_ready(
     fluent_runtime_core: BaseCore[Any],
 ) -> AsyncGenerator[BaseCore[Any], None]:
@@ -81,7 +80,7 @@ async def fluent_runtime_core_ready(
     await fluent_runtime_core.shutdown()
 
 
-@fixture(scope="class")
+@pytest.fixture(scope="class")
 async def fluent_compile_core_ready(
     fluent_compile_core: BaseCore[Any],
 ) -> AsyncGenerator[BaseCore[Any], None]:

@@ -58,10 +58,9 @@ jinja2 = [
     "jinja2~=3.1.4",
 ]
 test = [
-    "pytest~=7.4",
+    "pytest~=8.3",
     "pytest-cov~=6.1",
-    "pytest-asyncio~=0.23",
-    "pytest-lazy-fixture~=0.6.3",
+    "pytest-asyncio~=0.26",
     "fluent_compiler~=1.0",
     "fluent.runtime~=0.4.0",
     "coverage~=7.8",
