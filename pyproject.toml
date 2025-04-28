@@ -69,7 +69,7 @@ test = [
 dev = [
     "isort==6.0.1",
     "pre-commit==4.2.0",
-    "ruff==0.11.6",
+    "ruff==0.11.7",
     "mypy==1.15.0",
 ]
 docs = [
