@@ -12,6 +12,7 @@ from aiogram_i18n.cores.base import BaseCore
         lazy_fixture("gnu_text_core"),
         lazy_fixture("fluent_runtime_core"),
         lazy_fixture("fluent_compile_core"),
+        lazy_fixture("yaml_core"),
     ],
 )
 @pytest.mark.asyncio

@@ -77,6 +77,9 @@ docs = [
     "furo~=2024.8",
     "sphinx-autobuild~=2024.10",
 ]
+yml = [
+    "PyYAML~=6.0.2",
+]
 
 [tool.hatch.envs.dev]
 post-install = [
