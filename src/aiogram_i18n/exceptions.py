@@ -78,3 +78,15 @@ class UnknownLocaleError(AiogramI18nError):
 
     def __str__(self) -> str:
         return self.message.format(locale=self.locale)
+
+
+class FluentMessageError(AiogramI18nError):
+    def __init__(self, message_id: str, errors: List[Exception]) -> None:
+        self.message_id = message_id
+        self.errors = errors
+
+    def __str__(self) -> str:
+        lines = [f"\n{len(self.errors)} errors for message '{self.message_id}':"]
+        for idx, err in enumerate(self.errors, start=1):
+            lines.append(f"  {err} (type={err.__class__.__name__})")
+        return "\n".join(lines)
