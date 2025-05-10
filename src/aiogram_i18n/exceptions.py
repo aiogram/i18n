@@ -87,6 +87,6 @@ class FluentMessageError(AiogramI18nError):
 
     def __str__(self) -> str:
         lines = [f"\n{len(self.errors)} errors for key '{self.message_id}':"]
-        for idx, err in enumerate(self.errors, start=1):
+        for err in self.errors:
             lines.append(f"  {err} (type={err.__class__.__name__})")
         return "\n".join(lines)
