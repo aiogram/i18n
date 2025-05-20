@@ -32,7 +32,7 @@ keywords = [
 dynamic = ["version"]
 dependencies = [
     "aiogram>=3.0.0b8",
-    "click~=8.1.0",
+    "click~=8.1",
 ]
 
 [tool.uv]
