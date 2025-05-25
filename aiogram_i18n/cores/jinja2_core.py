@@ -22,6 +22,7 @@ class Jinja2Core(BaseCore[Dict[str, Template]]):
         raise_key_error: bool = True,
         use_td: bool = True,
         locales_map: Optional[Dict[str, str]] = None,
+        key_separator: str = "-",
     ) -> None:
         super().__init__(path=path, default_locale=default_locale, locales_map=locales_map)
         self.environment = environment or Environment(autoescape=True)
@@ -29,6 +30,7 @@ class Jinja2Core(BaseCore[Dict[str, Template]]):
             for name, func in td.functions.items():
                 self.environment.filters[name.lower()] = func
         self.raise_key_error = raise_key_error
+        self.key_separator = key_separator
 
     def get(self, message_id: str, locale: Optional[str] = None, /, **kwargs: Any) -> str:
         locale = self.get_locale(locale=locale)
@@ -50,6 +52,9 @@ class Jinja2Core(BaseCore[Dict[str, Template]]):
             translations[locale] = {}
             for file_path in paths:
                 with file_path.open(encoding="utf-8") as f:
-                    translations[locale][file_path.stem] = self.environment.from_string(f.read())
-
+                    content = self.environment.from_string(f.read())
+                    relative_file_path = file_path.relative_to(self.path / locale)
+                    parts = relative_file_path.with_suffix("").parts
+                    key = self.key_separator.join(parts)
+                    translations[locale][key] = content
         return translations
