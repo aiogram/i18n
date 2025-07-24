@@ -17,7 +17,7 @@ MESSAGES = dict[str, set[str]]
 def parse(text: str) -> MESSAGES:
     resource = FluentParser().parse(text)
     if not resource.body:
-        msg = "no budy"
+        msg = "no body"
         raise ValueError(msg)
 
     ftl_visitor = FluentVisitor()

@@ -26,7 +26,7 @@ def lazy_import(name: str, func: str) -> STUB_GENERATOR:
     multiple=True,
     type=click.Path(exists=True, path_type=Path),
 )
-@click.option("-o", "--output-file", required=True, type=click.Path(exists=True, path_type=Path))
+@click.option("-o", "--output-file", required=True, type=click.Path(exists=False, path_type=Path))
 def stub(input_files: tuple[Path, ...], output_file: Path) -> None:
     allow_formats: dict[str, Callable[[Sequence[Path], Path], None]] = {
         "ftl": lazy_import("aiogram_i18n.utils.fluent_stub", "from_files_to_file_ex"),
