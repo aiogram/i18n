@@ -21,9 +21,9 @@ from aiogram.enums import ParseMode
 from aiogram.filters import CommandStart
 from aiogram.types import Message
 
-from aiogram_i18n import I18nContext, LazyProxy, I18nMiddleware, LazyFilter
+from src import I18nContext, LazyProxy, I18nMiddleware, LazyFilter
 from aiogram_i18n.cores.fluent_runtime_core import FluentRuntimeCore
-from aiogram_i18n.types import (
+from src import (
     ReplyKeyboardMarkup, KeyboardButton
     # you should import mutable objects from here if you want to use LazyProxy in them
 )

@@ -1,0 +1,31 @@
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, cast
+
+from aiogram_i18n.managers.base import BaseManager
+
+if TYPE_CHECKING:
+    from aiogram import Dispatcher
+    from aiogram.fsm.context import FSMContext
+
+
+class FSMManager(BaseManager):
+    key: str
+
+    def __init__(self, key: str = "locale", default_locale: str | None = None) -> None:
+        super().__init__(default_locale=default_locale)
+        self.key = key
+
+    async def startup(self, dispatcher: Dispatcher) -> None:
+        try:
+            dispatcher.update.outer_middleware._middlewares.index(dispatcher.fsm)  # noqa: SLF001
+        except ValueError as e:
+            msg = "dispatcher is not configured to work with fsm"
+            raise ValueError(msg) from e
+
+    async def get_locale(self, state: FSMContext) -> str:
+        fsm_data = await state.get_data()
+        return cast(str, fsm_data.get(self.key, self.default_locale))
+
+    async def set_locale(self, locale: str, state: FSMContext) -> None:
+        await state.update_data(data={self.key: locale})

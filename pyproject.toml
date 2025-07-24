@@ -1,9 +1,10 @@
 [project]
 name = "aiogram_i18n"
+description = "Translation tool for aiogram"
+version = "1.4"
 authors = [
     { name = "RootShinobi" },
 ]
-description = "Translation tool for aiogram"
 readme = "README.md"
 license = "MIT"
 requires-python = ">=3.9"
@@ -29,17 +30,18 @@ keywords = [
     "fluent",
     "gnutext",
 ]
-dynamic = ["version"]
 dependencies = [
     "aiogram>=3.0.0b8",
     "click~=8.1",
+    "eval_type_backport~=0.2"
 ]
 
 [tool.uv]
 package = true
 
-[tool.hatch.version]
-path = "aiogram_i18n/__meta__.py"
+[build-system]
+requires = ["uv_build>=0.8.0,<0.9.0"]
+build-backend = "uv_build"
 
 [project.urls]
 Repository = "https://github.com/aiogram/aiogram_i18n"
@@ -61,37 +63,99 @@ test = [
     "pytest~=8.3",
     "pytest-cov~=6.1",
     "pytest-asyncio~=0.26",
-    "fluent_compiler~=1.0",
-    "fluent.runtime~=0.4.0",
     "coverage~=7.8",
 ]
 dev = [
     "isort==6.0.1",
     "pre-commit==4.2.0",
-    "ruff==0.11.7",
-    "mypy==1.15.0",
+    "ruff==0.12.4",
+    "mypy==1.17.0",
+    "fluent_compiler~=1.0",
+    "fluent.runtime~=0.4",
+    "polib==1.2.0",
+    "types-polib==1.2.0.20250401"
 ]
 docs = [
     "sphinx~=7.4",
-    "furo~=2024.8",
+    "furo==v2025.7.19",
     "sphinx-autobuild~=2024.10",
 ]
 
-[tool.hatch.envs.dev]
-post-install = [
-    "pre-commit install",
+[tool.isort]
+py_version = 39
+src_paths = ["src"]
+line_length = 99
+multi_line_output = 3
+force_grid_wrap = 0
+include_trailing_comma = true
+split_on_trailing_comma = false
+single_line_exclusions = ["."]
+sections = ["FUTURE", "STDLIB", "THIRDPARTY", "FIRSTPARTY", "LOCALFOLDER"]
+skip_gitignore = true
+extend_skip = ["__pycache__"]
+known_first_party = [
+    "cores",
+    "lazy",
+    "managers",
+    "utils",
+    "context",
+    "exceptions",
+    "middlewares",
+    "types",
 ]
 
-features = [
-    "compiler",
-    "runtime",
-    "jinja2",
-    "dev",
-    "test",
+[tool.ruff]
+src = ["src"]
+line-length = 99
+exclude = [
+    ".git",
+    ".mypy_cache",
+    ".ruff_cache",
+    "__pypackages__",
+    "__pycache__",
+    "venv",
+    ".venv",
+    "tests",
+    "dist",
+    "build",
     "docs",
+    "examples",
 ]
+
+[tool.ruff.lint]
+select = ["ALL"]
+ignore = [
+    "A002",
+    "ANN003", "ANN204", "ANN401",
+    "ARG002",
+    "COM812",
+    "CPY001",
+    "D100", "D101", "D102", "D103", "D104", "D105", "D107", "D203", "D212",
+    "FBT001", "FBT002",
+    "N805",
+    "PLR0913", "PLR0917", "PLR1702", "PLR6301",
+    "PLW2901",
+    "TC006",
+    "TID252",
+]
+
+[tool.ruff.lint.flake8-tidy-imports]
+ban-relative-imports = "all"
+
+[tool.ruff.lint.per-file-ignores]
+# Tests can use magic values, assertions, and relative imports
+"tests/**/*" = ["PLR2004", "S101"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"
 
 [tool.mypy]
+python_version = "3.9"
+mypy_path = "src"
+packages = ["aiogram_i18n"]
 plugins = ["pydantic.mypy"]
 exclude = [
     "\\.?venv",
@@ -112,61 +176,3 @@ module = [
     "redis.*", "fluent_compiler.*"
 ]
 ignore_missing_imports = true
-
-[tool.ruff]
-target-version = "py39"
-line-length = 99
-
-[tool.ruff.lint]
-select = [
-    "C",
-    "DTZ",
-    "E",
-    "F",
-    "I",
-    "ICN",
-    "ISC",
-    "N",
-    "PLC",
-    "PLE",
-    "Q",
-    "S",
-    "T",
-    "W",
-    "YTT",
-]
-ignore = [
-    "N805",
-    "C901",
-    "E203",
-    "I001",
-]
-unfixable = []
-exclude = [
-    "examples"
-]
-
-[tool.ruff.lint.flake8-tidy-imports]
-ban-relative-imports = "all"
-
-[tool.ruff.lint.per-file-ignores]
-# Tests can use magic values, assertions, and relative imports
-"tests/**/*" = ["PLR2004", "S101", "TID252"]
-
-[tool.ruff.format]
-quote-style = "double"
-indent-style = "space"
-skip-magic-trailing-comma = false
-line-ending = "auto"
-
-[tool.isort]
-py_version = 39
-line_length = 99
-multi_line_output = 3
-force_grid_wrap = 0
-include_trailing_comma = true
-split_on_trailing_comma = false
-single_line_exclusions = ["."]
-sections = ["FUTURE", "STDLIB", "THIRDPARTY", "FIRSTPARTY", "LOCALFOLDER"]
-skip_gitignore = true
-extend_skip = ["__pycache__"]

@@ -20,7 +20,7 @@ repos:
           - text
 
   - repo: https://github.com/charliermarsh/ruff-pre-commit
-    rev: v0.11.7
+    rev: v0.12.4
     hooks:
       - id: ruff
         args: [ "--fix" ]

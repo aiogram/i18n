@@ -1,24 +1,26 @@
+src_dir := src
 package_dir := aiogram_i18n
 tests_dir := tests
 examples_dir := examples
-code_dir := $(package_dir) $(tests_dir) $(examples_dir)
 
 .PHONY: lint
 lint:
 	echo "Running ruff..."
-	uv run ruff check --config pyproject.toml --diff $(package_dir)
-	uv run mypy --strict $(package_dir)
+	uv run ruff check --config pyproject.toml --diff
 
-.PHONY: reformat
-reformat:
+	echo "Running MyPy..."
+	uv run mypy --config-file pyproject.toml
+
+.PHONY: format
+format:
 	echo "Running ruff check with --fix..."
-	uv run ruff check --config pyproject.toml --fix --unsafe-fixes $(package_dir)
+	uv run ruff check --config pyproject.toml --fix --unsafe-fixes
 
 	echo "Running ruff..."
-	uv run ruff format --config pyproject.toml $(package_dir)
+	uv run ruff format --config pyproject.toml
 
 	echo "Running isort..."
-	uv run isort --settings-file pyproject.toml $(package_dir)
+	uv run isort --settings-file pyproject.toml $(src_dir)/$(package_dir)
 
 .PHONY: outdated
 outdated:
@@ -26,7 +28,13 @@ outdated:
 
 .PHONY: sync
 sync:
-	uv sync --extra dev --extra test --extra compiler --extra runtime --extra jinja2 --extra docs
+	uv sync \
+		--extra dev \
+		--extra test \
+		--extra compiler \
+		--extra runtime \
+		--extra jinja2 \
+		--extra docs
 
 .PHONY: test
 test:
