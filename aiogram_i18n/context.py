@@ -1,30 +1,32 @@
 from __future__ import annotations
 
 from contextlib import contextmanager
-from typing import TYPE_CHECKING, Any, Dict, Generator, Optional
+from typing import TYPE_CHECKING, Any
 
-from aiogram_i18n.managers.base import BaseManager
 from aiogram_i18n.utils.context_instance import ContextInstanceMixin
 from aiogram_i18n.utils.magic_proxy import MagicProxy
 
 if TYPE_CHECKING:
+    from collections.abc import Generator
+
     from aiogram_i18n.cores.base import BaseCore
+    from aiogram_i18n.managers.base import BaseManager
 
 
 class I18nContext(ContextInstanceMixin["I18nContext"]):
     locale: str
     core: BaseCore[Any]
     manager: BaseManager
-    data: Dict[str, Any]
+    data: dict[str, Any]
     key_separator: str
-    context: Dict[str, Any]
+    context: dict[str, Any]
 
     def __init__(
         self,
         locale: str,
         core: BaseCore[Any],
         manager: BaseManager,
-        data: Dict[str, Any],
+        data: dict[str, Any],
         key_separator: str = "-",
     ) -> None:
         self.locale = locale
@@ -34,7 +36,7 @@ class I18nContext(ContextInstanceMixin["I18nContext"]):
         self.key_separator = key_separator
         self.context = {}
 
-    def get(self, key: str, locale: Optional[str] = None, /, **kwargs: Any) -> str:
+    def get(self, key: str, locale: str | None = None, /, **kwargs: Any) -> str:
         return self.core.get(key, locale or self.locale, **kwargs)
 
     __call__ = get

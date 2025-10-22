@@ -16,12 +16,10 @@ jobs:
           - macos-latest
           - windows-latest
         python-version:
-          - '3.9'
           - '3.10'
           - '3.11'
           - '3.12'
           - '3.13'
-          - 'pypy3.9'
 
     defaults:
       # Windows sucks. Force use bash instead of PowerShell
@@ -44,10 +42,10 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Install uv
-        uses: astral-sh/setup-uv@v5
+        uses: astral-sh/setup-uv@v7
         with:
           version: "latest"
           enable-cache: true
@@ -57,7 +55,7 @@ jobs:
         run: uv python install ${{ matrix.python-version }}
 
       - name: Install the project
-        run: uv sync --extra dev --extra test --extra compiler --extra runtime --extra jinja2
+        run: uv sync --all-extras
 
       - name: Minimize uv cache
         run: uv cache prune --ci

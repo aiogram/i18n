@@ -1,10 +1,9 @@
 from pathlib import Path
-from typing import Tuple, Union
 
 import click
 from click import echo, style
 
-from .base import main
+from aiogram_i18n.utils.cli import main
 
 
 @main.command(help="Extract all used fluent keys from code and split them by files")
@@ -63,15 +62,15 @@ from .base import main
     show_default=True,
 )
 def multiple_extract(
-    input_paths: Tuple[str, ...],
-    output_dir: str,
-    i18n_keys: Tuple[str, ...],
-    separator: str,
-    locales: Union[Tuple[str, ...], None],
-    exclude_dirs: Tuple[str, ...],
-    exclude_keys: Tuple[str, ...],
-    create_missing_dirs: bool,
-    default_ftl_file: str,
+    input_paths: tuple[str, ...],  # noqa: ARG001
+    output_dir: str,  # noqa: ARG001
+    i18n_keys: tuple[str, ...],  # noqa: ARG001
+    separator: str,  # noqa: ARG001
+    locales: tuple[str, ...] | None,  # noqa: ARG001
+    exclude_dirs: tuple[str, ...],  # noqa: ARG001
+    exclude_keys: tuple[str, ...],  # noqa: ARG001
+    create_missing_dirs: bool,  # noqa: ARG001
+    default_ftl_file: str,  # noqa: ARG001
 ) -> None:
     echo(
         style(

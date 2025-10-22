@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import Any, Optional
 
 STUB_TEMPLATE = """from contextlib import contextmanager
 from typing import Any, Generator, Union
@@ -58,14 +57,14 @@ class BaseClass(BaseNode, ABC):
     def create_class(self, name: str) -> BaseClass:
         return self.add_class(ClassNode(name=name, stub=self.stub))
 
-    def create_call(self, params: Optional[list[str]] = None) -> MethodNode:
+    def create_call(self, params: list[str] | None = None) -> MethodNode:
         return self.create_method(name="__call__", params=params)
 
     def add_method(self, method: MethodNode) -> MethodNode:
         self.attrs.append(method)
         return method
 
-    def create_method(self, name: str, params: Optional[list[str]] = None) -> MethodNode:
+    def create_method(self, name: str, params: list[str] | None = None) -> MethodNode:
         return self.add_method(method=MethodNode(name=name, params=params))
 
     @abstractmethod
@@ -75,9 +74,7 @@ class BaseClass(BaseNode, ABC):
 class MethodNode(BaseNode):
     params: list[str]
 
-    def __init__(
-        self, name: str, params: Optional[list[str]] = None, kw_only: bool = True
-    ) -> None:
+    def __init__(self, name: str, params: list[str] | None = None, kw_only: bool = True) -> None:
         super().__init__(name)
         self.params = params or []
         self.kw_only = kw_only
@@ -97,7 +94,7 @@ class ClassNode(BaseClass):
         self,
         name: str,
         stub: BaseClass,
-        mro: Optional[list[str]] = None,
+        mro: list[str] | None = None,
         number: int = 0,
     ) -> None:
         super().__init__(name)
@@ -121,10 +118,11 @@ class ClassNode(BaseClass):
     def __hash__(self) -> int:
         return self.class_name.__hash__()
 
-    def __eq__(self, other: Any) -> bool:
+    def __eq__(self, other: object) -> bool:
         if isinstance(other, ClassNode):
             return hash(other) == hash(self)
-        raise ValueError(f"unknown type {type(other)}")
+        msg = f"unknown type {type(other)}"
+        raise ValueError(msg)
 
 
 class Stub(BaseClass):
@@ -147,7 +145,7 @@ class Stub(BaseClass):
 class Attr:
     def __init__(self, name: str) -> None:
         self.attrs: list[Attr] = []
-        self.params: Optional[list[str]] = None
+        self.params: list[str] | None = None
         self.name = name
 
     def render(self, node: BaseClass) -> None:

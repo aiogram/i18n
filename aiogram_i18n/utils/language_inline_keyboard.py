@@ -1,11 +1,11 @@
-from typing import Any, Dict, List, Optional, Union
+from typing import Any
 
 from aiogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup
 
 from aiogram_i18n import I18nContext
 from aiogram_i18n.lazy.base import BaseLazyFilter
 
-INLINE_MARKUP = List[List[InlineKeyboardButton]]
+INLINE_MARKUP = list[list[InlineKeyboardButton]]
 
 
 class LanguageCallbackFilter(BaseLazyFilter):
@@ -19,7 +19,7 @@ class LanguageCallbackFilter(BaseLazyFilter):
     async def startup(self, i18n: I18nContext) -> None:
         await self.keyboard.startup(i18n=i18n)
 
-    async def __call__(self, callback: CallbackQuery) -> Union[bool, Dict[str, Any]]:
+    async def __call__(self, callback: CallbackQuery) -> bool | dict[str, Any]:
         if not callback.data or not callback.data.startswith(self.keyboard.prefix):
             return False
         return {self.keyboard.param: callback.data[self.slice]}
@@ -33,7 +33,7 @@ class LanguageInlineMarkup:
         hide_current: bool = False,
         prefix: str = "__lang__",
         param: str = "lang",
-        keyboard: Optional[INLINE_MARKUP] = None,
+        keyboard: INLINE_MARKUP | None = None,
     ):
         self.key = key
         self.row = row
@@ -41,12 +41,12 @@ class LanguageInlineMarkup:
         self.prefix = prefix
         self.param = param
         self.filter = LanguageCallbackFilter(keyboard=self)
-        self.keyboards: Dict[str, INLINE_MARKUP] = {}
-        self.keyboard: Optional[INLINE_MARKUP] = keyboard or []
+        self.keyboards: dict[str, INLINE_MARKUP] = {}
+        self.keyboard: INLINE_MARKUP | None = keyboard or []
 
-    def reply_markup(self, locale: Optional[str] = None) -> InlineKeyboardMarkup:
+    def reply_markup(self, locale: str | None = None) -> InlineKeyboardMarkup:
         if locale is None:
-            locale = I18nContext.get_current(False).locale
+            locale = I18nContext.get_current(no_error=False).locale
         return InlineKeyboardMarkup(inline_keyboard=self.keyboards.get(locale) or [])
 
     async def startup(self, i18n: I18nContext) -> None:

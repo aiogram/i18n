@@ -1,4 +1,4 @@
-from typing import Optional, Union, cast
+from typing import cast
 
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.storage.redis import DefaultKeyBuilder, KeyBuilder  # type: ignore[attr-defined]
@@ -17,9 +17,9 @@ from .base import BaseManager
 class RedisManager(BaseManager):
     def __init__(
         self,
-        redis: Union[Redis, ConnectionPool],
-        key_builder: Optional[KeyBuilder] = None,
-        default_locale: Optional[str] = None,
+        redis: Redis | ConnectionPool,
+        key_builder: KeyBuilder | None = None,
+        default_locale: str | None = None,
     ):
         super().__init__(default_locale=default_locale)
         self.key_builder: KeyBuilder = key_builder or DefaultKeyBuilder()

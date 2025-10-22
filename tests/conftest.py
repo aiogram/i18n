@@ -2,11 +2,14 @@ from __future__ import annotations
 
 import warnings
 from pathlib import Path
-from typing import Any, AsyncGenerator, List
+from typing import TYPE_CHECKING, Any
 
 import pytest
 
-from aiogram_i18n.cores import BaseCore
+if TYPE_CHECKING:
+    from collections.abc import AsyncGenerator
+
+    from aiogram_i18n.cores import BaseCore
 
 LOCALES = str(
     Path(__file__).parent.joinpath("data", "locales", "{locale}", "LC_MESSAGES").absolute()
@@ -21,24 +24,25 @@ def is_installed(module_name: str) -> bool:
     return True
 
 
-def pytest_collection_modifyitems(config: Any, items: list[pytest.Function]) -> None:  # noqa
-    _skip_f: List[str] = []
+def pytest_collection_modifyitems(config: pytest.Config, items: list[pytest.Function]) -> None:  # noqa: ARG001
+    skip_f: list[str] = []
     if not is_installed("fluent_compiler"):
-        _skip_f.append("fluent_compile")
+        skip_f.append("fluent_compile")
         warnings.warn(
-            "Just install fluent_compiler (`pip install fluent_compiler`)", ImportWarning
+            "Just install fluent_compiler (`pip install fluent_compiler`)",
+            ImportWarning,
+            stacklevel=2,
         )
     if not is_installed("fluent.runtime"):
-        _skip_f.append("fluent_runtime")
+        skip_f.append("fluent_runtime")
         warnings.warn(
-            "Just install fluent_compiler (`pip install fluent_compiler`)", ImportWarning
+            "Just install fluent_compiler (`pip install fluent_compiler`)",
+            ImportWarning,
+            stacklevel=2,
         )
-    skip_f = tuple(_skip_f)
-    to_remove = []
-    for item in items:
-        for kw in item.keywords:
-            if kw.startswith(skip_f):
-                to_remove.append(item)
+    skip_f: tuple[str] = tuple(skip_f)
+    to_remove = [item for item in items if any(kw.startswith(skip_f) for kw in item.keywords)]
+
     for remove in to_remove:
         items.remove(remove)
 

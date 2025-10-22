@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 
 class AiogramI18nError(Exception):
@@ -25,7 +25,7 @@ class NoModuleError(AiogramI18nError):
 class NoTranslateFileExistsError(AiogramI18nError):
     message = "files {ext}in folder ({locale_path}) not found"
 
-    def __init__(self, locale_path: str, ext: Optional[str] = None) -> None:
+    def __init__(self, locale_path: str, ext: str | None = None) -> None:
         self.locale_path = locale_path
         self.ext = ext
 
@@ -41,7 +41,7 @@ class NoLocalesError(AiogramI18nError):
 class NoLocalesFoundError(AiogramI18nError):
     message = "locales ({locales}) in path ({path}) not found"
 
-    def __init__(self, locales: List[str], path: str) -> None:
+    def __init__(self, locales: list[str], path: str) -> None:
         self.locales = locales
         self.path = path
 
@@ -62,7 +62,7 @@ class KeyNotFoundError(AiogramI18nError):
 class ContextItemError(AiogramI18nError):
     message = "context({context}) has no item '{key}'"
 
-    def __init__(self, key: str, context: Dict[str, Any]) -> None:
+    def __init__(self, key: str, context: dict[str, Any]) -> None:
         self.key = key
         self.context = context
 

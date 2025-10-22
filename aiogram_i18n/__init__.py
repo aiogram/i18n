@@ -6,10 +6,10 @@ from .middleware import I18nMiddleware
 L = LazyFactory()
 
 __all__ = (
-    "__version__",
     "I18nContext",
-    "LazyProxy",
-    "LazyFilter",
     "I18nMiddleware",
     "L",
+    "LazyFilter",
+    "LazyProxy",
+    "__version__",
 )

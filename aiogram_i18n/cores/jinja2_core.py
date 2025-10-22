@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Any, Dict, Optional, Union
+from typing import Any
 
 from aiogram_i18n.cores.base import BaseCore
 from aiogram_i18n.exceptions import KeyNotFoundError, NoModuleError
@@ -11,17 +11,17 @@ except ImportError as e:
     raise NoModuleError(name="Jinja2Core", module_name="jinja2") from e
 
 
-class Jinja2Core(BaseCore[Dict[str, Template]]):
+class Jinja2Core(BaseCore[dict[str, Template]]):
     environment: Environment
 
     def __init__(
         self,
-        path: Union[str, Path],
-        default_locale: Optional[str] = None,
-        environment: Optional[Environment] = None,
+        path: str | Path,
+        default_locale: str | None = None,
+        environment: Environment | None = None,
         raise_key_error: bool = True,
         use_td: bool = True,
-        locales_map: Optional[Dict[str, str]] = None,
+        locales_map: dict[str, str] | None = None,
     ) -> None:
         super().__init__(path=path, default_locale=default_locale, locales_map=locales_map)
         self.environment = environment or Environment(autoescape=True)
@@ -30,9 +30,9 @@ class Jinja2Core(BaseCore[Dict[str, Template]]):
                 self.environment.filters[name.lower()] = func
         self.raise_key_error = raise_key_error
 
-    def get(self, message_id: str, locale: Optional[str] = None, /, **kwargs: Any) -> str:
+    def get(self, message_id: str, locale: str | None = None, /, **kwargs: Any) -> str:
         locale = self.get_locale(locale=locale)
-        translator: Dict[str, Template] = self.get_translator(locale=locale)
+        translator: dict[str, Template] = self.get_translator(locale=locale)
         try:
             message = translator[message_id]
         except KeyError:
@@ -43,8 +43,8 @@ class Jinja2Core(BaseCore[Dict[str, Template]]):
             return message_id
         return message.render(kwargs)
 
-    def find_locales(self) -> Dict[str, Dict[str, Template]]:
-        translations: Dict[str, Dict[str, Template]] = {}
+    def find_locales(self) -> dict[str, dict[str, Template]]:
+        translations: dict[str, dict[str, Template]] = {}
         locales = self._extract_locales(self.path)
         for locale, paths in self._find_locales(self.path, locales, ".j2").items():
             translations[locale] = {}

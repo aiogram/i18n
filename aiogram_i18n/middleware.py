@@ -1,5 +1,6 @@
+from collections.abc import Awaitable, Callable, Generator
 from contextlib import contextmanager
-from typing import Any, Awaitable, Callable, Dict, Generator, Optional, cast
+from typing import Any, cast
 from warnings import warn
 
 from aiogram import BaseMiddleware, Dispatcher
@@ -18,7 +19,7 @@ class I18nMiddleware(BaseMiddleware, ContextInstanceMixin["I18nMiddleware"]):
     core: BaseCore[Any]
     manager: BaseManager
     context_key: str
-    locale_key: Optional[str]
+    locale_key: str | None
     middleware_key: str
     key_separator: str
     with_context: bool
@@ -27,16 +28,16 @@ class I18nMiddleware(BaseMiddleware, ContextInstanceMixin["I18nMiddleware"]):
     def __init__(
         self,
         core: BaseCore[Any],
-        manager: Optional[BaseManager] = None,
+        manager: BaseManager | None = None,
         context_key: str = "i18n",
-        locale_key: Optional[str] = None,
+        locale_key: str | None = None,
         middleware_key: str = "i18n_middleware",
         default_locale: str = "en",
         key_separator: str = "-",
         enabled_startup: bool = True,
     ) -> None:
         self.core = core
-        self.manager = manager or MemoryManager()
+        self.manager = manager or MemoryManager()  # type: ignore[abstract]
         self.context_key = context_key
         self.locale_key = locale_key
         self.middleware_key = middleware_key
@@ -49,7 +50,7 @@ class I18nMiddleware(BaseMiddleware, ContextInstanceMixin["I18nMiddleware"]):
             self.manager.default_locale = default_locale
         I18nMiddleware.set_current(self)
         if locale_key:
-            warn("parameter locale_key deprecated since version 2.0")
+            warn("parameter locale_key deprecated since version 2.0", stacklevel=2)
         self._startup: list[CallableMixin] = []
 
     def on_startup(self, func: StartupFunction) -> StartupFunction:
@@ -83,9 +84,9 @@ class I18nMiddleware(BaseMiddleware, ContextInstanceMixin["I18nMiddleware"]):
 
     async def __call__(
         self,
-        handler: Callable[[TelegramObject, Dict[str, Any]], Awaitable[Any]],
+        handler: Callable[[TelegramObject, dict[str, Any]], Awaitable[Any]],
         event: TelegramObject,
-        data: Dict[str, Any],
+        data: dict[str, Any],
     ) -> Any:
         locale = await self.manager.locale_getter(event=event, **data)
         if self.locale_key is not None:
@@ -97,8 +98,8 @@ class I18nMiddleware(BaseMiddleware, ContextInstanceMixin["I18nMiddleware"]):
     @contextmanager
     def use_context(
         self,
-        locale: Optional[str] = None,
-        data: Optional[Dict[str, Any]] = None,
+        locale: str | None = None,
+        data: dict[str, Any] | None = None,
     ) -> Generator[I18nContext, None, None]:
         if data is None:
             data = dict()  # noqa: C408
@@ -112,7 +113,7 @@ class I18nMiddleware(BaseMiddleware, ContextInstanceMixin["I18nMiddleware"]):
             data[self.context_key] = context
             yield context
 
-    def new_context(self, locale: str, data: Dict[str, Any]) -> I18nContext:
+    def new_context(self, locale: str, data: dict[str, Any]) -> I18nContext:
         return I18nContext(
             locale=locale,
             core=self.core,
