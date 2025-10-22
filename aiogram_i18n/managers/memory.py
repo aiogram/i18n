@@ -1,18 +1,20 @@
-from typing import Dict, Optional, cast
+from typing import TYPE_CHECKING, cast
 
 from aiogram.fsm.context import FSMContext
-from aiogram.fsm.storage.base import StorageKey
 
 from .base import BaseManager
+
+if TYPE_CHECKING:
+    from aiogram.fsm.storage.base import StorageKey
 
 
 class MemoryManager(BaseManager):
     def __init__(
         self,
-        default_locale: Optional[str] = None,
+        default_locale: str | None = None,
     ):
         super().__init__(default_locale=default_locale)
-        self.storage: Dict[StorageKey, str] = {}
+        self.storage: dict[StorageKey, str] = {}
 
     async def set_locale(self, locale: str, state: FSMContext) -> None:
         self.storage[state.key] = locale

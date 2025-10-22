@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import Any, Dict, Generic, List, Optional, Tuple, TypeVar, Union, cast
+from typing import Any, Generic, TypeVar, cast
 
 from aiogram_i18n import I18nContext
 from aiogram_i18n.exceptions import NoLocalesError, NoLocalesFoundError, NoTranslateFileExistsError
@@ -8,20 +8,20 @@ from aiogram_i18n.exceptions import NoLocalesError, NoLocalesFoundError, NoTrans
 Translator = TypeVar("Translator")
 
 
-class BaseCore(Generic[Translator], ABC):
+class BaseCore(ABC, Generic[Translator]):
     """
     Is an abstract base class for implementing core functionality for translation.
     """
 
-    default_locale: Optional[str]
-    locales: Dict[str, Translator]
-    locales_map: Dict[str, str]
+    default_locale: str | None
+    locales: dict[str, Translator]
+    locales_map: dict[str, str]
 
     def __init__(
         self,
-        path: Union[str, Path],
-        default_locale: Optional[str] = None,
-        locales_map: Optional[Dict[str, str]] = None,
+        path: str | Path,
+        default_locale: str | None = None,
+        locales_map: dict[str, str] | None = None,
     ) -> None:
         """
 
@@ -34,15 +34,15 @@ class BaseCore(Generic[Translator], ABC):
         self.locales_map = locales_map or {}
 
     @abstractmethod
-    def get(self, message: str, locale: Optional[str] = None, /, **kwargs: Any) -> str:
+    def get(self, message: str, locale: str | None = None, /, **kwargs: Any) -> str:
         pass
 
     def nget(
         self,
         singular: str,
-        plural: Optional[str] = None,
-        n: int = 1,
-        locale: Optional[str] = None,
+        plural: str | None = None,  # noqa: ARG002
+        n: int = 1,  # noqa: ARG002
+        locale: str | None = None,
         /,
         **kwargs: Any,
     ) -> str:
@@ -51,7 +51,7 @@ class BaseCore(Generic[Translator], ABC):
     def get_translator(self, locale: str) -> Translator:
         return self.locales[locale]
 
-    def get_locale(self, locale: Optional[str] = None) -> str:
+    def get_locale(self, locale: str | None = None) -> str:
         if locale is None:
             locale = I18nContext.get_current(no_error=False).locale
         if locale not in self.locales:
@@ -65,15 +65,11 @@ class BaseCore(Generic[Translator], ABC):
         self.locales.clear()
 
     @staticmethod
-    def _extract_locales(path: Path) -> List[str]:
+    def _extract_locales(path: Path) -> list[str]:
         if "{locale}" in path.parts:
             path = Path(*path.parts[: path.parts.index("{locale}")])
 
-        locales: List[str] = []
-
-        for file_path in path.iterdir():
-            if file_path.is_dir():
-                locales.append(file_path.name)
+        locales: list[str] = [file_path.name for file_path in path.iterdir() if file_path.is_dir()]
 
         if not locales:
             raise NoLocalesFoundError(locales=[], path=path.as_posix())
@@ -82,12 +78,12 @@ class BaseCore(Generic[Translator], ABC):
 
     @staticmethod
     def _find_locales(
-        path: Path, locales: List[str], ext: Optional[str] = None
-    ) -> Dict[str, List[Path]]:
+        path: Path, locales: list[str], ext: str | None = None
+    ) -> dict[str, list[Path]]:
         if not locales:
             raise NoLocalesError
 
-        paths: Dict[str, List[Path]] = {}
+        paths: dict[str, list[Path]] = {}
 
         if "{locale}" not in path.as_posix():
             path = path.joinpath("{locale}")
@@ -105,9 +101,9 @@ class BaseCore(Generic[Translator], ABC):
         return paths
 
     @abstractmethod
-    def find_locales(self) -> Dict[str, Translator]:
+    def find_locales(self) -> dict[str, Translator]:
         pass
 
     @property
-    def available_locales(self) -> Tuple[str, ...]:
+    def available_locales(self) -> tuple[str, ...]:
         return tuple(self.locales.keys())

@@ -4,6 +4,6 @@ from .proxy import LazyProxy
 
 __all__ = (
     "LazyFactory",
-    "LazyProxy",
     "LazyFilter",
+    "LazyProxy",
 )

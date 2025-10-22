@@ -2,10 +2,11 @@ from __future__ import annotations
 
 from contextlib import contextmanager
 from contextvars import ContextVar, Token
-from typing import TYPE_CHECKING, Any, Generator, Generic, Optional, TypeVar, cast, overload
+from typing import TYPE_CHECKING, Any, Generic, TypeVar, overload
 
 if TYPE_CHECKING:
-    from typing_extensions import Literal
+    from collections.abc import Generator
+    from typing import Literal
 
 ContextInstance = TypeVar("ContextInstance")
 
@@ -17,34 +18,25 @@ class ContextInstanceMixin(Generic[ContextInstance]):
         super().__init_subclass__()
         cls.__context_instance = ContextVar(f"instance_{cls.__name__}")
 
-    @overload  # noqa: F811
+    @overload
     @classmethod
-    def get_current(cls) -> Optional[ContextInstance]:  # pragma: no cover  # noqa: F811
+    def get_current(cls) -> ContextInstance | None:  # pragma: no cover
         ...
 
-    @overload  # noqa: F811
+    @overload
     @classmethod
-    def get_current(  # noqa: F811
-        cls, no_error: Literal[True]
-    ) -> Optional[ContextInstance]:  # pragma: no cover  # noqa: F811
+    def get_current(cls, no_error: Literal[True]) -> ContextInstance | None:  # pragma: no cover
         ...
 
-    @overload  # noqa: F811
+    @overload
     @classmethod
-    def get_current(  # noqa: F811
-        cls, no_error: Literal[False]
-    ) -> ContextInstance:  # pragma: no cover  # noqa: F811
+    def get_current(cls, no_error: Literal[False]) -> ContextInstance:  # pragma: no cover
         ...
 
-    @classmethod  # noqa: F811
-    def get_current(  # noqa: F811
-        cls, no_error: bool = True
-    ) -> Optional[ContextInstance]:  # pragma: no cover  # noqa: F811
-        # on mypy 0.770 I catch that contextvars.ContextVar always contextvars.ContextVar[Any]
-        cls.__context_instance = cast(ContextVar[ContextInstance], cls.__context_instance)
-
+    @classmethod
+    def get_current(cls, no_error: bool = True) -> ContextInstance | None:  # pragma: no cover
         try:
-            current: Optional[ContextInstance] = cls.__context_instance.get()
+            current: ContextInstance | None = cls.__context_instance.get()
         except LookupError:
             if no_error:
                 current = None
@@ -56,10 +48,9 @@ class ContextInstanceMixin(Generic[ContextInstance]):
     @classmethod
     def set_current(cls, value: ContextInstance) -> Token[ContextInstance]:
         if not isinstance(value, cls):
-            raise TypeError(
-                f"Value should be instance of {cls.__name__!r} not {type(value).__name__!r}"
-            )
-        return cls.__context_instance.set(value)
+            msg = f"Value should be instance of {cls.__name__!r} not {type(value).__name__!r}"
+            raise TypeError(msg)
+        return cls.__context_instance.set(value)  # type: ignore[arg-type]
 
     @classmethod
     def reset_current(cls, token: Token[ContextInstance]) -> None:

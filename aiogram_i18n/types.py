@@ -1,17 +1,18 @@
-"""
-All mutable models from aiogram are listed here and LazyProxy is allowed in string fields.
+"""All mutable models from aiogram are listed here and LazyProxy is allowed in string fields.
+
 This code is generated automatically.
 """
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, Awaitable, Callable, List, Literal, Optional, Union
+from collections.abc import Awaitable, Callable
+from typing import TYPE_CHECKING, Any, Literal, TypeAlias
 
 from aiogram import types
 
 from aiogram_i18n.lazy import LazyProxy
 
-StrOrLazy = Union[str, LazyProxy]
+StrOrLazy: TypeAlias = str | LazyProxy
 StartupFunction = Callable[..., Awaitable[None]]  # Callable[[I18nContext, ...], Awaitable[None]]
 
 
@@ -36,14 +37,14 @@ class ChatPermissions(types.ChatPermissions):
 
 
 class ForceReply(types.ForceReply):
-    input_field_placeholder: Optional[StrOrLazy] = None
+    input_field_placeholder: StrOrLazy | None = None
 
     if TYPE_CHECKING:
 
         def __init__(
             __pydantic__self__,
             *,
-            input_field_placeholder: Optional[StrOrLazy] = None,
+            input_field_placeholder: StrOrLazy | None = None,
             **__pydantic_kwargs: Any,
         ) -> None:
             super().__init__(input_field_placeholder=input_field_placeholder, **__pydantic_kwargs)
@@ -51,10 +52,10 @@ class ForceReply(types.ForceReply):
 
 class InlineKeyboardButton(types.InlineKeyboardButton):
     text: StrOrLazy
-    url: Optional[StrOrLazy] = None
-    callback_data: Optional[StrOrLazy] = None
-    switch_inline_query: Optional[StrOrLazy] = None
-    switch_inline_query_current_chat: Optional[StrOrLazy] = None
+    url: StrOrLazy | None = None
+    callback_data: StrOrLazy | None = None
+    switch_inline_query: StrOrLazy | None = None
+    switch_inline_query_current_chat: StrOrLazy | None = None
 
     if TYPE_CHECKING:
 
@@ -62,10 +63,10 @@ class InlineKeyboardButton(types.InlineKeyboardButton):
             __pydantic__self__,
             *,
             text: StrOrLazy,
-            url: Optional[StrOrLazy] = None,
-            callback_data: Optional[StrOrLazy] = None,
-            switch_inline_query: Optional[StrOrLazy] = None,
-            switch_inline_query_current_chat: Optional[StrOrLazy] = None,
+            url: StrOrLazy | None = None,
+            callback_data: StrOrLazy | None = None,
+            switch_inline_query: StrOrLazy | None = None,
+            switch_inline_query_current_chat: StrOrLazy | None = None,
             **__pydantic_kwargs: Any,
         ) -> None:
             super().__init__(
@@ -89,9 +90,9 @@ class InlineQueryResult(types.InlineQueryResult):
 class InlineQueryResultArticle(types.InlineQueryResultArticle):
     id: StrOrLazy
     title: StrOrLazy
-    url: Optional[StrOrLazy] = None
-    description: Optional[StrOrLazy] = None
-    thumbnail_url: Optional[StrOrLazy] = None
+    url: StrOrLazy | None = None
+    description: StrOrLazy | None = None
+    thumbnail_url: StrOrLazy | None = None
 
     if TYPE_CHECKING:
 
@@ -100,9 +101,9 @@ class InlineQueryResultArticle(types.InlineQueryResultArticle):
             *,
             id: StrOrLazy,
             title: StrOrLazy,
-            url: Optional[StrOrLazy] = None,
-            description: Optional[StrOrLazy] = None,
-            thumbnail_url: Optional[StrOrLazy] = None,
+            url: StrOrLazy | None = None,
+            description: StrOrLazy | None = None,
+            thumbnail_url: StrOrLazy | None = None,
             **__pydantic_kwargs: Any,
         ) -> None:
             super().__init__(
@@ -119,9 +120,9 @@ class InlineQueryResultAudio(types.InlineQueryResultAudio):
     id: StrOrLazy
     audio_url: StrOrLazy
     title: StrOrLazy
-    caption: Optional[StrOrLazy] = None
-    parse_mode: Optional[StrOrLazy] = None
-    performer: Optional[StrOrLazy] = None
+    caption: StrOrLazy | None = None
+    parse_mode: StrOrLazy | None = None
+    performer: StrOrLazy | None = None
 
     if TYPE_CHECKING:
 
@@ -131,9 +132,9 @@ class InlineQueryResultAudio(types.InlineQueryResultAudio):
             id: StrOrLazy,
             audio_url: StrOrLazy,
             title: StrOrLazy,
-            caption: Optional[StrOrLazy] = None,
-            parse_mode: Optional[StrOrLazy] = None,
-            performer: Optional[StrOrLazy] = None,
+            caption: StrOrLazy | None = None,
+            parse_mode: StrOrLazy | None = None,
+            performer: StrOrLazy | None = None,
             **__pydantic_kwargs: Any,
         ) -> None:
             super().__init__(
@@ -150,8 +151,8 @@ class InlineQueryResultAudio(types.InlineQueryResultAudio):
 class InlineQueryResultCachedAudio(types.InlineQueryResultCachedAudio):
     id: StrOrLazy
     audio_file_id: StrOrLazy
-    caption: Optional[StrOrLazy] = None
-    parse_mode: Optional[StrOrLazy] = None
+    caption: StrOrLazy | None = None
+    parse_mode: StrOrLazy | None = None
 
     if TYPE_CHECKING:
 
@@ -160,8 +161,8 @@ class InlineQueryResultCachedAudio(types.InlineQueryResultCachedAudio):
             *,
             id: StrOrLazy,
             audio_file_id: StrOrLazy,
-            caption: Optional[StrOrLazy] = None,
-            parse_mode: Optional[StrOrLazy] = None,
+            caption: StrOrLazy | None = None,
+            parse_mode: StrOrLazy | None = None,
             **__pydantic_kwargs: Any,
         ) -> None:
             super().__init__(
@@ -177,9 +178,9 @@ class InlineQueryResultCachedDocument(types.InlineQueryResultCachedDocument):
     id: StrOrLazy
     title: StrOrLazy
     document_file_id: StrOrLazy
-    description: Optional[StrOrLazy] = None
-    caption: Optional[StrOrLazy] = None
-    parse_mode: Optional[StrOrLazy] = None
+    description: StrOrLazy | None = None
+    caption: StrOrLazy | None = None
+    parse_mode: StrOrLazy | None = None
 
     if TYPE_CHECKING:
 
@@ -189,9 +190,9 @@ class InlineQueryResultCachedDocument(types.InlineQueryResultCachedDocument):
             id: StrOrLazy,
             title: StrOrLazy,
             document_file_id: StrOrLazy,
-            description: Optional[StrOrLazy] = None,
-            caption: Optional[StrOrLazy] = None,
-            parse_mode: Optional[StrOrLazy] = None,
+            description: StrOrLazy | None = None,
+            caption: StrOrLazy | None = None,
+            parse_mode: StrOrLazy | None = None,
             **__pydantic_kwargs: Any,
         ) -> None:
             super().__init__(
@@ -208,9 +209,9 @@ class InlineQueryResultCachedDocument(types.InlineQueryResultCachedDocument):
 class InlineQueryResultCachedGif(types.InlineQueryResultCachedGif):
     id: StrOrLazy
     gif_file_id: StrOrLazy
-    title: Optional[StrOrLazy] = None
-    caption: Optional[StrOrLazy] = None
-    parse_mode: Optional[StrOrLazy] = None
+    title: StrOrLazy | None = None
+    caption: StrOrLazy | None = None
+    parse_mode: StrOrLazy | None = None
 
     if TYPE_CHECKING:
 
@@ -219,9 +220,9 @@ class InlineQueryResultCachedGif(types.InlineQueryResultCachedGif):
             *,
             id: StrOrLazy,
             gif_file_id: StrOrLazy,
-            title: Optional[StrOrLazy] = None,
-            caption: Optional[StrOrLazy] = None,
-            parse_mode: Optional[StrOrLazy] = None,
+            title: StrOrLazy | None = None,
+            caption: StrOrLazy | None = None,
+            parse_mode: StrOrLazy | None = None,
             **__pydantic_kwargs: Any,
         ) -> None:
             super().__init__(
@@ -237,9 +238,9 @@ class InlineQueryResultCachedGif(types.InlineQueryResultCachedGif):
 class InlineQueryResultCachedMpeg4Gif(types.InlineQueryResultCachedMpeg4Gif):
     id: StrOrLazy
     mpeg4_file_id: StrOrLazy
-    title: Optional[StrOrLazy] = None
-    caption: Optional[StrOrLazy] = None
-    parse_mode: Optional[StrOrLazy] = None
+    title: StrOrLazy | None = None
+    caption: StrOrLazy | None = None
+    parse_mode: StrOrLazy | None = None
 
     if TYPE_CHECKING:
 
@@ -248,9 +249,9 @@ class InlineQueryResultCachedMpeg4Gif(types.InlineQueryResultCachedMpeg4Gif):
             *,
             id: StrOrLazy,
             mpeg4_file_id: StrOrLazy,
-            title: Optional[StrOrLazy] = None,
-            caption: Optional[StrOrLazy] = None,
-            parse_mode: Optional[StrOrLazy] = None,
+            title: StrOrLazy | None = None,
+            caption: StrOrLazy | None = None,
+            parse_mode: StrOrLazy | None = None,
             **__pydantic_kwargs: Any,
         ) -> None:
             super().__init__(
@@ -266,10 +267,10 @@ class InlineQueryResultCachedMpeg4Gif(types.InlineQueryResultCachedMpeg4Gif):
 class InlineQueryResultCachedPhoto(types.InlineQueryResultCachedPhoto):
     id: StrOrLazy
     photo_file_id: StrOrLazy
-    title: Optional[StrOrLazy] = None
-    description: Optional[StrOrLazy] = None
-    caption: Optional[StrOrLazy] = None
-    parse_mode: Optional[StrOrLazy] = None
+    title: StrOrLazy | None = None
+    description: StrOrLazy | None = None
+    caption: StrOrLazy | None = None
+    parse_mode: StrOrLazy | None = None
 
     if TYPE_CHECKING:
 
@@ -278,10 +279,10 @@ class InlineQueryResultCachedPhoto(types.InlineQueryResultCachedPhoto):
             *,
             id: StrOrLazy,
             photo_file_id: StrOrLazy,
-            title: Optional[StrOrLazy] = None,
-            description: Optional[StrOrLazy] = None,
-            caption: Optional[StrOrLazy] = None,
-            parse_mode: Optional[StrOrLazy] = None,
+            title: StrOrLazy | None = None,
+            description: StrOrLazy | None = None,
+            caption: StrOrLazy | None = None,
+            parse_mode: StrOrLazy | None = None,
             **__pydantic_kwargs: Any,
         ) -> None:
             super().__init__(
@@ -315,9 +316,9 @@ class InlineQueryResultCachedVideo(types.InlineQueryResultCachedVideo):
     id: StrOrLazy
     video_file_id: StrOrLazy
     title: StrOrLazy
-    description: Optional[StrOrLazy] = None
-    caption: Optional[StrOrLazy] = None
-    parse_mode: Optional[StrOrLazy] = None
+    description: StrOrLazy | None = None
+    caption: StrOrLazy | None = None
+    parse_mode: StrOrLazy | None = None
 
     if TYPE_CHECKING:
 
@@ -327,9 +328,9 @@ class InlineQueryResultCachedVideo(types.InlineQueryResultCachedVideo):
             id: StrOrLazy,
             video_file_id: StrOrLazy,
             title: StrOrLazy,
-            description: Optional[StrOrLazy] = None,
-            caption: Optional[StrOrLazy] = None,
-            parse_mode: Optional[StrOrLazy] = None,
+            description: StrOrLazy | None = None,
+            caption: StrOrLazy | None = None,
+            parse_mode: StrOrLazy | None = None,
             **__pydantic_kwargs: Any,
         ) -> None:
             super().__init__(
@@ -347,8 +348,8 @@ class InlineQueryResultCachedVoice(types.InlineQueryResultCachedVoice):
     id: StrOrLazy
     voice_file_id: StrOrLazy
     title: StrOrLazy
-    caption: Optional[StrOrLazy] = None
-    parse_mode: Optional[StrOrLazy] = None
+    caption: StrOrLazy | None = None
+    parse_mode: StrOrLazy | None = None
 
     if TYPE_CHECKING:
 
@@ -358,8 +359,8 @@ class InlineQueryResultCachedVoice(types.InlineQueryResultCachedVoice):
             id: StrOrLazy,
             voice_file_id: StrOrLazy,
             title: StrOrLazy,
-            caption: Optional[StrOrLazy] = None,
-            parse_mode: Optional[StrOrLazy] = None,
+            caption: StrOrLazy | None = None,
+            parse_mode: StrOrLazy | None = None,
             **__pydantic_kwargs: Any,
         ) -> None:
             super().__init__(
@@ -376,9 +377,9 @@ class InlineQueryResultContact(types.InlineQueryResultContact):
     id: StrOrLazy
     phone_number: StrOrLazy
     first_name: StrOrLazy
-    last_name: Optional[StrOrLazy] = None
-    vcard: Optional[StrOrLazy] = None
-    thumbnail_url: Optional[StrOrLazy] = None
+    last_name: StrOrLazy | None = None
+    vcard: StrOrLazy | None = None
+    thumbnail_url: StrOrLazy | None = None
 
     if TYPE_CHECKING:
 
@@ -388,9 +389,9 @@ class InlineQueryResultContact(types.InlineQueryResultContact):
             id: StrOrLazy,
             phone_number: StrOrLazy,
             first_name: StrOrLazy,
-            last_name: Optional[StrOrLazy] = None,
-            vcard: Optional[StrOrLazy] = None,
-            thumbnail_url: Optional[StrOrLazy] = None,
+            last_name: StrOrLazy | None = None,
+            vcard: StrOrLazy | None = None,
+            thumbnail_url: StrOrLazy | None = None,
             **__pydantic_kwargs: Any,
         ) -> None:
             super().__init__(
@@ -409,10 +410,10 @@ class InlineQueryResultDocument(types.InlineQueryResultDocument):
     title: StrOrLazy
     document_url: StrOrLazy
     mime_type: StrOrLazy
-    caption: Optional[StrOrLazy] = None
-    parse_mode: Optional[StrOrLazy] = None
-    description: Optional[StrOrLazy] = None
-    thumbnail_url: Optional[StrOrLazy] = None
+    caption: StrOrLazy | None = None
+    parse_mode: StrOrLazy | None = None
+    description: StrOrLazy | None = None
+    thumbnail_url: StrOrLazy | None = None
 
     if TYPE_CHECKING:
 
@@ -423,10 +424,10 @@ class InlineQueryResultDocument(types.InlineQueryResultDocument):
             title: StrOrLazy,
             document_url: StrOrLazy,
             mime_type: StrOrLazy,
-            caption: Optional[StrOrLazy] = None,
-            parse_mode: Optional[StrOrLazy] = None,
-            description: Optional[StrOrLazy] = None,
-            thumbnail_url: Optional[StrOrLazy] = None,
+            caption: StrOrLazy | None = None,
+            parse_mode: StrOrLazy | None = None,
+            description: StrOrLazy | None = None,
+            thumbnail_url: StrOrLazy | None = None,
             **__pydantic_kwargs: Any,
         ) -> None:
             super().__init__(
@@ -462,10 +463,10 @@ class InlineQueryResultGif(types.InlineQueryResultGif):
     id: StrOrLazy
     gif_url: StrOrLazy
     thumbnail_url: StrOrLazy
-    thumbnail_mime_type: Optional[StrOrLazy] = None
-    title: Optional[StrOrLazy] = None
-    caption: Optional[StrOrLazy] = None
-    parse_mode: Optional[StrOrLazy] = None
+    thumbnail_mime_type: StrOrLazy | None = None
+    title: StrOrLazy | None = None
+    caption: StrOrLazy | None = None
+    parse_mode: StrOrLazy | None = None
 
     if TYPE_CHECKING:
 
@@ -475,10 +476,10 @@ class InlineQueryResultGif(types.InlineQueryResultGif):
             id: StrOrLazy,
             gif_url: StrOrLazy,
             thumbnail_url: StrOrLazy,
-            thumbnail_mime_type: Optional[StrOrLazy] = None,
-            title: Optional[StrOrLazy] = None,
-            caption: Optional[StrOrLazy] = None,
-            parse_mode: Optional[StrOrLazy] = None,
+            thumbnail_mime_type: StrOrLazy | None = None,
+            title: StrOrLazy | None = None,
+            caption: StrOrLazy | None = None,
+            parse_mode: StrOrLazy | None = None,
             **__pydantic_kwargs: Any,
         ) -> None:
             super().__init__(
@@ -496,7 +497,7 @@ class InlineQueryResultGif(types.InlineQueryResultGif):
 class InlineQueryResultLocation(types.InlineQueryResultLocation):
     id: StrOrLazy
     title: StrOrLazy
-    thumbnail_url: Optional[StrOrLazy] = None
+    thumbnail_url: StrOrLazy | None = None
 
     if TYPE_CHECKING:
 
@@ -505,7 +506,7 @@ class InlineQueryResultLocation(types.InlineQueryResultLocation):
             *,
             id: StrOrLazy,
             title: StrOrLazy,
-            thumbnail_url: Optional[StrOrLazy] = None,
+            thumbnail_url: StrOrLazy | None = None,
             **__pydantic_kwargs: Any,
         ) -> None:
             super().__init__(id=id, title=title, thumbnail_url=thumbnail_url, **__pydantic_kwargs)
@@ -515,10 +516,10 @@ class InlineQueryResultMpeg4Gif(types.InlineQueryResultMpeg4Gif):
     id: StrOrLazy
     mpeg4_url: StrOrLazy
     thumbnail_url: StrOrLazy
-    thumbnail_mime_type: Optional[StrOrLazy] = None
-    title: Optional[StrOrLazy] = None
-    caption: Optional[StrOrLazy] = None
-    parse_mode: Optional[StrOrLazy] = None
+    thumbnail_mime_type: StrOrLazy | None = None
+    title: StrOrLazy | None = None
+    caption: StrOrLazy | None = None
+    parse_mode: StrOrLazy | None = None
 
     if TYPE_CHECKING:
 
@@ -528,10 +529,10 @@ class InlineQueryResultMpeg4Gif(types.InlineQueryResultMpeg4Gif):
             id: StrOrLazy,
             mpeg4_url: StrOrLazy,
             thumbnail_url: StrOrLazy,
-            thumbnail_mime_type: Optional[StrOrLazy] = None,
-            title: Optional[StrOrLazy] = None,
-            caption: Optional[StrOrLazy] = None,
-            parse_mode: Optional[StrOrLazy] = None,
+            thumbnail_mime_type: StrOrLazy | None = None,
+            title: StrOrLazy | None = None,
+            caption: StrOrLazy | None = None,
+            parse_mode: StrOrLazy | None = None,
             **__pydantic_kwargs: Any,
         ) -> None:
             super().__init__(
@@ -550,10 +551,10 @@ class InlineQueryResultPhoto(types.InlineQueryResultPhoto):
     id: StrOrLazy
     photo_url: StrOrLazy
     thumbnail_url: StrOrLazy
-    title: Optional[StrOrLazy] = None
-    description: Optional[StrOrLazy] = None
-    caption: Optional[StrOrLazy] = None
-    parse_mode: Optional[StrOrLazy] = None
+    title: StrOrLazy | None = None
+    description: StrOrLazy | None = None
+    caption: StrOrLazy | None = None
+    parse_mode: StrOrLazy | None = None
 
     if TYPE_CHECKING:
 
@@ -563,10 +564,10 @@ class InlineQueryResultPhoto(types.InlineQueryResultPhoto):
             id: StrOrLazy,
             photo_url: StrOrLazy,
             thumbnail_url: StrOrLazy,
-            title: Optional[StrOrLazy] = None,
-            description: Optional[StrOrLazy] = None,
-            caption: Optional[StrOrLazy] = None,
-            parse_mode: Optional[StrOrLazy] = None,
+            title: StrOrLazy | None = None,
+            description: StrOrLazy | None = None,
+            caption: StrOrLazy | None = None,
+            parse_mode: StrOrLazy | None = None,
             **__pydantic_kwargs: Any,
         ) -> None:
             super().__init__(
@@ -585,11 +586,11 @@ class InlineQueryResultVenue(types.InlineQueryResultVenue):
     id: StrOrLazy
     title: StrOrLazy
     address: StrOrLazy
-    foursquare_id: Optional[StrOrLazy] = None
-    foursquare_type: Optional[StrOrLazy] = None
-    google_place_id: Optional[StrOrLazy] = None
-    google_place_type: Optional[StrOrLazy] = None
-    thumbnail_url: Optional[StrOrLazy] = None
+    foursquare_id: StrOrLazy | None = None
+    foursquare_type: StrOrLazy | None = None
+    google_place_id: StrOrLazy | None = None
+    google_place_type: StrOrLazy | None = None
+    thumbnail_url: StrOrLazy | None = None
 
     if TYPE_CHECKING:
 
@@ -599,11 +600,11 @@ class InlineQueryResultVenue(types.InlineQueryResultVenue):
             id: StrOrLazy,
             title: StrOrLazy,
             address: StrOrLazy,
-            foursquare_id: Optional[StrOrLazy] = None,
-            foursquare_type: Optional[StrOrLazy] = None,
-            google_place_id: Optional[StrOrLazy] = None,
-            google_place_type: Optional[StrOrLazy] = None,
-            thumbnail_url: Optional[StrOrLazy] = None,
+            foursquare_id: StrOrLazy | None = None,
+            foursquare_type: StrOrLazy | None = None,
+            google_place_id: StrOrLazy | None = None,
+            google_place_type: StrOrLazy | None = None,
+            thumbnail_url: StrOrLazy | None = None,
             **__pydantic_kwargs: Any,
         ) -> None:
             super().__init__(
@@ -625,9 +626,9 @@ class InlineQueryResultVideo(types.InlineQueryResultVideo):
     mime_type: StrOrLazy
     thumbnail_url: StrOrLazy
     title: StrOrLazy
-    caption: Optional[StrOrLazy] = None
-    parse_mode: Optional[StrOrLazy] = None
-    description: Optional[StrOrLazy] = None
+    caption: StrOrLazy | None = None
+    parse_mode: StrOrLazy | None = None
+    description: StrOrLazy | None = None
 
     if TYPE_CHECKING:
 
@@ -639,9 +640,9 @@ class InlineQueryResultVideo(types.InlineQueryResultVideo):
             mime_type: StrOrLazy,
             thumbnail_url: StrOrLazy,
             title: StrOrLazy,
-            caption: Optional[StrOrLazy] = None,
-            parse_mode: Optional[StrOrLazy] = None,
-            description: Optional[StrOrLazy] = None,
+            caption: StrOrLazy | None = None,
+            parse_mode: StrOrLazy | None = None,
+            description: StrOrLazy | None = None,
             **__pydantic_kwargs: Any,
         ) -> None:
             super().__init__(
@@ -661,8 +662,8 @@ class InlineQueryResultVoice(types.InlineQueryResultVoice):
     id: StrOrLazy
     voice_url: StrOrLazy
     title: StrOrLazy
-    caption: Optional[StrOrLazy] = None
-    parse_mode: Optional[StrOrLazy] = None
+    caption: StrOrLazy | None = None
+    parse_mode: StrOrLazy | None = None
 
     if TYPE_CHECKING:
 
@@ -672,8 +673,8 @@ class InlineQueryResultVoice(types.InlineQueryResultVoice):
             id: StrOrLazy,
             voice_url: StrOrLazy,
             title: StrOrLazy,
-            caption: Optional[StrOrLazy] = None,
-            parse_mode: Optional[StrOrLazy] = None,
+            caption: StrOrLazy | None = None,
+            parse_mode: StrOrLazy | None = None,
             **__pydantic_kwargs: Any,
         ) -> None:
             super().__init__(
@@ -689,8 +690,8 @@ class InlineQueryResultVoice(types.InlineQueryResultVoice):
 class InputContactMessageContent(types.InputContactMessageContent):
     phone_number: StrOrLazy
     first_name: StrOrLazy
-    last_name: Optional[StrOrLazy] = None
-    vcard: Optional[StrOrLazy] = None
+    last_name: StrOrLazy | None = None
+    vcard: StrOrLazy | None = None
 
     if TYPE_CHECKING:
 
@@ -699,8 +700,8 @@ class InputContactMessageContent(types.InputContactMessageContent):
             *,
             phone_number: StrOrLazy,
             first_name: StrOrLazy,
-            last_name: Optional[StrOrLazy] = None,
-            vcard: Optional[StrOrLazy] = None,
+            last_name: StrOrLazy | None = None,
+            vcard: StrOrLazy | None = None,
             **__pydantic_kwargs: Any,
         ) -> None:
             super().__init__(
@@ -718,8 +719,8 @@ class InputInvoiceMessageContent(types.InputInvoiceMessageContent):
     payload: StrOrLazy
     provider_token: StrOrLazy
     currency: StrOrLazy
-    provider_data: Optional[StrOrLazy] = None
-    photo_url: Optional[StrOrLazy] = None
+    provider_data: StrOrLazy | None = None
+    photo_url: StrOrLazy | None = None
 
     if TYPE_CHECKING:
 
@@ -731,8 +732,8 @@ class InputInvoiceMessageContent(types.InputInvoiceMessageContent):
             payload: StrOrLazy,
             provider_token: StrOrLazy,
             currency: StrOrLazy,
-            provider_data: Optional[StrOrLazy] = None,
-            photo_url: Optional[StrOrLazy] = None,
+            provider_data: StrOrLazy | None = None,
+            photo_url: StrOrLazy | None = None,
             **__pydantic_kwargs: Any,
         ) -> None:
             super().__init__(
@@ -756,36 +757,36 @@ class InputMedia(types.InputMedia):
 
 
 class InputMediaAnimation(types.InputMediaAnimation):
-    caption: Optional[StrOrLazy] = None
-    parse_mode: Optional[StrOrLazy] = None
+    caption: StrOrLazy | None = None
+    parse_mode: StrOrLazy | None = None
 
     if TYPE_CHECKING:
 
         def __init__(
             __pydantic__self__,
             *,
-            caption: Optional[StrOrLazy] = None,
-            parse_mode: Optional[StrOrLazy] = None,
+            caption: StrOrLazy | None = None,
+            parse_mode: StrOrLazy | None = None,
             **__pydantic_kwargs: Any,
         ) -> None:
             super().__init__(caption=caption, parse_mode=parse_mode, **__pydantic_kwargs)
 
 
 class InputMediaAudio(types.InputMediaAudio):
-    caption: Optional[StrOrLazy] = None
-    parse_mode: Optional[StrOrLazy] = None
-    performer: Optional[StrOrLazy] = None
-    title: Optional[StrOrLazy] = None
+    caption: StrOrLazy | None = None
+    parse_mode: StrOrLazy | None = None
+    performer: StrOrLazy | None = None
+    title: StrOrLazy | None = None
 
     if TYPE_CHECKING:
 
         def __init__(
             __pydantic__self__,
             *,
-            caption: Optional[StrOrLazy] = None,
-            parse_mode: Optional[StrOrLazy] = None,
-            performer: Optional[StrOrLazy] = None,
-            title: Optional[StrOrLazy] = None,
+            caption: StrOrLazy | None = None,
+            parse_mode: StrOrLazy | None = None,
+            performer: StrOrLazy | None = None,
+            title: StrOrLazy | None = None,
             **__pydantic_kwargs: Any,
         ) -> None:
             super().__init__(
@@ -798,48 +799,48 @@ class InputMediaAudio(types.InputMediaAudio):
 
 
 class InputMediaDocument(types.InputMediaDocument):
-    caption: Optional[StrOrLazy] = None
-    parse_mode: Optional[StrOrLazy] = None
+    caption: StrOrLazy | None = None
+    parse_mode: StrOrLazy | None = None
 
     if TYPE_CHECKING:
 
         def __init__(
             __pydantic__self__,
             *,
-            caption: Optional[StrOrLazy] = None,
-            parse_mode: Optional[StrOrLazy] = None,
+            caption: StrOrLazy | None = None,
+            parse_mode: StrOrLazy | None = None,
             **__pydantic_kwargs: Any,
         ) -> None:
             super().__init__(caption=caption, parse_mode=parse_mode, **__pydantic_kwargs)
 
 
 class InputMediaPhoto(types.InputMediaPhoto):
-    caption: Optional[StrOrLazy] = None
-    parse_mode: Optional[StrOrLazy] = None
+    caption: StrOrLazy | None = None
+    parse_mode: StrOrLazy | None = None
 
     if TYPE_CHECKING:
 
         def __init__(
             __pydantic__self__,
             *,
-            caption: Optional[StrOrLazy] = None,
-            parse_mode: Optional[StrOrLazy] = None,
+            caption: StrOrLazy | None = None,
+            parse_mode: StrOrLazy | None = None,
             **__pydantic_kwargs: Any,
         ) -> None:
             super().__init__(caption=caption, parse_mode=parse_mode, **__pydantic_kwargs)
 
 
 class InputMediaVideo(types.InputMediaVideo):
-    caption: Optional[StrOrLazy] = None
-    parse_mode: Optional[StrOrLazy] = None
+    caption: StrOrLazy | None = None
+    parse_mode: StrOrLazy | None = None
 
     if TYPE_CHECKING:
 
         def __init__(
             __pydantic__self__,
             *,
-            caption: Optional[StrOrLazy] = None,
-            parse_mode: Optional[StrOrLazy] = None,
+            caption: StrOrLazy | None = None,
+            parse_mode: StrOrLazy | None = None,
             **__pydantic_kwargs: Any,
         ) -> None:
             super().__init__(caption=caption, parse_mode=parse_mode, **__pydantic_kwargs)
@@ -851,7 +852,7 @@ class InputMessageContent(types.InputMessageContent):
 
 class InputTextMessageContent(types.InputTextMessageContent):
     message_text: StrOrLazy
-    parse_mode: Optional[StrOrLazy] = None
+    parse_mode: StrOrLazy | None = None
 
     if TYPE_CHECKING:
 
@@ -859,7 +860,7 @@ class InputTextMessageContent(types.InputTextMessageContent):
             __pydantic__self__,
             *,
             message_text: StrOrLazy,
-            parse_mode: Optional[StrOrLazy] = None,
+            parse_mode: StrOrLazy | None = None,
             **__pydantic_kwargs: Any,
         ) -> None:
             super().__init__(message_text=message_text, parse_mode=parse_mode, **__pydantic_kwargs)
@@ -868,10 +869,10 @@ class InputTextMessageContent(types.InputTextMessageContent):
 class InputVenueMessageContent(types.InputVenueMessageContent):
     title: StrOrLazy
     address: StrOrLazy
-    foursquare_id: Optional[StrOrLazy] = None
-    foursquare_type: Optional[StrOrLazy] = None
-    google_place_id: Optional[StrOrLazy] = None
-    google_place_type: Optional[StrOrLazy] = None
+    foursquare_id: StrOrLazy | None = None
+    foursquare_type: StrOrLazy | None = None
+    google_place_id: StrOrLazy | None = None
+    google_place_type: StrOrLazy | None = None
 
     if TYPE_CHECKING:
 
@@ -880,10 +881,10 @@ class InputVenueMessageContent(types.InputVenueMessageContent):
             *,
             title: StrOrLazy,
             address: StrOrLazy,
-            foursquare_id: Optional[StrOrLazy] = None,
-            foursquare_type: Optional[StrOrLazy] = None,
-            google_place_id: Optional[StrOrLazy] = None,
-            google_place_type: Optional[StrOrLazy] = None,
+            foursquare_id: StrOrLazy | None = None,
+            foursquare_type: StrOrLazy | None = None,
+            google_place_id: StrOrLazy | None = None,
+            google_place_type: StrOrLazy | None = None,
             **__pydantic_kwargs: Any,
         ) -> None:
             super().__init__(
@@ -912,14 +913,14 @@ class KeyboardButton(types.KeyboardButton):
 
 
 class KeyboardButtonPollType(types.KeyboardButtonPollType):
-    type: Optional[StrOrLazy] = None
+    type: StrOrLazy | None = None
 
     if TYPE_CHECKING:
 
         def __init__(
             __pydantic__self__,
             *,
-            type: Optional[StrOrLazy] = None,
+            type: StrOrLazy | None = None,
             **__pydantic_kwargs: Any,
         ) -> None:
             super().__init__(type=type, **__pydantic_kwargs)
@@ -941,7 +942,7 @@ class LabeledPrice(types.LabeledPrice):
 
 class MenuButton(types.MenuButton):
     type: StrOrLazy
-    text: Optional[StrOrLazy] = None
+    text: StrOrLazy | None = None
 
     if TYPE_CHECKING:
 
@@ -949,35 +950,35 @@ class MenuButton(types.MenuButton):
             __pydantic__self__,
             *,
             type: StrOrLazy,
-            text: Optional[StrOrLazy] = None,
+            text: StrOrLazy | None = None,
             **__pydantic_kwargs: Any,
         ) -> None:
             super().__init__(type=type, text=text, **__pydantic_kwargs)
 
 
 class MenuButtonCommands(types.MenuButtonCommands):
-    text: Optional[StrOrLazy] = None
+    text: StrOrLazy | None = None
 
     if TYPE_CHECKING:
 
         def __init__(
             __pydantic__self__,
             *,
-            text: Optional[StrOrLazy] = None,
+            text: StrOrLazy | None = None,
             **__pydantic_kwargs: Any,
         ) -> None:
             super().__init__(text=text, **__pydantic_kwargs)
 
 
 class MenuButtonDefault(types.MenuButtonDefault):
-    text: Optional[StrOrLazy] = None
+    text: StrOrLazy | None = None
 
     if TYPE_CHECKING:
 
         def __init__(
             __pydantic__self__,
             *,
-            text: Optional[StrOrLazy] = None,
+            text: StrOrLazy | None = None,
             **__pydantic_kwargs: Any,
         ) -> None:
             super().__init__(text=text, **__pydantic_kwargs)
@@ -999,9 +1000,9 @@ class MenuButtonWebApp(types.MenuButtonWebApp):
 
 class MessageEntity(types.MessageEntity):
     type: StrOrLazy
-    url: Optional[StrOrLazy] = None
-    language: Optional[StrOrLazy] = None
-    custom_emoji_id: Optional[StrOrLazy] = None
+    url: StrOrLazy | None = None
+    language: StrOrLazy | None = None
+    custom_emoji_id: StrOrLazy | None = None
 
     if TYPE_CHECKING:
 
@@ -1009,9 +1010,9 @@ class MessageEntity(types.MessageEntity):
             __pydantic__self__,
             *,
             type: StrOrLazy,
-            url: Optional[StrOrLazy] = None,
-            language: Optional[StrOrLazy] = None,
-            custom_emoji_id: Optional[StrOrLazy] = None,
+            url: StrOrLazy | None = None,
+            language: StrOrLazy | None = None,
+            custom_emoji_id: StrOrLazy | None = None,
             **__pydantic_kwargs: Any,
         ) -> None:
             super().__init__(
@@ -1199,14 +1200,14 @@ class PassportElementErrorUnspecified(types.PassportElementErrorUnspecified):
 
 
 class ReplyKeyboardMarkup(types.ReplyKeyboardMarkup):
-    input_field_placeholder: Optional[StrOrLazy] = None
+    input_field_placeholder: StrOrLazy | None = None
 
     if TYPE_CHECKING:
 
         def __init__(
             __pydantic__self__,
             *,
-            input_field_placeholder: Optional[StrOrLazy] = None,
+            input_field_placeholder: StrOrLazy | None = None,
             **__pydantic_kwargs: Any,
         ) -> None:
             super().__init__(input_field_placeholder=input_field_placeholder, **__pydantic_kwargs)
@@ -1284,9 +1285,6 @@ for _entity_name in __all__:
         continue
     _entity.model_rebuild(
         _types_namespace={
-            "List": List,
-            "Optional": Optional,
-            "Union": Union,
             "Literal": Literal,
             **{k: v for k, v in vars(types).items() if k in types.__all__},
         }

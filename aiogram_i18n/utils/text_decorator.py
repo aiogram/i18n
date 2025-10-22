@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Any, Callable, Dict, Optional, cast
+from typing import TYPE_CHECKING, Any, cast
 from warnings import warn
 
 from aiogram import Bot
@@ -9,9 +9,12 @@ from aiogram.utils.text_decorations import html_decoration, markdown_decoration
 
 from aiogram_i18n.context import I18nContext
 
+if TYPE_CHECKING:
+    from collections.abc import Callable
+
 
 class Null(TextD):
-    def link(self, value: str, link: str) -> str:
+    def link(self, value: str, link: str) -> str:  # noqa: ARG002
         return value
 
     def bold(self, value: str) -> str:
@@ -26,7 +29,7 @@ class Null(TextD):
     def pre(self, value: str) -> str:
         return value
 
-    def pre_language(self, value: str, language: str) -> str:
+    def pre_language(self, value: str, language: str) -> str:  # noqa: ARG002
         return value
 
     def underline(self, value: str) -> str:
@@ -44,7 +47,7 @@ class Null(TextD):
     def blockquote(self, value: str) -> str:
         return value
 
-    def custom_emoji(self, value: str, custom_emoji_id: str) -> str:
+    def custom_emoji(self, value: str, custom_emoji_id: str) -> str:  # noqa: ARG002
         return value
 
     def expandable_blockquote(self, value: str) -> str:
@@ -53,14 +56,14 @@ class Null(TextD):
 
 class TextDecoration:
     def __init__(self) -> None:
-        self.decorations: Dict[Optional[str], TextD] = {
+        self.decorations: dict[str | None, TextD] = {
             "html": html_decoration,
             "markdown": markdown_decoration,
             None: Null(),
         }
 
     @property
-    def functions(self) -> Dict[str, Callable[..., Any]]:
+    def functions(self) -> dict[str, Callable[..., Any]]:
         return {
             "LINK": self.link,
             "BOLD": self.bold,
@@ -79,58 +82,56 @@ class TextDecoration:
 
     @property
     def i18n(self) -> I18nContext:
-        return I18nContext.get_current(False)
+        return I18nContext.get_current(no_error=False)
 
     @property
     def bot(self) -> Bot:
         return cast(Bot, self.i18n.data["bot"])
 
-    def get_decoration(self, parse_mode: Optional[str] = None) -> TextD:
+    def get_decoration(self, parse_mode: str | None = None) -> TextD:
         parse_mode = parse_mode or self.i18n.context.get("parse_mode", self.bot.default.parse_mode)
         if parse_mode is None:
-            warn("parse mode is None")
+            warn("parse mode is None", stacklevel=2)
             return self.decorations[parse_mode]
         return self.decorations[parse_mode.lower().strip()]
 
-    def link(self, value: str, link: str, parse_mode: Optional[str] = None) -> str:
+    def link(self, value: str, link: str, parse_mode: str | None = None) -> str:
         return self.get_decoration(parse_mode=parse_mode).link(value, link)
 
-    def bold(self, value: str, parse_mode: Optional[str] = None) -> str:
+    def bold(self, value: str, parse_mode: str | None = None) -> str:
         return self.get_decoration(parse_mode=parse_mode).bold(value)
 
-    def italic(self, value: str, parse_mode: Optional[str] = None) -> str:
+    def italic(self, value: str, parse_mode: str | None = None) -> str:
         return self.get_decoration(parse_mode=parse_mode).italic(value)
 
-    def code(self, value: str, parse_mode: Optional[str] = None) -> str:
+    def code(self, value: str, parse_mode: str | None = None) -> str:
         return self.get_decoration(parse_mode=parse_mode).code(value)
 
-    def pre(self, value: str, parse_mode: Optional[str] = None) -> str:
+    def pre(self, value: str, parse_mode: str | None = None) -> str:
         return self.get_decoration(parse_mode=parse_mode).pre(value)
 
-    def pre_language(self, value: str, language: str, parse_mode: Optional[str] = None) -> str:
+    def pre_language(self, value: str, language: str, parse_mode: str | None = None) -> str:
         return self.get_decoration(parse_mode=parse_mode).pre_language(value, language)
 
-    def underline(self, value: str, parse_mode: Optional[str] = None) -> str:
+    def underline(self, value: str, parse_mode: str | None = None) -> str:
         return self.get_decoration(parse_mode=parse_mode).underline(value)
 
-    def strikethrough(self, value: str, parse_mode: Optional[str] = None) -> str:
+    def strikethrough(self, value: str, parse_mode: str | None = None) -> str:
         return self.get_decoration(parse_mode=parse_mode).strikethrough(value)
 
-    def spoiler(self, value: str, parse_mode: Optional[str] = None) -> str:
+    def spoiler(self, value: str, parse_mode: str | None = None) -> str:
         return self.get_decoration(parse_mode=parse_mode).spoiler(value)
 
-    def quote(self, value: str, parse_mode: Optional[str] = None) -> str:
+    def quote(self, value: str, parse_mode: str | None = None) -> str:
         return self.get_decoration(parse_mode=parse_mode).quote(value)
 
-    def custom_emoji(
-        self, value: str, custom_emoji_id: str, parse_mode: Optional[str] = None
-    ) -> str:
+    def custom_emoji(self, value: str, custom_emoji_id: str, parse_mode: str | None = None) -> str:
         return self.get_decoration(parse_mode=parse_mode).custom_emoji(value, custom_emoji_id)
 
-    def blockquote(self, value: str, parse_mode: Optional[str] = None) -> str:
+    def blockquote(self, value: str, parse_mode: str | None = None) -> str:
         return self.get_decoration(parse_mode=parse_mode).blockquote(value)
 
-    def expandable_blockquote(self, value: str, parse_mode: Optional[str] = None) -> str:
+    def expandable_blockquote(self, value: str, parse_mode: str | None = None) -> str:
         return self.get_decoration(parse_mode=parse_mode).expandable_blockquote(value)
 
 

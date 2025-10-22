@@ -1,20 +1,22 @@
 from __future__ import annotations
 
-from typing import Any, Dict, Optional, Tuple, Union
+from typing import TYPE_CHECKING, Any
 
-from aiogram.types import Message
 from pydantic import BaseModel, model_serializer
 
 from aiogram_i18n.context import I18nContext
 from aiogram_i18n.utils.attrdict import AttrDict
 
+if TYPE_CHECKING:
+    from aiogram.types import Message
+
 
 class LazyProxy(BaseModel):  # type: ignore[no-redef]
     key: str
-    locale: Optional[str]
-    kwargs: Dict[str, Any]
+    locale: str | None
+    kwargs: dict[str, Any]
 
-    def __init__(self, key: str, locale: Optional[str] = None, /, **kwargs: Any) -> None:
+    def __init__(self, key: str, locale: str | None = None, /, **kwargs: Any) -> None:
         super().__init__(key=key, locale=locale, kwargs=kwargs)
 
     @property
@@ -51,7 +53,7 @@ class LazyProxy(BaseModel):  # type: ignore[no-redef]
     def __hash__(self) -> int:
         return hash(self.data)
 
-    def __getnewargs__(self) -> Tuple[str, ...]:
+    def __getnewargs__(self) -> tuple[str, ...]:
         return (self.data[:],)
 
     def __eq__(self, string: object) -> bool:
@@ -59,22 +61,22 @@ class LazyProxy(BaseModel):  # type: ignore[no-redef]
             return self.data == string.data
         return self.data == string
 
-    def __lt__(self, string: Union[str, LazyProxy]) -> bool:
+    def __lt__(self, string: str | LazyProxy) -> bool:
         if isinstance(string, LazyProxy):
             return self.data < string.data
         return self.data < string
 
-    def __le__(self, string: Union[str, LazyProxy]) -> bool:
+    def __le__(self, string: str | LazyProxy) -> bool:
         if isinstance(string, LazyProxy):
             return self.data <= string.data
         return self.data <= string
 
-    def __gt__(self, string: Union[str, LazyProxy]) -> bool:
+    def __gt__(self, string: str | LazyProxy) -> bool:
         if isinstance(string, LazyProxy):
             return self.data > string.data
         return self.data > string
 
-    def __ge__(self, string: Union[str, LazyProxy]) -> bool:
+    def __ge__(self, string: str | LazyProxy) -> bool:
         if isinstance(string, LazyProxy):
             return self.data >= string.data
         return self.data >= string
@@ -84,7 +86,7 @@ class LazyProxy(BaseModel):  # type: ignore[no-redef]
             return char.data in self.data
         if isinstance(char, str):
             return char in self.data
-        raise TypeError()
+        raise TypeError
 
     def __len__(self) -> int:
         return len(self.data)

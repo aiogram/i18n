@@ -4,6 +4,6 @@ from .fsm import FSMManager
 
 __all__ = (
     "BaseManager",
-    "FSMManager",
     "ConstManager",
+    "FSMManager",
 )

@@ -13,7 +13,8 @@ class LazyFactory:
     @key_separator.setter
     def key_separator(self, sep: str) -> None:
         if not isinstance(sep, str):
-            raise ValueError(f"Key separator should be instance of str not {type(sep).__name__!r}")
+            msg = f"Key separator should be instance of str not {type(sep).__name__!r}"
+            raise TypeError(msg)
         self._key_separator = sep
 
     def __getattr__(self, item: str) -> MagicProxy[LazyProxy]:

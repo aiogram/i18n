@@ -1,4 +1,4 @@
-from typing import Dict, Generator, Set
+from collections.abc import Generator
 
 from fluent.syntax import ast
 from fluent.syntax.visitor import Visitor
@@ -6,7 +6,7 @@ from fluent.syntax.visitor import Visitor
 
 class FluentVisitor(Visitor):
     def __init__(self) -> None:
-        self.messages: Dict[str, Set[str]] = {}
+        self.messages: dict[str, set[str]] = {}
 
     def _get_placeholders(self, element: ast.BaseNode) -> Generator[str, None, None]:
         if isinstance(element, ast.VariableReference):

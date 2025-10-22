@@ -18,11 +18,11 @@ __cores__ = {
 }
 
 __all__ = (
-    "GNUTextCore",
-    "FluentRuntimeCore",
-    "FluentCompileCore",
-    "Jinja2Core",
     "BaseCore",
+    "FluentCompileCore",
+    "FluentRuntimeCore",
+    "GNUTextCore",
+    "Jinja2Core",
 )
 
 

@@ -1,18 +1,23 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING, Any, Awaitable, Callable, Optional
+from typing import TYPE_CHECKING, Any
+
+if TYPE_CHECKING:
+    from collections.abc import Awaitable, Callable
 
 try:
     from aiogram.dispatcher.event.handler import CallableObject as CallableMixin
 except ImportError:
-    from aiogram.dispatcher.event.handler import CallableMixin  # type: ignore
+    from aiogram.dispatcher.event.handler import (  # type: ignore[attr-defined, no-redef]
+        CallableMixin,
+    )
 
 
 class BaseManager(ABC):
-    default_locale: Optional[str]
+    default_locale: str | None
 
-    def __init__(self, default_locale: Optional[str] = None) -> None:
+    def __init__(self, default_locale: str | None = None) -> None:
         self.default_locale = default_locale
         self.locale_setter = LocaleSetter(self.set_locale)
         self.locale_getter = LocaleGetter(self.get_locale)
@@ -31,9 +36,11 @@ class BaseManager(ABC):
         async def get_locale(self, *args: Any, **kwargs: Any) -> str:
             pass
 
+    @abstractmethod
     async def startup(self, *args: Any, **kwargs: Any) -> None:
         pass
 
+    @abstractmethod
     async def shutdown(self, *args: Any, **kwargs: Any) -> None:
         pass
 
