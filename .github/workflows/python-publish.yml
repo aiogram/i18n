@@ -20,8 +20,6 @@ jobs:
         uses: astral-sh/setup-uv@v7
         with:
           version: "latest"
-          enable-cache: true
-          cache-dependency-glob: "uv.lock"
 
       - name: Set up Python ${{ env.UV_PYTHON }}
         run: uv python install ${{ env.UV_PYTHON }}

@@ -1,7 +1,7 @@
 from typing import cast
 
 from aiogram.fsm.context import FSMContext
-from aiogram.fsm.storage.redis import DefaultKeyBuilder, KeyBuilder  # type: ignore[attr-defined]
+from aiogram.fsm.storage.redis import DefaultKeyBuilder, KeyBuilder
 
 from ..exceptions import NoModuleError
 
@@ -28,12 +28,12 @@ class RedisManager(BaseManager):
         self.redis: Redis = redis
 
     async def get_locale(self, state: FSMContext) -> str:
-        redis_key = self.key_builder.build(state.key, "locale")  # type: ignore[arg-type]
+        redis_key = self.key_builder.build(state.key, "locale")
         value = await self.redis.get(redis_key)
         if isinstance(value, bytes):
             return value.decode("utf-8")
         return value or cast(str, self.default_locale)
 
     async def set_locale(self, locale: str, state: FSMContext) -> None:
-        redis_key = self.key_builder.build(state.key, "locale")  # type: ignore[arg-type]
+        redis_key = self.key_builder.build(state.key, "locale")
         await self.redis.set(redis_key, locale)

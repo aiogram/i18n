@@ -1,18 +1,24 @@
-from collections.abc import Awaitable, Callable, Generator
+from __future__ import annotations
+
 from contextlib import contextmanager
-from typing import Any, cast
+from typing import TYPE_CHECKING, Any, cast
 from warnings import warn
 
 from aiogram import BaseMiddleware, Dispatcher
-from aiogram.types import TelegramObject
 
 from aiogram_i18n.context import I18nContext
-from aiogram_i18n.cores.base import BaseCore
 from aiogram_i18n.lazy.base import BaseLazyFilter
 from aiogram_i18n.managers.base import BaseManager, CallableMixin  # type: ignore[attr-defined]
 from aiogram_i18n.managers.memory import MemoryManager
-from aiogram_i18n.types import StartupFunction
 from aiogram_i18n.utils.context_instance import ContextInstanceMixin
+
+if TYPE_CHECKING:
+    from collections.abc import Awaitable, Callable, Generator
+
+    from aiogram.types import TelegramObject
+
+    from aiogram_i18n.cores.base import BaseCore
+    from aiogram_i18n.types import StartupFunction
 
 
 class I18nMiddleware(BaseMiddleware, ContextInstanceMixin["I18nMiddleware"]):

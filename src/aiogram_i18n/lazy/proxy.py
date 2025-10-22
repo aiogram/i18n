@@ -11,7 +11,7 @@ if TYPE_CHECKING:
     from aiogram.types import Message
 
 
-class LazyProxy(BaseModel):  # type: ignore[no-redef]
+class LazyProxy(BaseModel):
     key: str
     locale: str | None
     kwargs: dict[str, Any]

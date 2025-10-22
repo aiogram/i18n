@@ -1,4 +1,4 @@
-from .__meta__ import __version__
+from .__version__ import __version__
 from .context import I18nContext
 from .lazy import LazyFactory, LazyFilter, LazyProxy
 from .middleware import I18nMiddleware

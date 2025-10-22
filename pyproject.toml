@@ -1,5 +1,6 @@
 [project]
 name = "aiogram_i18n"
+version = "1.4"
 authors = [
     { name = "RootShinobi" },
 ]
@@ -28,7 +29,6 @@ keywords = [
     "fluent",
     "gnutext",
 ]
-dynamic = ["version"]
 dependencies = [
     "aiogram>=3.0.0b8",
     "click==8.*",
@@ -37,8 +37,9 @@ dependencies = [
 [tool.uv]
 package = true
 
-[tool.hatch.version]
-path = "aiogram_i18n/__meta__.py"
+[build-system]
+requires = ["uv_build>=0.9.5,<0.10.0"]
+build-backend = "uv_build"
 
 [project.urls]
 Repository = "https://github.com/aiogram/aiogram_i18n"
@@ -90,30 +91,34 @@ features = [
     "docs",
 ]
 
-[tool.mypy]
-plugins = ["pydantic.mypy"]
-exclude = [
-    "\\.?venv",
-    "\\.idea",
-    "\\.tests?",
-]
-
-[[tool.mypy.overrides]]
-module = "mre"
-strict_optional = false
-
-[[tool.mypy.overrides]]
-module = "aiogram_i18n.types"
-disable_error_code = ["arg-type", "assignment"]
-
-[[tool.mypy.overrides]]
-module = [
-    "redis.*", "fluent_compiler.*"
-]
-ignore_missing_imports = true
+[tool.isort]
+py_version = 310
+line_length = 99
+multi_line_output = 3
+force_grid_wrap = 0
+include_trailing_comma = true
+split_on_trailing_comma = false
+single_line_exclusions = ["."]
+sections = ["FUTURE", "STDLIB", "THIRDPARTY", "FIRSTPARTY", "LOCALFOLDER"]
+skip_gitignore = true
+extend_skip = ["__pycache__"]
 
 [tool.ruff]
+src = ["src", "tests"]
 line-length = 99
+exclude = [
+    ".git",
+    ".mypy_cache",
+    ".ruff_cache",
+    "__pypackages__",
+    "__pycache__",
+    "venv",
+    ".venv",
+    "tests/.files",
+    "tests/files/py",
+    "dist",
+    "build",
+]
 
 [tool.ruff.lint]
 select = ["ALL"]
@@ -150,14 +155,48 @@ indent-style = "space"
 skip-magic-trailing-comma = false
 line-ending = "auto"
 
-[tool.isort]
-py_version = 310
-line_length = 99
-multi_line_output = 3
-force_grid_wrap = 0
-include_trailing_comma = true
-split_on_trailing_comma = false
-single_line_exclusions = ["."]
-sections = ["FUTURE", "STDLIB", "THIRDPARTY", "FIRSTPARTY", "LOCALFOLDER"]
-skip_gitignore = true
-extend_skip = ["__pycache__"]
+[tool.mypy]
+mypy_path = "src"
+packages = ["aiogram_i18n"]
+plugins = ["pydantic.mypy"]
+allow_redefinition = true
+check_untyped_defs = true
+disallow_any_generics = true
+disallow_incomplete_defs = true
+disallow_untyped_calls = true
+disallow_untyped_defs = true
+extra_checks = true
+follow_imports = "skip"
+follow_imports_for_stubs = false
+ignore_missing_imports = false
+namespace_packages = true
+no_implicit_optional = true
+no_implicit_reexport = true
+pretty = true
+show_absolute_path = true
+show_error_codes = true
+show_error_context = true
+warn_unused_configs = true
+warn_unused_ignores = true
+disable_error_code = [
+    "no-redef",
+]
+exclude = [
+    "\\.?venv",
+    "\\.idea",
+    "\\.tests?",
+]
+
+[[tool.mypy.overrides]]
+module = "mre"
+strict_optional = false
+
+[[tool.mypy.overrides]]
+module = "aiogram_i18n.types"
+disable_error_code = ["arg-type", "assignment"]
+
+[[tool.mypy.overrides]]
+module = [
+    "redis.*", "fluent_compiler.*"
+]
+ignore_missing_imports = true

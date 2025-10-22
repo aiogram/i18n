@@ -41,7 +41,8 @@ class FluentRuntimeCore(BaseCore[FluentBundle]):
             if message.value is None:
                 raise KeyError(message)  # noqa: TRY301
         except KeyError:
-            if locale := self.locales_map.get(locale):
+            locale: str | None = self.locales_map.get(locale)
+            if locale is not None:
                 return self.get(message_id, locale, **kwargs)
             if self.raise_key_error:
                 raise KeyNotFoundError(message_id) from None

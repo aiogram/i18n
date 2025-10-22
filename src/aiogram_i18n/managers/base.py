@@ -9,9 +9,7 @@ if TYPE_CHECKING:
 try:
     from aiogram.dispatcher.event.handler import CallableObject as CallableMixin
 except ImportError:
-    from aiogram.dispatcher.event.handler import (  # type: ignore[attr-defined, no-redef]
-        CallableMixin,
-    )
+    from aiogram.dispatcher.event.handler import CallableMixin
 
 
 class BaseManager(ABC):
