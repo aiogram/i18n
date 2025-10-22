@@ -76,6 +76,9 @@ def multiple_extract(
         style(
             text="This function is removed. Use FTL-Extract instead.\n"
             "pip install ftl-extract\n"
+            "\n"
+            "ftl extract <code_path> <output_file> [OPTIONS]\n"
+            "\n"
             "https://pypi.org/project/FTL-Extract/",
             fg="red",
         ),
