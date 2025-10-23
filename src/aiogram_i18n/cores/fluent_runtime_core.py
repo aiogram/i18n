@@ -2,7 +2,7 @@ from collections.abc import Callable
 from pathlib import Path
 from typing import Any, cast
 
-from aiogram_i18n.exceptions import KeyNotFoundError, NoModuleError, FluentMessageError
+from aiogram_i18n.exceptions import FluentMessageError, KeyNotFoundError, NoModuleError
 from aiogram_i18n.utils.text_decorator import td
 
 try:
