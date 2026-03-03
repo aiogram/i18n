@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from datetime import datetime
 from typing import TYPE_CHECKING, Any, cast
 from warnings import warn
 
@@ -53,6 +54,13 @@ class Null(TextD):
     def expandable_blockquote(self, value: str) -> str:
         return value
 
+    def date_time(
+        self,
+        value: str,
+        unix_time: int | datetime,
+        date_time_format: str | None = None,
+    ) -> str: # noqa: ARG002
+        return value
 
 class TextDecoration:
     def __init__(self) -> None:
