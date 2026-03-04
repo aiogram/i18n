@@ -2,7 +2,7 @@ from collections.abc import Callable
 from pathlib import Path
 from typing import Any, cast
 
-from aiogram_i18n.exceptions import KeyNotFoundError, NoModuleError
+from aiogram_i18n.exceptions import FluentMessageError, KeyNotFoundError, NoModuleError
 from aiogram_i18n.utils.text_decorator import td
 
 try:
@@ -44,7 +44,7 @@ class FluentCompileCore(BaseCore[FluentBundle]):
                 raise KeyNotFoundError(message) from None
             return message
         if errors:
-            raise errors[0]
+            raise FluentMessageError(message_id=message, errors=errors)
         return cast(str, text)  # 'cause fluent_compiler type-ignored
 
     def find_locales(self) -> dict[str, FluentBundle]:

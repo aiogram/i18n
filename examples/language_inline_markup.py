@@ -28,14 +28,14 @@ async def cmd_start(message: Message, i18n: I18nContext):
 
 
 @router.callback_query(F.data == "back")
-async def btn_help(call: CallbackQuery, i18n: I18nContext):
+async def btn_back(call: CallbackQuery, i18n: I18nContext):
     await call.message.edit_text(
         text=i18n.get("hello", user=call.from_user.full_name)
     )
 
 
 @router.callback_query(lang_kb.filter)
-async def btn_help(call: CallbackQuery, lang: str, i18n: I18nContext):
+async def btn_lang(call: CallbackQuery, lang: str, i18n: I18nContext):
     await call.answer()
     await i18n.set_locale(locale=lang)
     await call.message.edit_text(text=i18n.cur.lang(language=i18n.locale))
