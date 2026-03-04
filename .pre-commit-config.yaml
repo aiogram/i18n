@@ -20,7 +20,7 @@ repos:
           - text
 
   - repo: https://github.com/charliermarsh/ruff-pre-commit
-    rev: v0.14.1
+    rev: v0.15.4
     hooks:
       - id: ruff
         args: [ "--fix" ]
@@ -28,7 +28,7 @@ repos:
       - id: ruff-format
 
   - repo: https://github.com/pycqa/isort
-    rev: 7.0.0
+    rev: 8.0.1
     hooks:
       - id: isort
         name: isort (python)
