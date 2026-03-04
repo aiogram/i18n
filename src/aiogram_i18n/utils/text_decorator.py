@@ -11,6 +11,7 @@ from aiogram_i18n.context import I18nContext
 
 if TYPE_CHECKING:
     from collections.abc import Callable
+    from datetime import datetime
 
 
 class Null(TextD):
@@ -51,6 +52,14 @@ class Null(TextD):
         return value
 
     def expandable_blockquote(self, value: str) -> str:
+        return value
+
+    def date_time(
+        self,
+        value: str,
+        unix_time: int | datetime,  # noqa: ARG002
+        date_time_format: str | None = None,  # noqa: ARG002
+    ) -> str:
         return value
 
 
