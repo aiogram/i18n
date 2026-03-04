@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from datetime import datetime
 from typing import TYPE_CHECKING, Any, cast
 from warnings import warn
 
@@ -12,6 +11,7 @@ from aiogram_i18n.context import I18nContext
 
 if TYPE_CHECKING:
     from collections.abc import Callable
+    from datetime import datetime
 
 
 class Null(TextD):
@@ -57,10 +57,11 @@ class Null(TextD):
     def date_time(
         self,
         value: str,
-        unix_time: int | datetime,
-        date_time_format: str | None = None,
-    ) -> str: # noqa: ARG002
+        unix_time: int | datetime,  # noqa: ARG002
+        date_time_format: str | None = None,  # noqa: ARG002
+    ) -> str:
         return value
+
 
 class TextDecoration:
     def __init__(self) -> None:
