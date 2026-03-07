@@ -33,5 +33,8 @@ jobs:
       - name: Verify wheel installation
         run: uv run --verbose --with aiogram_i18n --no-project --refresh-package aiogram_i18n -- python -c "import aiogram_i18n; print(aiogram_i18n.__version__)"
 
-      - name: 🐍 Publish distribution 📦
-        run: uv publish --username __token__ --token ${{ secrets.PYPI_TOKEN }}
+      - name: List artifacts
+        run: ls -lah dist
+
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
