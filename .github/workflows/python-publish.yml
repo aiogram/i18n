@@ -36,5 +36,5 @@ jobs:
       - name: List artifacts
         run: ls -lah dist
 
-      - name: Publish to PyPI
-        uses: pypa/gh-action-pypi-publish@release/v1
+      - name: 🐍 Publish distribution 📦
+        run: uv publish --token ${{ secrets.PYPI_TOKEN }}
