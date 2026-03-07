@@ -43,7 +43,7 @@ class I18nMiddleware(BaseMiddleware, ContextInstanceMixin["I18nMiddleware"]):
         enabled_startup: bool = True,
     ) -> None:
         self.core = core
-        self.manager = manager or MemoryManager()  # type: ignore[abstract]
+        self.manager = manager or MemoryManager()
         self.context_key = context_key
         self.locale_key = locale_key
         self.middleware_key = middleware_key

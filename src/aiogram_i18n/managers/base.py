@@ -34,12 +34,10 @@ class BaseManager(ABC):
         async def get_locale(self, *args: Any, **kwargs: Any) -> str:
             pass
 
-    @abstractmethod
-    async def startup(self, *args: Any, **kwargs: Any) -> None:
+    async def startup(self, *args: Any, **kwargs: Any) -> None:  # noqa: B027
         pass
 
-    @abstractmethod
-    async def shutdown(self, *args: Any, **kwargs: Any) -> None:
+    async def shutdown(self, *args: Any, **kwargs: Any) -> None:  # noqa: B027
         pass
 
 
