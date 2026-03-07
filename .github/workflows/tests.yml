@@ -60,7 +60,8 @@ jobs:
       - name: Minimize uv cache
         run: uv cache prune --ci
 
-      - uses: taiki-e/install-action@just
+      - name: Install Just
+        uses: taiki-e/install-action@just
 
       - name: Lint code
         if: "env.IS_PYPY == 'false'"
