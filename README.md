@@ -2,7 +2,7 @@
 
 [![PyPI version](https://img.shields.io/pypi/v/aiogram-i18n.svg)](https://pypi.org/project/aiogram-i18n/)
 [![Python versions](https://img.shields.io/pypi/pyversions/aiogram-i18n.svg)](https://pypi.org/project/aiogram-i18n/)
-[![License](https://img.shields.io/pypi/l/aiogram-i18n.svg)](https://github.com/aiogram/aiogram_i18n/blob/master/LICENSE)
+[![License](https://img.shields.io/pypi/l/aiogram-i18n.svg)](https://pypi.org/project/aiogram-i18n/)
 [![Downloads](https://img.shields.io/pypi/dm/aiogram-i18n.svg)](https://pypi.org/project/aiogram-i18n/)
 [![Documentation](https://readthedocs.org/projects/aiogram-i18n/badge/?version=latest)](https://aiogram-i18n.readthedocs.io/)
 

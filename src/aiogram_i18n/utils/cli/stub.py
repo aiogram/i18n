@@ -25,27 +25,30 @@ def stub(input_files: tuple[str, ...], output_file: str) -> None:
         "pot": lazy_import("aiogram_i18n.utils.gnutext_stub", "from_po_files_to_file_ex"),
     }
 
-    suffix: str | None = None
+    suffixes: set[str] = set()
     for input_file in input_files:
         path = Path(input_file)
         suffix = path.suffix[1:]
         if not suffix:
             msg = f"only files with this extension are allowed ({', '.join(allow_formats.keys())})"
-            raise Exception(msg)  # noqa: TRY002
+            raise click.ClickException(msg)
         if suffix not in allow_formats:
             msg = f"unknown file extension {path.suffix}"
-            raise Exception(msg)  # noqa: TRY002
+            raise click.ClickException(msg)
         if not path.is_file():
             msg = "only files allowed"
-            raise Exception(msg)  # noqa: TRY002
+            raise click.ClickException(msg)
+        suffixes.add(suffix)
+
+    if len(suffixes) != 1:
+        msg = "all input files must have the same extension"
+        raise click.ClickException(msg)
+
+    suffix = suffixes.pop()
 
     path = Path(output_file)
     if path.suffix != ".pyi":
         msg = 'output file must have the extension "pyi"'
-        raise Exception(msg)  # noqa: TRY002
-
-    if suffix is None:
-        msg = "input files are required"
-        raise Exception(msg)  # noqa: TRY002
+        raise click.ClickException(msg)
 
     allow_formats[suffix](input_files, output_file)
