@@ -60,5 +60,7 @@ class ContextInstanceMixin(Generic[ContextInstance]):
     @contextmanager
     def with_current(cls, value: ContextInstance) -> Generator[ContextInstance, None, None]:
         token = cls.set_current(value=value)
-        yield value
-        cls.reset_current(token=token)
+        try:
+            yield value
+        finally:
+            cls.reset_current(token=token)

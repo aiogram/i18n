@@ -7,28 +7,25 @@ examples_dir := "examples"
 
 lint:
     echo "Running ruff..."
-    uv run ruff check --config pyproject.toml --show-fixes --preview {{src_dir}} {{tests_dir}}
-    uv run mypy --config-file pyproject.toml
+    uv run ruff format --check --diff {{src_dir}} {{tests_dir}}
+    uv run ruff check --show-fixes --preview {{src_dir}} {{tests_dir}}
+    uv run mypy --native-parser --num-workers 8 {{src_dir}}
 
 reformat:
     echo "Running ruff check with --fix..."
-    uv run ruff check --config pyproject.toml --fix --unsafe-fixes {{src_dir}} {{tests_dir}}
+    uv run ruff check --fix --unsafe-fixes {{src_dir}} {{tests_dir}}
 
     echo "Running ruff..."
-    uv run ruff format --config pyproject.toml {{src_dir}} {{tests_dir}}
+    uv run ruff format {{src_dir}} {{tests_dir}}
 
     echo "Running isort..."
-    uv run isort --settings-file pyproject.toml {{src_dir}} {{tests_dir}}
+    uv run isort {{src_dir}} {{tests_dir}}
 
 outdated:
     uv tree --outdated --universal --no-cache --depth 1
 
 sync:
     uv sync --reinstall-package aiogram_i18n --all-extras
-
-pull:
-    git pull origin master
-    git submodule update --init --recursive
 
 test:
     echo "Running tests..."

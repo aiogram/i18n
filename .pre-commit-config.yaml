@@ -7,25 +7,19 @@ repos:
       - id: "check-merge-conflict"
       - id: "debug-statements"
       - id: "end-of-file-fixer"
+      - id: "mixed-line-ending"
       - id: "detect-private-key"
       - id: "check-yaml"
       - id: "check-toml"
       - id: "check-json"
-      - id: "mixed-line-ending"
-        args: [ "--fix", "crlf" ]
-        types:
-          - python
-          - yaml
-          - toml
-          - text
 
-  - repo: https://github.com/charliermarsh/ruff-pre-commit
-    rev: v0.15.5
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.15.14
     hooks:
-      - id: ruff
-        args: [ "--fix" ]
-
+      - id: ruff-check
+        files: &files '^(src|tests)'
       - id: ruff-format
+        files: *files
 
   - repo: https://github.com/pycqa/isort
     rev: 8.0.1
