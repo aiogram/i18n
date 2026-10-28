@@ -15,10 +15,49 @@ from aiogram_i18n.utils.context_instance import ContextInstanceMixin
 if TYPE_CHECKING:
     from collections.abc import Awaitable, Callable, Generator
 
+    from aiogram.dispatcher.event.telegram import TelegramEventObserver
     from aiogram.types import TelegramObject
 
     from aiogram_i18n.cores.base import BaseCore
     from aiogram_i18n.types import StartupFunction
+
+
+def _extract_nested_filters(target: Any) -> list[Any]:
+    if target is None:
+        return []
+    nested: list[Any] = []
+    cb = getattr(target, "callback", None)
+    if cb is not None:
+        nested.append(cb)
+    for attr in ("targets", "filters", "sub_filters", "rules"):
+        val = getattr(target, attr, None)
+        if isinstance(val, (list, tuple, set)):
+            nested.extend(val)
+    for attr in ("target", "filter"):
+        val = getattr(target, attr, None)
+        if val is not None:
+            nested.append(val)
+    return nested
+
+
+def _find_lazy_filters(obj: Any) -> list[BaseLazyFilter]:
+    result: list[BaseLazyFilter] = []
+    visited: set[int] = set()
+    queue = [obj]
+
+    while queue:
+        current = queue.pop()
+        if current is None or id(current) in visited:
+            continue
+        visited.add(id(current))
+
+        if isinstance(current, BaseLazyFilter):
+            result.append(current)
+            continue
+
+        queue.extend(_extract_nested_filters(current))
+
+    return result
 
 
 class I18nMiddleware(BaseMiddleware, ContextInstanceMixin["I18nMiddleware"]):
@@ -30,6 +69,7 @@ class I18nMiddleware(BaseMiddleware, ContextInstanceMixin["I18nMiddleware"]):
     key_separator: str
     with_context: bool
     enabled_startup: bool
+    _dispatcher: Dispatcher | None
 
     def __init__(
         self,
@@ -49,6 +89,7 @@ class I18nMiddleware(BaseMiddleware, ContextInstanceMixin["I18nMiddleware"]):
         self.middleware_key = middleware_key
         self.key_separator = key_separator
         self.enabled_startup = enabled_startup
+        self._dispatcher = None
 
         if self.core.default_locale is None:
             self.core.default_locale = default_locale
@@ -72,21 +113,29 @@ class I18nMiddleware(BaseMiddleware, ContextInstanceMixin["I18nMiddleware"]):
         if self.enabled_startup:
             dispatcher.startup.register(self.startup)
         dispatcher[self.middleware_key] = self
+        self._dispatcher = dispatcher
 
-    async def startup(self, dispatcher: Dispatcher, **kwargs) -> None:  # type: ignore[no-untyped-def]
-        kwargs["dispatcher"] = dispatcher
+    async def _process_observer_filters(
+        self, observer: TelegramEventObserver, **kwargs: Any
+    ) -> None:
+        for handler in observer.handlers:
+            if not handler.filters:
+                continue
+            for filter_ in handler.filters:
+                for lazy_filter in _find_lazy_filters(filter_):
+                    await lazy_filter.call(self.context_key, **kwargs)
+
+    async def startup(self, dispatcher: Dispatcher | None = None, **kwargs: Any) -> None:
+        dp = dispatcher or kwargs.get("router") or self._dispatcher
+        if not isinstance(dp, Dispatcher):
+            return
+        kwargs["dispatcher"] = dp
         with self.use_context(data=kwargs):
             for startup_func in self._startup:
                 await startup_func.call(**kwargs)
-            for sub_router in dispatcher.chain_tail:
+            for sub_router in dp.chain_tail:
                 for observer in sub_router.observers.values():
-                    for handler in observer.handlers:
-                        if not handler.filters:
-                            continue
-                        for filter_ in handler.filters:
-                            if not isinstance(filter_.callback, BaseLazyFilter):
-                                continue
-                            await filter_.callback.call(self.context_key, **kwargs)
+                    await self._process_observer_filters(observer, **kwargs)
 
     async def __call__(
         self,
